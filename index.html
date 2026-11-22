@@ -224,6 +224,23 @@ details[open]>summary .chev{transform:rotate(90deg)}
 .pdfwrap{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .pdfwrap canvas{display:block;margin:0 auto 12px;max-width:100%;background:#fff;border-radius:6px;box-shadow:0 2px 10px rgba(10,30,20,.2)}
 @media print{body{display:none!important}}
+
+/* categories on a course page */
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 14px}
+.cat{display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border-radius:18px;border:1px solid var(--glass-edge);background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);color:var(--fg);font:inherit;cursor:pointer;box-shadow:var(--glass-shadow);transition:transform .15s,background .2s,border-color .2s}
+.cat:active{transform:scale(.97)}
+.cat .ci{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--copper-bg);flex:none}
+.cat svg{width:22px;height:22px;stroke:var(--copper);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cat b{display:block;font:600 .92rem var(--head);line-height:1.2}
+.cat small{color:var(--muted);font-size:.75rem}
+.cat[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.cat[aria-pressed="true"] small{color:inherit;opacity:.85}
+.cat[aria-pressed="true"] .ci{background:rgba(255,255,255,.22)}
+.cat[aria-pressed="true"] svg{stroke:var(--accent-fg)}
+.cat.off:not([aria-pressed="true"]){opacity:.6}
+.cats .cat:last-child:nth-child(odd){grid-column:1/-1}
+.dupnote{color:var(--copper);font-size:.8rem;margin-top:4px}
+.frow input[type=text]{width:100%;margin-top:6px}
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -429,7 +446,15 @@ const SCHOOL_IMG = {
   built:['img/built.jpg','Architectural render of a brick campus building with its floor plan']
 };
 const YEARS = [];
-const PTYPES = ['Final exam','Supplementary exam','Mid-term test','Test','Other'];
+const CATS = [
+  {id:'paper', name:'Past papers', types:['Final exam','Supplementary exam','Mid-term test','Test'], icon:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>'},
+  {id:'notes', name:'Notes', types:['Lecture notes','Summary notes'], icon:'<path d="M5 4h14v16H5z"/><path d="M9 4v16M12 9h4M12 13h4"/>'},
+  {id:'work', name:'Worksheets', types:['Worksheet','Tutorial sheet','Assignment','Lab manual'], icon:'<path d="M9 3h6v3H9z"/><path d="M6 5h12v16H6z"/><path d="M9 12l2 2 4-4M9 18h6"/>'},
+  {id:'book', name:'Books', types:['Textbook','Reference book'], icon:'<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/>'},
+  {id:'outline', name:'Course outlines', types:['Course outline'], icon:'<path d="M5 5h14M5 10h10M5 15h14M5 20h8"/>'}
+];
+const PTYPES = CATS.flatMap(c => c.types);
+const catOf = t => CATS.find(c => c.types.includes(t)) || CATS[0];
 const NTYPES = ['Lecture notes','Tutorial sheet','Lab manual','Summary sheet'];
 const LEVELS = {1:'Year 1',2:'Year 2',3:'Year 3',4:'Year 4'};
 
@@ -517,14 +542,13 @@ function home(app){
         <button type="submit">Search</button>
       </form>
     </section>
-    <div class="stats"><div class="stat"><b>${SCHOOLS.length}</b><span>Schools</span></div><div class="stat"><b>${fmt(papers.length)}</b><span>Papers</span></div><div class="stat"><b>${fmt(new Set(papers.map(p=>p.course)).size)}</b><span>Courses with papers</span></div></div>
+    <div class="stats"><div class="stat"><b>${SCHOOLS.length}</b><span>Schools</span></div><div class="stat"><b>${fmt(papers.length)}</b><span>Files</span></div><div class="stat"><b>${fmt(new Set(papers.map(p=>p.course)).size)}</b><span>Courses with files</span></div></div>
     <div class="sec"><h2>Browse by school</h2><a href="#schools">See all</a></div>
     <div class="rail">${rail}</div>
     <div class="quick">
       <a href="#papers"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><div><b>Past papers</b><small>Search and filter every paper</small></div></a>
       <a href="#account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><b>Your account</b><small>Sign in and get access</small></div></a>
     </div>
-    <div class="sec"><h2>Latest papers</h2><a href="#papers">See all</a></div><ul class="grid two" id="hp"></ul>
     ${savedCount?`<div class="sec"><h2>Saved by you</h2></div><ul class="grid two" id="hs"></ul>`:''}
     <p class="note-foot">Course lists are being checked and completed school by school.</p>`;
   const slides = [...document.querySelectorAll('.hero-slides img')], dots = [...document.querySelectorAll('.dots button')];
@@ -536,7 +560,6 @@ function home(app){
   dots.forEach((d,k) => d.onclick = () => { show(k); start(); });
   start();
   $('#hform').onsubmit = e => { e.preventDefault(); pf.q = $('#hq').value; location.hash = '#papers'; };
-  fillList($('#hp'), [...papers].sort((a,b)=>b.yr.localeCompare(a.yr)).slice(0,4), paperCard, 'Papers are being added school by school.');
   if(savedCount){ const ul=$('#hs'); ul.innerHTML=''; papers.filter(p=>savedP.has(p.id)).forEach(p=>ul.appendChild(paperCard(p))); notes.filter(n=>savedN.has(n.id)).forEach(n=>ul.appendChild(noteCard(n))); }
 }
 
@@ -613,15 +636,28 @@ function offered(c){
   if(!hits.length) return '';
   return `<div class="sec" style="margin-top:6px"><h2>Offered in</h2></div><div class="chips">${hits.map(p=>{ const y=Object.keys(p.years).find(k=>p.years[k].includes(c.code)); return `<a class="chip" style="text-decoration:none" href="#prog-${s.id}-${p.id}-${y}">${esc(p.name)} · Year ${y}</a>`; }).join('')}</div>`;
 }
+const courseCat = {};
 function courseScreen(app,key){
   const c = courses.find(x=>slug(x)===key); if(!c) return schoolsScreen(app);
   topbar(c.code+' · '+c.name, c.school.name, '#school-'+c.school.id);
-  const cp = papers.filter(p=>p.course===c).sort((a,b)=>b.yr.localeCompare(a.yr)), cn = notes.filter(n=>n.course===c);
-  app.innerHTML = `${offered(c)}<div class="sec"><h2>Past papers (${cp.length})</h2></div><div id="cp"></div>
-    `;
-  const cpb = $('#cp');
-  if (!cp.length) cpb.appendChild(emptyBox('No papers for this course yet.'));
-  else { const pn = panel(); cpb.appendChild(pn); YEARS.forEach(y => { const yp = cp.filter(p => p.yr === y); if (!yp.length) return; subhead(pn, y + ' academic year', yp.length + ' papers'); yp.forEach(p => pn.appendChild(paperRow(p,'course'))); }); }
+  const mine = papers.filter(p => p.course === c);
+  const of = id => mine.filter(p => catOf(p.type).id === id);
+  let cur = courseCat[key] || (CATS.find(k => of(k.id).length) || CATS[0]).id;
+  app.innerHTML = `${offered(c)}<div class="cats" id="cats"></div><div id="cp"></div>`;
+  const draw = () => {
+    $('#cats').innerHTML = CATS.map(k => { const n = of(k.id).length; return `<button class="cat${n ? '' : ' off'}" data-k="${k.id}" aria-pressed="${k.id === cur}"><span class="ci"><svg viewBox="0 0 24 24" aria-hidden="true">${k.icon}</svg></span><span><b>${esc(k.name)}</b><small>${n ? n + (n === 1 ? ' file' : ' files') : 'Coming soon'}</small></span></button>`; }).join('');
+    $('#cats').querySelectorAll('.cat').forEach(b => b.onclick = () => { cur = b.dataset.k; courseCat[key] = cur; draw(); });
+    const k = CATS.find(x => x.id === cur), list = of(k.id), box = $('#cp');
+    box.innerHTML = `<div class="sec"><h2>${esc(k.name)} (${list.length})</h2></div>`;
+    if (!list.length) { box.appendChild(emptyBox('No ' + k.name.toLowerCase() + ' for this course yet.')); return; }
+    const pn = panel(); box.appendChild(pn);
+    if (k.id === 'paper') {
+      YEARS.forEach(y => { const yp = list.filter(p => p.yr === y); if (!yp.length) return; subhead(pn, y + ' academic year', yp.length + (yp.length === 1 ? ' paper' : ' papers')); yp.forEach(p => pn.appendChild(paperRow(p,'course'))); });
+    } else {
+      k.types.forEach(t => { const tp = list.filter(p => p.type === t).sort((a,b) => a.title.localeCompare(b.title)); if (!tp.length) return; subhead(pn, t, tp.length + (tp.length === 1 ? ' file' : ' files')); tp.forEach(p => pn.appendChild(paperRow(p,'course'))); });
+    }
+  };
+  draw();
 }
 
 /* ---------- organised lists: groups, rows, chips ---------- */
@@ -669,7 +705,7 @@ function starButton(set, id, key, d, after){
 function paperRow(p, mode, after){
   const d = document.createElement('div'); d.className = 'row-item'; const on = savedP.has(p.id);
   let main;
-  if (mode === 'course') main = `<span class="ri-t">${esc(p.type)}</span><span class="small">${p.yr} academic year${p.title ? ' · ' + esc(p.title) : ''}</span>`;
+  if (mode === 'course') main = catOf(p.type).id === 'paper' ? `<span class="ri-t">${esc(p.type)}</span><span class="small">${p.yr} academic year${p.title ? ' · ' + esc(p.title) : ''}</span>` : `<span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(p.type)} · ${p.yr}</span>`;
   else if (mode === 'year') main = `<span class="code">${esc(p.course.code)}</span><span class="ri-t">${esc(p.course.name)}</span><span class="ri-s"><span class="chip">${esc(p.course.school.ab)}</span><span class="chip">${LEVELS[p.course.lvl]}</span></span>`;
   else main = `<span class="code">${esc(p.course.code)}</span><span class="ri-t">${esc(p.course.name)}</span><span class="ri-s"><span class="chip hot">${esc(p.type)}</span><span class="chip">${p.yr}</span><span class="chip">${LEVELS[p.course.lvl]}</span></span>`;
   d.innerHTML = `<a class="ri-main" href="#read-${p.id}">${main}</a><button class="star" aria-pressed="${on}" aria-label="Save paper">${on ? '★' : '☆'}</button>`;
@@ -849,7 +885,7 @@ function setPapers(list){
   papers.length = 0;
   list.forEach(d => {
     const c = courses.find(x => x.code === d.code); if (!c) return;
-    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path});
+    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path, size:d.size || 0});
   });
   const ys = [...new Set(papers.map(p => p.yr))].sort((a,b) => b.localeCompare(a));
   YEARS.length = 0; ys.forEach(y => YEARS.push(y));
@@ -946,7 +982,7 @@ function loadPdfJs(){
   });
   return pdfjsP;
 }
-async function renderPdf(box, bytes, mark, status){
+async function renderPdf(box, bytes, mark, status, sub){
   const lib = await loadPdfJs();
   const doc = await lib.getDocument({data: bytes}).promise;
   const w = Math.min(box.clientWidth || 360, 900), dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -959,10 +995,11 @@ async function renderPdf(box, bytes, mark, status){
     box.appendChild(cv);
     const g = cv.getContext('2d');
     await page.render({canvasContext:g, viewport:v}).promise;
-    g.save(); g.globalAlpha = .12; g.fillStyle = '#000'; g.font = (15 * dpr) + 'px sans-serif'; g.rotate(-Math.PI / 6);
-    const span = v.width + v.height;
-    for (let y = 0; y < span; y += 90 * dpr) for (let x = -span; x < span; x += 330 * dpr) g.fillText(mark, x, y);
+    g.save(); g.globalAlpha = .13; g.fillStyle = '#000'; g.font = '700 ' + (22 * dpr) + 'px sans-serif'; g.rotate(-Math.PI / 6);
+    const span = v.width + v.height; let row = 0;
+    for (let y = 0; y < span; y += 120 * dpr, row++) for (let x = -span + (row % 2 ? 110 * dpr : 0); x < span; x += 240 * dpr) g.fillText(mark, x, y);
     g.restore();
+    if (sub) { g.save(); g.globalAlpha = .4; g.fillStyle = '#000'; g.font = (10 * dpr) + 'px sans-serif'; g.textAlign = 'right'; g.fillText(sub, v.width - 8 * dpr, v.height - 8 * dpr); g.restore(); }
   }
   status.textContent = doc.numPages + (doc.numPages === 1 ? ' page' : ' pages');
 }
@@ -982,7 +1019,7 @@ async function readScreen(app, id){
   ['contextmenu','dragstart','copy','cut'].forEach(ev => box.addEventListener(ev, e => e.preventDefault()));
   try {
     const bytes = await window.FB.getPdf(p.path);
-    await renderPdf(box, bytes, S.user.email, st);
+    await renderPdf(box, bytes, 'CBU DATA', st, S.user.email);
   } catch(e) {
     if (box.isConnected) st.textContent = 'Could not open this paper. Check your connection and try again.';
   }
@@ -992,7 +1029,48 @@ async function readScreen(app, id){
 const adm = {tab:'add', school:'', course:''};
 const YEAR_OPTS = (() => { const a = []; for (let y = new Date().getFullYear(); y >= 2005; y--) a.push(y); return a; })();
 const guessYear = n => { const m = String(n).match(/(?:19|20)\d{2}/); return m ? Number(m[0]) : new Date().getFullYear(); };
-const guessType = n => /supp/i.test(n) ? 'Supplementary exam' : /mid/i.test(n) ? 'Mid-term test' : /test|quiz|\bca\b/i.test(n) ? 'Test' : /final|exam/i.test(n) ? 'Final exam' : 'Other';
+const guessType = n => /outline|syllabus|course\s*guide/i.test(n) ? 'Course outline' : /supp/i.test(n) ? 'Supplementary exam' : /mid/i.test(n) ? 'Mid-term test' : /test|quiz|\bca\b/i.test(n) ? 'Test' : /final|exam/i.test(n) ? 'Final exam' : /worksheet/i.test(n) ? 'Worksheet' : /tutorial/i.test(n) ? 'Tutorial sheet' : /assign/i.test(n) ? 'Assignment' : /\blab/i.test(n) ? 'Lab manual' : /summary/i.test(n) ? 'Summary notes' : /notes?|lecture|slides/i.test(n) ? 'Lecture notes' : /book|edition/i.test(n) ? 'Textbook' : 'Final exam';
+const typeOptions = cur => CATS.map(k => `<optgroup label="${esc(k.name)}">${optionsHtml(k.types.map(t => [t,t]), cur)}</optgroup>`).join('');
+const normName = s => String(s || '').toLowerCase().replace(/\.pdf$/, '').replace(/[^a-z0-9]+/g, '');
+function findDup(code, f, seen){
+  const nn = [normName(f.file.name), normName(f.title)];
+  const hit = papers.find(p => p.course.code === code && ((p.size && p.size === f.file.size) || nn.includes(normName(p.title))));
+  if (hit) return 'Already uploaded in this course';
+  const key = code + '|' + f.file.size + '|' + normName(f.file.name);
+  if (seen) { if (seen.has(key)) return 'Picked twice'; seen.add(key); }
+  return '';
+}
+let pdflibP = null;
+function loadPdfLib(){
+  if (!pdflibP) pdflibP = new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js';
+    s.onload = () => res(window.PDFLib); s.onerror = () => { pdflibP = null; rej(new Error('pdflib')); };
+    document.head.appendChild(s);
+  });
+  return pdflibP;
+}
+/* Makes big PDFs smaller: each page is redrawn as a sharp picture. If it does not get clearly smaller, the original is kept. */
+async function shrinkPdf(file, say){
+  if (file.size < 1.5 * 1024 * 1024) return file;
+  const [lib, PL] = await Promise.all([loadPdfJs(), loadPdfLib()]);
+  const src = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+  const n = src.numPages, big = n > 120, target = big ? 1300 : 1700, q = big ? 0.72 : 0.8;
+  const out = await PL.PDFDocument.create();
+  for (let i = 1; i <= n; i++) {
+    say(i, n);
+    const page = await src.getPage(i), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:Math.min(3, target / v1.width)});
+    const cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
+    const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
+    await page.render({canvasContext:g, viewport:v}).promise;
+    const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', q));
+    const img = await out.embedJpg(new Uint8Array(await blob.arrayBuffer()));
+    out.addPage([v1.width, v1.height]).drawImage(img, {x:0, y:0, width:v1.width, height:v1.height});
+    cv.width = cv.height = 0; page.cleanup();
+  }
+  await src.destroy();
+  const bytes = await out.save();
+  return bytes.length < file.size * 0.85 ? new File([bytes], file.name, {type:'application/pdf'}) : file;
+}
 const optionsHtml = (arr, cur) => arr.map(([v,l]) => `<option value="${esc(v)}"${String(v) === String(cur) ? ' selected' : ''}>${esc(l)}</option>`).join('');
 
 function adminScreen(app){
@@ -1007,6 +1085,7 @@ function admAdd(box){
   box.innerHTML = `<div class="panel pad"><label class="lbl">School<select id="as">${optionsHtml(SCHOOLS.map(s => [s.id, s.name]), adm.school)}</select></label>
     <label class="lbl">Course<select id="ac"></select></label>
     <label class="lbl">PDF files (you can pick many)<input id="af" type="file" accept="application/pdf" multiple></label>
+    <p class="small">Big files are made smaller automatically. Files already uploaded are skipped.</p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
@@ -1017,7 +1096,7 @@ function admAdd(box){
   };
   const drawExisting = () => {
     const ex = papers.filter(p => p.course.code === adm.course).sort((a,b) => b.yr.localeCompare(a.yr));
-    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.type)} · ${esc(p.yr)}</span><span class="small">${esc(p.title)}</span></div><button class="btn" data-del="${esc(p.id)}">Delete</button></div>`).join('') + '</div>' : '<div class="empty">No papers in this course yet.</div>';
+    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}</span></div><button class="btn" data-del="${esc(p.id)}">Delete</button></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
     $('#aex').querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
       const p = papers.find(x => x.id === b.dataset.del); if (!p || !confirm('Delete this paper?\n' + p.title)) return;
       b.disabled = true;
@@ -1025,28 +1104,38 @@ function admAdd(box){
     });
   };
   const drawFiles = () => {
-    $('#afl').innerHTML = files.map((f,i) => `<div class="frow"><div class="small" style="word-break:break-all">${esc(f.file.name)}</div>
-      <div class="two"><select data-y="${i}">${optionsHtml(YEAR_OPTS.map(y => [y,y]), f.year)}</select><select data-t="${i}">${optionsHtml(PTYPES.map(t => [t,t]), f.type)}</select></div></div>`).join('');
+    const seen = new Set(); files.forEach(f => { f.dup = findDup(adm.course, f, seen); });
+    $('#afl').innerHTML = files.map((f,i) => `<div class="frow"><div class="small" style="word-break:break-all">${esc(f.file.name)} · ${(f.file.size / 1048576).toFixed(1)} MB</div>
+      ${f.dup ? `<div class="dupnote">${esc(f.dup)}. It will be skipped.</div>` : ''}
+      <input class="search" type="text" data-n="${i}" value="${esc(f.title)}" aria-label="Title">
+      <div class="two"><select data-y="${i}">${optionsHtml(YEAR_OPTS.map(y => [y,y]), f.year)}</select><select data-t="${i}">${typeOptions(f.type)}</select></div></div>`).join('');
     $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); });
     $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; });
-    $('#aup').disabled = !files.length;
+    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(/\.pdf$/i, ''); drawFiles(); });
+    $('#aup').disabled = !files.some(f => !f.dup);
   };
   drawCourses(); drawExisting();
   $('#as').onchange = e => { adm.school = e.target.value; drawCourses(); drawExisting(); };
-  $('#ac').onchange = e => { adm.course = e.target.value; drawExisting(); };
-  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:guessType(file.name)})); drawFiles(); };
+  $('#ac').onchange = e => { adm.course = e.target.value; drawExisting(); drawFiles(); };
+  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:guessType(file.name), title:file.name.replace(/\.pdf$/i, '')})); drawFiles(); };
   $('#aup').onclick = async () => {
-    const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = '';
-    let done = 0;
+    const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
+    let done = 0, skipped = 0, total = 0;
     try {
-      for (const f of files) {
-        const title = f.file.name.replace(/\.pdf$/i, '');
-        await window.FB.addPaper(f.file, {code:adm.course, year:f.year, type:f.type, title}, p => { msg.textContent = 'Uploading ' + (done + 1) + ' of ' + files.length + ' (' + Math.round(p * 100) + '%)'; });
+      try { setPapers(await window.FB.listPapers()); } catch(e) {}
+      const seen = new Set(), todo = [];
+      files.forEach(f => { if (findDup(adm.course, f, seen)) skipped++; else todo.push(f); });
+      total = todo.length;
+      for (const f of todo) {
+        const label = 'File ' + (done + 1) + ' of ' + total;
+        let up = f.file;
+        try { up = await shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; }); } catch(e) { up = f.file; }
+        await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type, title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
         done++;
       }
-      msg.textContent = done + (done === 1 ? ' paper added.' : ' papers added.');
+      msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '');
       files = []; $('#af').value = ''; drawFiles();
-    } catch(e) { msg.textContent = 'Stopped after ' + done + ' of ' + files.length + '. ' + (e && e.code === 'storage/unauthorized' ? 'Storage rules refused the upload.' : 'Check your connection and try again.'); btn.disabled = false; }
+    } catch(e) { msg.textContent = 'Stopped after ' + done + ' of ' + total + '. ' + (e && e.code === 'storage/unauthorized' ? 'Storage rules refused the upload.' : 'Check your connection and try again.'); btn.disabled = false; }
     try { setPapers(await window.FB.listPapers()); drawExisting(); } catch(e) {}
   };
 }
@@ -1164,7 +1253,7 @@ if (window.FB === undefined) {
         signOut: async () => { await sb.auth.signOut(); },
         async getStudent(uid){ const r = ok(await sb.from('students').select('email,paid_until').eq('user_id', uid).maybeSingle()); return r ? {email:r.email, paidUntil:D(r.paid_until)} : null; },
         async getConfig(){ const r = ok(await sb.from('config').select('data').eq('id', 1).maybeSingle()); return r ? r.data : {}; },
-        async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path})); },
+        async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path, size:r.size})); },
         async getPdf(path){ const b = ok(await sb.storage.from('papers').download(path)); return new Uint8Array(await b.arrayBuffer()); },
         async createPayment(uid, email, reference, amount){ ok(await sb.from('payments').insert({user_id:uid, email, reference, amount:amount || ''})); },
         async myPayments(uid){ return ok(await sb.from('payments').select('*').eq('user_id', uid)).map(r => ({id:r.id, reference:r.reference, status:r.status, createdAt:D(r.created_at)})); },
@@ -1174,7 +1263,7 @@ if (window.FB === undefined) {
           const up = await sb.storage.from('papers').upload(path, file, {contentType:'application/pdf', upsert:false});
           if (up.error) throw up.error;
           if (onProgress) onProgress(0.9);
-          const ins = await sb.from('papers').insert({code:meta.code, year:meta.year, type:meta.type, title:meta.title, path, size:file.size});
+          const ins = await sb.from('papers').insert({code:meta.code, year:meta.year, type:meta.type, title:meta.title, path, size:meta.origSize || file.size});
           if (ins.error) { await sb.storage.from('papers').remove([path]); throw ins.error; }
         },
         async deletePaper(p){ try { await sb.storage.from('papers').remove([p.path]); } catch(e) {} ok(await sb.from('papers').delete().eq('id', p.id)); },

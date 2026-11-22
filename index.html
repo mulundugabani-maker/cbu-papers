@@ -241,6 +241,12 @@ details[open]>summary .chev{transform:rotate(90deg)}
 .cats .cat:last-child:nth-child(odd){grid-column:1/-1}
 .dupnote{color:var(--copper);font-size:.8rem;margin-top:4px}
 .frow input[type=text]{width:100%;margin-top:6px}
+
+.pdfwrap.office{position:relative;overflow:hidden;background:#fff;color:#000;border-radius:12px;-webkit-user-select:none;user-select:none}
+.pdfwrap .wm{position:absolute;inset:0;pointer-events:none;z-index:5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='140'%3E%3Ctext x='20' y='90' transform='rotate(-30 120 70)' font-family='sans-serif' font-weight='700' font-size='22' fill='rgba(0,0,0,0.14)'%3ECBU DATA%3C/text%3E%3C/svg%3E")}
+.pdfwrap .wm2{position:absolute;right:8px;bottom:6px;z-index:6;pointer-events:none;font:10px sans-serif;color:rgba(0,0,0,.4)}
+.tidyh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tidy .small{margin:2px 0 8px}
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -415,10 +421,10 @@ buildSchool('hum', 'HSS', ['Introduction to Social Sciences','Communication and 
   ['law','Laws','LLB','LAW',['Law of Contract','Criminal Law','Constitutional Law'],['Law of Torts','Property Law','Administrative Law'],['Company Law','Law of Evidence','Legal Research Project']]
 ]);
 
-/* Humanities: launching with Economics and Laws only. Add programme ids here to bring others back. */
+/* Humanities: launching with Laws only (Economics lives under Business). Add programme ids here to bring others back. */
 {
   const hum = SCHOOLS.find(x => x.id === 'hum');
-  hum.programmes = hum.programmes.filter(p => ['ecn','law'].includes(p.id));
+  hum.programmes = hum.programmes.filter(p => ['law'].includes(p.id));
   const used = new Set(); hum.programmes.forEach(p => Object.values(p.years).forEach(a => a.forEach(c => used.add(c))));
   Object.keys(hum.catalog).forEach(c => { if (!used.has(c)) delete hum.catalog[c]; });
 }
@@ -761,7 +767,7 @@ function papersScreen(app){
             subhead(box, 'Year ' + l, lc.length + ' courses');
             moreList(box, lc, c => courseRow(c, by.get(c)), 40);
           });
-        }, first || q !== ''));
+        }, false));
         first = false;
       });
       return;
@@ -776,7 +782,7 @@ function papersScreen(app){
           subhead(box, t, tp.length + ' papers');
           moreList(box, tp, p => paperRow(p,'year'), 25);
         });
-      }, first || q !== ''));
+      }, false));
       first = false;
     });
   }
@@ -829,7 +835,7 @@ function notesScreen(app){
             subhead(box, t, tn.length + ' notes');
             moreList(box, tn, n => noteRow(n,'grouped'), 25);
           });
-        }, first || q !== ''));
+        }, false));
         first = false;
       });
       return;
@@ -843,7 +849,7 @@ function notesScreen(app){
           subhead(box, s.name, sn.length + ' notes');
           moreList(box, sn, n => noteRow(n,'grouped'), 25);
         });
-      }, first || q !== ''));
+      }, false));
       first = false;
     });
   }
@@ -885,7 +891,7 @@ function setPapers(list){
   papers.length = 0;
   list.forEach(d => {
     const c = courses.find(x => x.code === d.code); if (!c) return;
-    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path, size:d.size || 0});
+    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path, size:d.size || 0, at:d.createdAt ? +new Date(d.createdAt) : 0});
   });
   const ys = [...new Set(papers.map(p => p.yr))].sort((a,b) => b.localeCompare(a));
   YEARS.length = 0; ys.forEach(y => YEARS.push(y));
@@ -1003,6 +1009,27 @@ async function renderPdf(box, bytes, mark, status, sub){
   }
   status.textContent = doc.numPages + (doc.numPages === 1 ? ' page' : ' pages');
 }
+const scriptP = {};
+function loadScript(url){ if (!scriptP[url]) scriptP[url] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = url; s.onload = res; s.onerror = () => { delete scriptP[url]; rej(new Error('script')); }; document.head.appendChild(s); }); return scriptP[url]; }
+async function renderOffice(box, bytes, kind, status, who){
+  const CDN = 'https://cdn.jsdelivr.net/npm/';
+  status.textContent = 'Opening…';
+  box.classList.add('office');
+  const holder = document.createElement('div'); holder.className = 'ofh'; box.appendChild(holder);
+  if (kind === 'docx') {
+    await loadScript(CDN + 'jszip@3.10.1/dist/jszip.min.js'); await loadScript(CDN + 'docx-preview@0.3.7/dist/docx-preview.min.js');
+    await window.docx.renderAsync(bytes, holder, null, {className:'docx', inWrapper:true, breakPages:true});
+  } else {
+    await loadScript(CDN + 'pptx-preview@1.0.7/dist/pptx-preview.umd.js');
+    const pv = window.pptxPreview.init(holder, {width:960, height:540, mode:'list'});
+    await pv.preview(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
+  }
+  const fit = () => { holder.style.zoom = 1; const nat = Math.max(holder.scrollWidth, 1), z = Math.min(1, (box.clientWidth || 360) / nat); holder.style.zoom = z; };
+  fit(); window.addEventListener('resize', fit, {once:true});
+  const wm = document.createElement('div'); wm.className = 'wm'; box.appendChild(wm);
+  if (who) { const w2 = document.createElement('div'); w2.className = 'wm2'; w2.textContent = who; box.appendChild(w2); }
+  status.textContent = kind === 'docx' ? 'Document' : 'Slides';
+}
 function gateBox(app, title, text, label, href){
   app.innerHTML = `<div class="panel pad" style="text-align:center"><h2 class="ph2">${esc(title)}</h2><p class="small">${esc(text)}</p><a class="btn pri" href="${href}" style="text-decoration:none;display:inline-block">${esc(label)}</a></div>`;
 }
@@ -1019,7 +1046,8 @@ async function readScreen(app, id){
   ['contextmenu','dragstart','copy','cut'].forEach(ev => box.addEventListener(ev, e => e.preventDefault()));
   try {
     const bytes = await window.FB.getPdf(p.path);
-    await renderPdf(box, bytes, 'CBU DATA', st, S.user.email);
+    const ex = extOf(p.path);
+    if (ex === 'docx' || ex === 'pptx') await renderOffice(box, bytes, ex, st, S.user.email); else await renderPdf(box, bytes, 'CBU DATA', st, S.user.email);
   } catch(e) {
     if (box.isConnected) st.textContent = 'Could not open this paper. Check your connection and try again.';
   }
@@ -1029,9 +1057,14 @@ async function readScreen(app, id){
 const adm = {tab:'add', school:'', course:''};
 const YEAR_OPTS = (() => { const a = []; for (let y = new Date().getFullYear(); y >= 2005; y--) a.push(y); return a; })();
 const guessYear = n => { const m = String(n).match(/(?:19|20)\d{2}/); return m ? Number(m[0]) : new Date().getFullYear(); };
-const guessType = n => /outline|syllabus|course\s*guide/i.test(n) ? 'Course outline' : /supp/i.test(n) ? 'Supplementary exam' : /mid/i.test(n) ? 'Mid-term test' : /test|quiz|\bca\b/i.test(n) ? 'Test' : /final|exam/i.test(n) ? 'Final exam' : /worksheet/i.test(n) ? 'Worksheet' : /tutorial/i.test(n) ? 'Tutorial sheet' : /assign/i.test(n) ? 'Assignment' : /\blab/i.test(n) ? 'Lab manual' : /summary/i.test(n) ? 'Summary notes' : /notes?|lecture|slides/i.test(n) ? 'Lecture notes' : /book|edition/i.test(n) ? 'Textbook' : 'Final exam';
+const guessTypeRaw = n => /outline|syllabus|course\s*guide/i.test(n) ? 'Course outline' : /supp/i.test(n) ? 'Supplementary exam' : /mid/i.test(n) ? 'Mid-term test' : /test|quiz|\bca\b/i.test(n) ? 'Test' : /final|exam/i.test(n) ? 'Final exam' : /worksheet/i.test(n) ? 'Worksheet' : /tutorial/i.test(n) ? 'Tutorial sheet' : /assign/i.test(n) ? 'Assignment' : /\blab/i.test(n) ? 'Lab manual' : /summary/i.test(n) ? 'Summary notes' : /notes?|lecture|slides/i.test(n) ? 'Lecture notes' : /book|edition/i.test(n) ? 'Textbook' : '';
+const guessType = n => guessTypeRaw(n) || 'Final exam';
+const MIME = {pdf:'application/pdf', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation'};
+const FILE_EXT = /\.(pdf|docx|pptx)$/i;
+const MAX_PAGES = 250, MAX_BYTES = 50 * 1024 * 1024;
+const extOf = n => (String(n).match(/\.([a-z0-9]+)$/i) || ['',''])[1].toLowerCase();
 const typeOptions = cur => CATS.map(k => `<optgroup label="${esc(k.name)}">${optionsHtml(k.types.map(t => [t,t]), cur)}</optgroup>`).join('');
-const normName = s => String(s || '').toLowerCase().replace(/\.pdf$/, '').replace(/[^a-z0-9]+/g, '');
+const normName = s => String(s || '').toLowerCase().replace(FILE_EXT, '').replace(/[^a-z0-9]+/g, '');
 function findDup(code, f, seen){
   const nn = [normName(f.file.name), normName(f.title)];
   const hit = papers.find(p => p.course.code === code && ((p.size && p.size === f.file.size) || nn.includes(normName(p.title))));
@@ -1049,12 +1082,13 @@ function loadPdfLib(){
   });
   return pdflibP;
 }
+async function pageCount(file){ const lib = await loadPdfJs(); const d = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const n = d.numPages; await d.destroy(); return n; }
 /* Makes big PDFs smaller: each page is redrawn as a sharp picture. If it does not get clearly smaller, the original is kept. */
 async function shrinkPdf(file, say){
-  if (file.size < 1.5 * 1024 * 1024) return file;
+  if (file.size < 400 * 1024) return file;
   const [lib, PL] = await Promise.all([loadPdfJs(), loadPdfLib()]);
   const src = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
-  const n = src.numPages, big = n > 120, target = big ? 1300 : 1700, q = big ? 0.72 : 0.8;
+  const n = src.numPages, big = n > 100, target = big ? 1200 : 1500, q = big ? 0.5 : 0.6;
   const out = await PL.PDFDocument.create();
   for (let i = 1; i <= n; i++) {
     say(i, n);
@@ -1062,6 +1096,9 @@ async function shrinkPdf(file, say){
     const cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
     const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
     await page.render({canvasContext:g, viewport:v}).promise;
+    { const im = g.getImageData(0, 0, cv.width, cv.height), d = im.data;   /* clean the paper background so it compresses well; text stays */
+      for (let k = 0; k < d.length; k += 4) { if (d[k] * 0.3 + d[k+1] * 0.59 + d[k+2] * 0.11 > 215) { d[k] = d[k+1] = d[k+2] = 255; } }
+      g.putImageData(im, 0, 0); }
     const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', q));
     const img = await out.embedJpg(new Uint8Array(await blob.arrayBuffer()));
     out.addPage([v1.width, v1.height]).drawImage(img, {x:0, y:0, width:v1.width, height:v1.height});
@@ -1069,7 +1106,7 @@ async function shrinkPdf(file, say){
   }
   await src.destroy();
   const bytes = await out.save();
-  return bytes.length < file.size * 0.85 ? new File([bytes], file.name, {type:'application/pdf'}) : file;
+  return bytes.length < file.size * 0.9 ? new File([bytes], file.name, {type:'application/pdf'}) : file;
 }
 const optionsHtml = (arr, cur) => arr.map(([v,l]) => `<option value="${esc(v)}"${String(v) === String(cur) ? ' selected' : ''}>${esc(l)}</option>`).join('');
 
@@ -1077,15 +1114,15 @@ function adminScreen(app){
   topbar('Admin','Papers, payments and students','#account');
   if (!isAdmin()) { app.innerHTML = '<div class="empty">Admin only. Sign in with the admin account on the Account page.</div>'; return; }
   app.innerHTML = '<div class="views" id="atabs"></div><div id="abody"></div>';
-  viewSwitch($('#atabs'), [['add','Add papers'],['pay','Payments'],['stu','Students'],['set','Settings']], adm.tab, v => { adm.tab = v; adminScreen(app); });
-  ({add:admAdd, pay:admPay, stu:admStu, set:admSet}[adm.tab] || admAdd)($('#abody'));
+  viewSwitch($('#atabs'), [['add','Add papers'],['pay','Payments'],['stu','Students'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
+  ({add:admAdd, pay:admPay, stu:admStu, set:admSet, tidy:admTidy}[adm.tab] || admAdd)($('#abody'));
 }
 function admAdd(box){
   if (!adm.school) adm.school = SCHOOLS[0].id;
   box.innerHTML = `<div class="panel pad"><label class="lbl">School<select id="as">${optionsHtml(SCHOOLS.map(s => [s.id, s.name]), adm.school)}</select></label>
     <label class="lbl">Course<select id="ac"></select></label>
-    <label class="lbl">PDF files (you can pick many)<input id="af" type="file" accept="application/pdf" multiple></label>
-    <p class="small">Big files are made smaller automatically. Files already uploaded are skipped.</p>
+    <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
+    <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped. PDFs over ${MAX_PAGES} pages are skipped.</p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
@@ -1111,16 +1148,16 @@ function admAdd(box){
       <div class="two"><select data-y="${i}">${optionsHtml(YEAR_OPTS.map(y => [y,y]), f.year)}</select><select data-t="${i}">${typeOptions(f.type)}</select></div></div>`).join('');
     $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); });
     $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; });
-    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(/\.pdf$/i, ''); drawFiles(); });
+    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
     $('#aup').disabled = !files.some(f => !f.dup);
   };
   drawCourses(); drawExisting();
   $('#as').onchange = e => { adm.school = e.target.value; drawCourses(); drawExisting(); };
   $('#ac').onchange = e => { adm.course = e.target.value; drawExisting(); drawFiles(); };
-  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:guessType(file.name), title:file.name.replace(/\.pdf$/i, '')})); drawFiles(); };
+  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:guessType(file.name), title:file.name.replace(FILE_EXT, '')})); drawFiles(); };
   $('#aup').onclick = async () => {
     const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
-    let done = 0, skipped = 0, total = 0;
+    let done = 0, skipped = 0, total = 0; const why = {long:0, big:0, type:0};
     try {
       try { setPapers(await window.FB.listPapers()); } catch(e) {}
       const seen = new Set(), todo = [];
@@ -1128,16 +1165,73 @@ function admAdd(box){
       total = todo.length;
       for (const f of todo) {
         const label = 'File ' + (done + 1) + ' of ' + total;
-        let up = f.file;
-        try { up = await shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; }); } catch(e) { up = f.file; }
+        let up = f.file; const ext = extOf(f.file.name);
+        if (!MIME[ext]) { why.type++; continue; }
+        if (f.file.size > MAX_BYTES) { why.big++; continue; }
+        if (ext === 'pdf') {
+          try { msg.textContent = label + ': checking pages'; if (await pageCount(f.file) > MAX_PAGES) { why.long++; continue; } } catch(e) {}
+          try { up = await shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; }); } catch(e) { up = f.file; }
+        }
         await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type, title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
         done++;
       }
-      msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '');
+      msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '') + (why.long ? ' ' + why.long + ' skipped: over ' + MAX_PAGES + ' pages.' : '') + (why.big ? ' ' + why.big + ' skipped: over 50 MB.' : '') + (why.type ? ' ' + why.type + ' skipped: not PDF, Word (.docx) or PowerPoint (.pptx).' : '');
       files = []; $('#af').value = ''; drawFiles();
     } catch(e) { msg.textContent = 'Stopped after ' + done + ' of ' + total + '. ' + (e && e.code === 'storage/unauthorized' ? 'Storage rules refused the upload.' : 'Check your connection and try again.'); btn.disabled = false; }
     try { setPapers(await window.FB.listPapers()); drawExisting(); } catch(e) {}
   };
+}
+/* ----- Tidy up: duplicates, wrong courses, unnamed types ----- */
+function dupGroups(){
+  const parent = new Map(papers.map(p => [p.id, p.id]));
+  const find = x => { while (parent.get(x) !== x) { parent.set(x, parent.get(parent.get(x))); x = parent.get(x); } return x; };
+  const seen = new Map();
+  papers.forEach(p => {
+    [p.size > 0 ? p.course.code + '|s' + p.size : '', p.title ? p.course.code + '|' + p.yr + '|t' + normName(p.title) : ''].filter(Boolean).forEach(k => {
+      if (seen.has(k)) parent.set(find(p.id), find(seen.get(k))); else seen.set(k, p.id);
+    });
+  });
+  const g = new Map(); papers.forEach(p => { const r = find(p.id); if (!g.has(r)) g.set(r, []); g.get(r).push(p); });
+  return [...g.values()].filter(a => a.length > 1);
+}
+const pickKeep = a => [...a].sort((x, y) => (PTYPES.includes(y.type) - PTYPES.includes(x.type)) || ((x.at || 0) - (y.at || 0)))[0];
+let codeRes = null;
+function wrongCourses(){
+  if (!codeRes) codeRes = courses.map(c => { const m = c.code.match(/^([A-Za-z]+)\s*([0-9][0-9A-Za-z]*)/); return m ? {c, re:new RegExp('(^|[^A-Za-z0-9])' + m[1] + '[\\s_.\\-]*' + m[2] + '(?![0-9])', 'i')} : null; }).filter(Boolean);
+  const out = [];
+  papers.forEach(p => {
+    const hits = codeRes.filter(x => x.re.test(p.title)).map(x => x.c);
+    if (hits.length === 1 && hits[0] !== p.course) out.push({p, to:hits[0]});
+  });
+  return out;
+}
+async function admTidy(box){
+  box.innerHTML = '<div class="empty">Checking everything…</div>';
+  try { setPapers(await window.FB.listPapers()); } catch(e) { box.innerHTML = '<div class="empty">Could not load. Check your connection.</div>'; return; }
+  const groups = dupGroups().map(a => { const keep = pickKeep(a); return {keep, drop:a.filter(x => x !== keep)}; });
+  const drops = groups.flatMap(g => g.drop), wrong = wrongCourses(), others = papers.filter(p => !PTYPES.includes(p.type));
+  const lim = (arr, f) => arr.slice(0, 25).map(f).join('') + (arr.length > 25 ? `<div class="small">…and ${arr.length - 25} more</div>` : '');
+  box.innerHTML = `<div class="tidy">
+    <div class="panel pad"><div class="tidyh"><h2 class="ph2">Duplicates</h2><span class="chip ${drops.length ? 'hot' : ''}">${drops.length}</span></div>
+      <p class="small">Same file or same name uploaded more than once in a course. One copy is kept (the older one) and the rest are deleted.</p>
+      ${drops.length ? lim(groups, g => `<div class="small"><b>${esc(g.keep.course.code)}</b> · ${esc(g.keep.title)} <span class="chip">${g.drop.length + 1} copies</span></div>`) + '<div class="btnrow"><button class="btn pri" id="tdd">Delete ' + drops.length + ' extra ' + (drops.length === 1 ? 'copy' : 'copies') + '</button></div>' : '<div class="small">No duplicates found.</div>'}</div>
+    <div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">In the wrong course</h2><span class="chip ${wrong.length ? 'hot' : ''}">${wrong.length}</span></div>
+      <p class="small">The file name has another course's code in it. These will be moved to that course.</p>
+      ${wrong.length ? lim(wrong, w => `<div class="small">${esc(w.p.title)}: <b>${esc(w.p.course.code)}</b> → <b>${esc(w.to.code)}</b></div>`) + '<div class="btnrow"><button class="btn pri" id="tdw">Move ' + wrong.length + '</button></div>' : '<div class="small">Everything is in the right course.</div>'}</div>
+    <div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Files named "Other"</h2><span class="chip ${others.length ? 'hot' : ''}">${others.length}</span></div>
+      <p class="small">Pick the right type for each, then save.</p>
+      ${others.length ? others.slice(0, 40).map((p, i) => `<div class="frow"><div class="small" style="word-break:break-all"><b>${esc(p.course.code)}</b> · ${esc(p.title)}</div><select data-o="${i}">${typeOptions(guessTypeRaw(p.title) || 'Final exam')}</select></div>`).join('') + (others.length > 40 ? `<div class="small">Showing the first 40. Save, then open this page again for the rest.</div>` : '') + '<div class="btnrow"><button class="btn pri" id="tdo">Save types</button></div>' : '<div class="small">Nothing to fix.</div>'}</div>
+    <p class="msg" id="tmsg" role="status"></p></div>`;
+  const msg = $('#tmsg');
+  const run = async (btn, items, fn, word) => {
+    btn.disabled = true; let n = 0;
+    try { for (const it of items) { msg.textContent = word + ' ' + (n + 1) + ' of ' + items.length + '…'; await fn(it); n++; } msg.textContent = 'Done: ' + n + '.'; }
+    catch(e) { msg.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; }
+    setTimeout(() => admTidy(box), 900);
+  };
+  if ($('#tdd')) $('#tdd').onclick = () => { if (confirm('Delete ' + drops.length + ' extra copies? This cannot be undone.')) run($('#tdd'), drops, p => window.FB.deletePaper({id:p.id, path:p.path}), 'Deleting'); };
+  if ($('#tdw')) $('#tdw').onclick = () => run($('#tdw'), wrong, w => window.FB.updatePaper(w.p.id, {code:w.to.code}), 'Moving');
+  if ($('#tdo')) $('#tdo').onclick = () => { const items = others.slice(0, 40).map((p, i) => ({p, type:box.querySelector('[data-o="' + i + '"]').value})); run($('#tdo'), items, it => window.FB.updatePaper(it.p.id, {type:it.type}), 'Saving'); };
 }
 async function admPay(box){
   box.innerHTML = '<div class="empty">Loading…</div>';
@@ -1202,7 +1296,12 @@ function route(keepScroll){
   if (['account','admin','read'].includes(name)) { const tg = document.querySelector('#topbar .tag'); if (tg) tg.remove(); }
   window.scrollTo(0, keepScroll===true ? y : 0);
 }
-window.addEventListener('hashchange', () => route());
+history.scrollRestoration = 'manual';
+const scrollMem = {}; let popped = false;
+window.addEventListener('scroll', () => { scrollMem[location.hash || '#home'] = window.scrollY; }, {passive:true});
+window.addEventListener('popstate', () => { popped = true; });
+function restoreScroll(y){ let n = 0; const t = () => { window.scrollTo(0, y); if (Math.abs(window.scrollY - y) > 2 && n++ < 15) setTimeout(t, 60); }; t(); }
+window.addEventListener('hashchange', () => { const y = scrollMem[location.hash || '#home'] || 0, back = popped; popped = false; route(); if (back && y) restoreScroll(y); });
 route();
 </script>
 <script type="module">
@@ -1253,19 +1352,22 @@ if (window.FB === undefined) {
         signOut: async () => { await sb.auth.signOut(); },
         async getStudent(uid){ const r = ok(await sb.from('students').select('email,paid_until').eq('user_id', uid).maybeSingle()); return r ? {email:r.email, paidUntil:D(r.paid_until)} : null; },
         async getConfig(){ const r = ok(await sb.from('config').select('data').eq('id', 1).maybeSingle()); return r ? r.data : {}; },
-        async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path, size:r.size})); },
+        async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path, size:r.size, createdAt:r.created_at})); },
         async getPdf(path){ const b = ok(await sb.storage.from('papers').download(path)); return new Uint8Array(await b.arrayBuffer()); },
         async createPayment(uid, email, reference, amount){ ok(await sb.from('payments').insert({user_id:uid, email, reference, amount:amount || ''})); },
         async myPayments(uid){ return ok(await sb.from('payments').select('*').eq('user_id', uid)).map(r => ({id:r.id, reference:r.reference, status:r.status, createdAt:D(r.created_at)})); },
         async addPaper(file, meta, onProgress){
           const path = meta.code.replace(/\s+/g, '') + '/' + Date.now() + '-' + file.name.replace(/[^\w.\-]+/g, '_');
           if (onProgress) onProgress(0.1);
-          const up = await sb.storage.from('papers').upload(path, file, {contentType:'application/pdf', upsert:false});
+          const ext = (file.name.match(/\.([a-z0-9]+)$/i) || ['',''])[1].toLowerCase();
+          const ct = {pdf:'application/pdf', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation'}[ext] || 'application/pdf';
+          const up = await sb.storage.from('papers').upload(path, file, {contentType:ct, upsert:false});
           if (up.error) throw up.error;
           if (onProgress) onProgress(0.9);
           const ins = await sb.from('papers').insert({code:meta.code, year:meta.year, type:meta.type, title:meta.title, path, size:meta.origSize || file.size});
           if (ins.error) { await sb.storage.from('papers').remove([path]); throw ins.error; }
         },
+        async updatePaper(id, patch){ ok(await sb.from('papers').update(patch).eq('id', id)); },
         async deletePaper(p){ try { await sb.storage.from('papers').remove([p.path]); } catch(e) {} ok(await sb.from('papers').delete().eq('id', p.id)); },
         async listPayments(){ return (await all('payments', q => q)).map(r => ({id:r.id, uid:r.user_id, email:r.email, reference:r.reference, amount:r.amount, status:r.status, createdAt:D(r.created_at)})); },
         async approvePayment(pay, months){

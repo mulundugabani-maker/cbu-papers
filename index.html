@@ -286,6 +286,9 @@ const BUS_CAT = {
   'PUR 2110':'Purchasing Principles','PUR 2120':'Inventory Management','PUR 3110':'Logistics and Transport','PUR 3120':'Negotiation Skills','PUR 3130':'Warehousing',
   'PUR 4110':'Supply Chain Management','PUR 4120':'Global Sourcing','PUR 4130':'Supply Chain Strategy',
   /* Banking and Finance (real) */
+  'BF 110':'Principles of Microeconomics',
+  /* HRM Year 1: same numbers as the business common year, HRM prefix (names to be confirmed) */
+  'HRM 120':'Financial Accounting','HRM 140':'Mathematical Analysis','HRM 151':'Business Communication','HRM 190':'Business Law','HRM 150':'Business Management','HRM 110':'Economics',
   'BF 120':'Basic Financial Accounting','BF 130':'Banking Operations, Lending & International Business','BF 140':'Mathematical Analysis','BF 150':'Principles of Management','BF 190':'Business Law',
   'BF 210':'Monetary and Financial Systems','BF 220':'Financial Reporting, Analysis and Management Control','BF 224':'Corporate Finance','BF 240':'Introduction to Data Processing','BF 242':'Decision Making Techniques','BF 260':'Principles of Marketing',
   'BF 310':'International Trade and Finance','BF 320':'Investment Analysis and Portfolio Management','BF 330':'Risk Management','BF 341':'Operations Research','BF 343':'Production and Operations Management (POM)','BF 390':'Banking Law & Practice','BF 392':'Regulatory Framework of Financial Institutions',
@@ -303,8 +306,8 @@ const Y1 = ['BS 120','BS 140','BS 151','BS 190','BS 150','BS 110'];
 const CY2 = ['BS 210','BS 242','BS 222','BS 224','BS 260','BS 240'];
 const BUS_PROGS = [
   {id:'cmn', name:'BBA/BAC/MKT', degree:'Common entry', years:{1:Y1,2:CY2}, splits:['ba','acc','mkt']},
-  {id:'bf', name:'Banking and Finance', degree:'BSc', names:{'BS 110':'Principles of Microeconomics'}, years:{1:['BS 110','BF 120','BF 130','BF 140','BF 150','BF 190'],2:['BF 210','BF 220','BF 224','BF 240','BF 242','BF 260'],3:['BF 310','BF 320','BF 330','BF 341','BF 343','BF 390','BF 392'],4:['BF 400','BF 424','BF 430','BF 432','BF 450','BF 452','BF 454']}},
-  {id:'hrm', name:'Human Resource Management', degree:'BA', years:{1:Y1,2:['HRM 210','HRM 220','HRM 240','HRM 242','HRM 260','HRM 280'],3:['HRM 3110','HRM 3120','HRM 3130','HRM 3140'],4:['HRM 4110','HRM 4120','HRM 4130','BUS 4900']}},
+  {id:'bf', name:'Banking and Finance', degree:'BSc', years:{1:['BF 110','BF 120','BF 130','BF 140','BF 150','BF 190'],2:['BF 210','BF 220','BF 224','BF 240','BF 242','BF 260'],3:['BF 310','BF 320','BF 330','BF 341','BF 343','BF 390','BF 392'],4:['BF 400','BF 424','BF 430','BF 432','BF 450','BF 452','BF 454']}},
+  {id:'hrm', name:'Human Resource Management', degree:'BA', years:{1:['HRM 120','HRM 140','HRM 151','HRM 190','HRM 150','HRM 110'],2:['HRM 210','HRM 220','HRM 240','HRM 242','HRM 260','HRM 280'],3:['HRM 3110','HRM 3120','HRM 3130','HRM 3140'],4:['HRM 4110','HRM 4120','HRM 4130','BUS 4900']}},
   {id:'mkt', name:'Marketing', degree:'BSc', from:'cmn', years:{3:['BS 362','BS 368','BS 361','BS 360','BS 366','BS 364'],4:['MKT 4110','MKT 4120','MKT 4130','BUS 4900']}},
   {id:'pp', name:'Public Procurement', degree:'BSc', years:{1:Y1,2:['PRO 2110','PRO 2120','BUS 2240','BS 242','ECO 2210'],3:['PRO 3110','PRO 3120','PRO 3130','FIN 3310'],4:['PRO 4110','PRO 4120','PRO 4130','BUS 4900']}},
   {id:'ps', name:'Purchasing and Supply', degree:'BSc', years:{1:Y1,2:['PUR 2110','PUR 2120','BUS 2240','BS 242','ECO 2210'],3:['PUR 3110','PUR 3120','PUR 3130','FIN 3310'],4:['PUR 4110','PUR 4120','PUR 4130','BUS 4900']}},
@@ -469,8 +472,19 @@ SCHOOLS.forEach(s => { if (s.programmes) { const seen = new Set();
 const courses = [];
 SCHOOLS.forEach(s => s.courses.forEach(([code,name,lvl]) => courses.push({code,name,lvl,school:s})));
 const slug = c => c.code.replace(' ','');
+/* In the School of Business every first-year course is shared: BS 110, BEC 110 and so on are the same course with different prefixes. */
+const eqKey = c => (c.school.id === 'bus' && /^[A-Za-z]+\s*1\d\d$/.test(c.code)) ? 'bus1-' + c.code.match(/(\d+)$/)[1] : '';
+const grp = c => eqKey(c) || c.code;
+const siblings = c => { const k = eqKey(c); return k ? courses.filter(x => eqKey(x) === k) : [c]; };
+function retitle(title, c2){
+  const sib = siblings(c2); if (sib.length < 2) return title;
+  const alts = sib.map(x => { const m = x.code.match(/^([A-Za-z]+)\s*(\d+)$/); return m ? m[1] + '[\\s_.\\-]*' + m[2] : null; }).filter(Boolean).join('|');
+  return title.replace(new RegExp('(^|[^A-Za-z0-9])(?:' + alts + ')(?![0-9])', 'gi'), (m, a) => a + c2.code);
+}
+let viewCtx = null;
 
 const papers = [];
+const papersX = [];   /* papers plus a copy for every sibling course (same file, no extra space) */
 const notes = [];
 
 /* ---------- state ---------- */
@@ -548,7 +562,7 @@ function home(app){
         <button type="submit">Search</button>
       </form>
     </section>
-    <div class="stats"><div class="stat"><b>${SCHOOLS.length}</b><span>Schools</span></div><div class="stat"><b>${fmt(papers.length)}</b><span>Files</span></div><div class="stat"><b>${fmt(new Set(papers.map(p=>p.course)).size)}</b><span>Courses with files</span></div></div>
+    <div class="stats"><div class="stat"><b>${SCHOOLS.length}</b><span>Schools</span></div><div class="stat"><b>${fmt(papers.length)}</b><span>Files</span></div><div class="stat"><b>${fmt(new Set(papersX.map(p=>p.course)).size)}</b><span>Courses with files</span></div></div>
     <div class="sec"><h2>Browse by school</h2><a href="#schools">See all</a></div>
     <div class="rail">${rail}</div>
     <div class="quick">
@@ -591,7 +605,7 @@ function schoolScreen(app,id){
   const ul=$('#cl');
   s.courses.forEach(([code,name,lvl])=>{
     const c = courses.find(x=>x.code===code);
-    const pc = papers.filter(p=>p.course===c).length, nc = notes.filter(n=>n.course===c).length;
+    const pc = papersX.filter(p=>p.course===c).length, nc = notes.filter(n=>n.course===c).length;
     const li=document.createElement('li');
     li.innerHTML = `<a class="card course" href="#course-${slug(c)}"><div><div class="code">${esc(code)}</div><h3 class="title">${esc(name)}</h3><div class="small">${pc} papers</div></div><span class="chip lv">${LEVELS[lvl]}</span></a>`;
     ul.appendChild(li);
@@ -599,7 +613,7 @@ function schoolScreen(app,id){
 }
 
 function courseCard(c, withLevel, nm){
-  const pc = papers.filter(p=>p.course===c).length, nc = notes.filter(n=>n.course===c).length;
+  const pc = papersX.filter(p=>p.course===c).length, nc = notes.filter(n=>n.course===c).length;
   const li=document.createElement('li');
   li.innerHTML = `<a class="card course" href="#course-${slug(c)}"><div><div class="code">${esc(c.code)}</div><h3 class="title">${esc(nm||c.name)}</h3><div class="small">${pc} papers</div></div>${withLevel?`<span class="chip lv">${LEVELS[c.lvl]}</span>`:''}</a>`;
   return li;
@@ -646,7 +660,8 @@ const courseCat = {};
 function courseScreen(app,key){
   const c = courses.find(x=>slug(x)===key); if(!c) return schoolsScreen(app);
   topbar(c.code+' · '+c.name, c.school.name, '#school-'+c.school.id);
-  const mine = papers.filter(p => p.course === c);
+  viewCtx = c;
+  const mine = papersX.filter(p => p.course === c);
   const of = id => mine.filter(p => catOf(p.type).id === id);
   let cur = courseCat[key] || (CATS.find(k => of(k.id).length) || CATS[0]).id;
   app.innerHTML = `${offered(c)}<div class="cats" id="cats"></div><div id="cp"></div>`;
@@ -715,6 +730,7 @@ function paperRow(p, mode, after){
   else if (mode === 'year') main = `<span class="code">${esc(p.course.code)}</span><span class="ri-t">${esc(p.course.name)}</span><span class="ri-s"><span class="chip">${esc(p.course.school.ab)}</span><span class="chip">${LEVELS[p.course.lvl]}</span></span>`;
   else main = `<span class="code">${esc(p.course.code)}</span><span class="ri-t">${esc(p.course.name)}</span><span class="ri-s"><span class="chip hot">${esc(p.type)}</span><span class="chip">${p.yr}</span><span class="chip">${LEVELS[p.course.lvl]}</span></span>`;
   d.innerHTML = `<a class="ri-main" href="#read-${p.id}">${main}</a><button class="star" aria-pressed="${on}" aria-label="Save paper">${on ? '★' : '☆'}</button>`;
+  $('.ri-main', d).addEventListener('click', () => { viewCtx = p.course; });
   starButton(savedP, p.id, 'cbu-sp', d, after);
   return d;
 }
@@ -744,7 +760,7 @@ function papersScreen(app){
     const q = pf.q.trim().toLowerCase(), res = $('#res'); res.innerHTML = '';
     let rows;
     if (pf.view === 'saved') rows = papers.filter(p => savedP.has(p.id) && qmatch(p,q));
-    else rows = papers.filter(p => qmatch(p,q) && (!pf.school || p.course.school.id === pf.school) &&
+    else rows = papersX.filter(p => qmatch(p,q) && (!pf.school || p.course.school.id === pf.school) &&
       (pf.view === 'school' ? (!pf.lvl || String(p.course.lvl) === pf.lvl) : ((!pf.year || p.yr === pf.year) && (!pf.type || p.type === pf.type))));
     const nc = new Set(rows.map(p => p.course)).size;
     $('#rm').textContent = rows.length + (rows.length === 1 ? ' paper' : ' papers') + (pf.view === 'saved' ? '' : ' in ' + nc + (nc === 1 ? ' course' : ' courses'));
@@ -893,6 +909,8 @@ function setPapers(list){
     const c = courses.find(x => x.code === d.code); if (!c) return;
     papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path, size:d.size || 0, at:d.createdAt ? +new Date(d.createdAt) : 0});
   });
+  papersX.length = 0;
+  papers.forEach(p => { papersX.push(p); siblings(p.course).forEach(c2 => { if (c2 !== p.course) papersX.push({...p, course:c2, title:retitle(p.title, c2), orig:p}); }); });
   const ys = [...new Set(papers.map(p => p.yr))].sort((a,b) => b.localeCompare(a));
   YEARS.length = 0; ys.forEach(y => YEARS.push(y));
 }
@@ -1036,7 +1054,8 @@ function gateBox(app, title, text, label, href){
 async function readScreen(app, id){
   const p = papers.find(x => String(x.id) === id);
   if (!p) { if (!S.loaded) { topbar('Paper','Loading','#papers'); app.innerHTML = '<div class="empty">Loading…</div>'; return; } return papersScreen(app); }
-  topbar(p.course.code + ' · ' + p.type, p.yr + ' academic year · ' + p.course.name, '#course-' + slug(p.course));
+  const cc = (viewCtx && grp(viewCtx) === grp(p.course)) ? viewCtx : p.course;
+  topbar(cc.code + ' · ' + p.type, p.yr + ' academic year · ' + cc.name, '#course-' + slug(cc));
   if (S.noBackend) return gateBox(app, 'Not available yet', 'Reading papers is not switched on yet.', 'Back to papers', '#papers');
   if (!S.authReady) { app.innerHTML = '<div class="empty">Loading…</div>'; return; }
   if (!S.user) return gateBox(app, 'Sign in to read', 'Create a free account, then get access to open every paper.', 'Sign in or create account', '#account');
@@ -1067,9 +1086,9 @@ const typeOptions = cur => CATS.map(k => `<optgroup label="${esc(k.name)}">${opt
 const normName = s => String(s || '').toLowerCase().replace(FILE_EXT, '').replace(/[^a-z0-9]+/g, '');
 function findDup(code, f, seen){
   const nn = [normName(f.file.name), normName(f.title)];
-  const hit = papers.find(p => p.course.code === code && ((p.size && p.size === f.file.size) || nn.includes(normName(p.title))));
+  const gc = courses.find(c => c.code === code), hit = papers.find(p => grp(p.course) === (gc ? grp(gc) : code) && ((p.size && p.size === f.file.size) || nn.includes(normName(p.title))));
   if (hit) return 'Already uploaded in this course';
-  const key = code + '|' + f.file.size + '|' + normName(f.file.name);
+  const key = (gc ? grp(gc) : code) + '|' + f.file.size + '|' + normName(f.file.name);
   if (seen) { if (seen.has(key)) return 'Picked twice'; seen.add(key); }
   return '';
 }
@@ -1121,19 +1140,22 @@ function admAdd(box){
   if (!adm.school) adm.school = SCHOOLS[0].id;
   box.innerHTML = `<div class="panel pad"><label class="lbl">School<select id="as">${optionsHtml(SCHOOLS.map(s => [s.id, s.name]), adm.school)}</select></label>
     <label class="lbl">Course<select id="ac"></select></label>
+    <p class="small" id="ashare"></p>
     <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
     <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped. PDFs over ${MAX_PAGES} pages are skipped.</p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
   const courseList = () => courses.filter(c => c.school.id === adm.school).sort((a,b) => a.code.localeCompare(b.code));
+  const drawShare = () => { const c = courses.find(x => x.code === adm.course), s = c ? siblings(c).filter(x => x !== c) : []; $('#ashare').textContent = s.length ? 'Shared first-year course. Files added here also show under ' + s.map(x => x.code).join(', ') + ', with the code changed to match.' : ''; };
   const drawCourses = () => {
     const cl = courseList(); if (!cl.some(c => c.code === adm.course)) adm.course = cl.length ? cl[0].code : '';
     $('#ac').innerHTML = optionsHtml(cl.map(c => [c.code, c.code + ' · ' + c.name]), adm.course);
+    drawShare();
   };
   const drawExisting = () => {
-    const ex = papers.filter(p => p.course.code === adm.course).sort((a,b) => b.yr.localeCompare(a.yr));
-    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}</span></div><button class="btn" data-del="${esc(p.id)}">Delete</button></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
+    const cur = courses.find(c => c.code === adm.course), ex = papers.filter(p => cur && grp(p.course) === grp(cur)).sort((a,b) => b.yr.localeCompare(a.yr));
+    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}${p.course.code !== adm.course ? ' · uploaded as ' + esc(p.course.code) : ''}</span></div><button class="btn" data-del="${esc(p.id)}">Delete</button></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
     $('#aex').querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
       const p = papers.find(x => x.id === b.dataset.del); if (!p || !confirm('Delete this paper?\n' + p.title)) return;
       b.disabled = true;
@@ -1153,7 +1175,7 @@ function admAdd(box){
   };
   drawCourses(); drawExisting();
   $('#as').onchange = e => { adm.school = e.target.value; drawCourses(); drawExisting(); };
-  $('#ac').onchange = e => { adm.course = e.target.value; drawExisting(); drawFiles(); };
+  $('#ac').onchange = e => { adm.course = e.target.value; drawShare(); drawExisting(); drawFiles(); };
   $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:guessType(file.name), title:file.name.replace(FILE_EXT, '')})); drawFiles(); };
   $('#aup').onclick = async () => {
     const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
@@ -1187,7 +1209,7 @@ function dupGroups(){
   const find = x => { while (parent.get(x) !== x) { parent.set(x, parent.get(parent.get(x))); x = parent.get(x); } return x; };
   const seen = new Map();
   papers.forEach(p => {
-    [p.size > 0 ? p.course.code + '|s' + p.size : '', p.title ? p.course.code + '|' + p.yr + '|t' + normName(p.title) : ''].filter(Boolean).forEach(k => {
+    [p.size > 0 ? grp(p.course) + '|s' + p.size : '', p.title ? grp(p.course) + '|' + p.yr + '|t' + normName(p.title) : ''].filter(Boolean).forEach(k => {
       if (seen.has(k)) parent.set(find(p.id), find(seen.get(k))); else seen.set(k, p.id);
     });
   });
@@ -1201,7 +1223,7 @@ function wrongCourses(){
   const out = [];
   papers.forEach(p => {
     const hits = codeRes.filter(x => x.re.test(p.title)).map(x => x.c);
-    if (hits.length === 1 && hits[0] !== p.course) out.push({p, to:hits[0]});
+    if (hits.length === 1 && hits[0] !== p.course && grp(hits[0]) !== grp(p.course)) out.push({p, to:hits[0]});
   });
   return out;
 }

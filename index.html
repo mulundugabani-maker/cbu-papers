@@ -54,8 +54,8 @@ button,select,input{font:inherit;color:inherit}
 
 /* floating tab capsule */
 .tabs{position:fixed;z-index:25;left:max(14px,env(safe-area-inset-left,0px));right:max(14px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));
-  max-width:520px;margin:0 auto;border-radius:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px}
-.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:22px;text-decoration:none;color:var(--muted);font:600 .7rem var(--body);transition:background .2s,color .2s}
+  max-width:520px;margin:0 auto;border-radius:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:6px}
+.tabs a{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:22px;text-decoration:none;color:var(--muted);font:600 .7rem var(--body);transition:background .2s,color .2s}
 .tabs a svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tabs a[aria-current="page"]{color:var(--accent);background:var(--glass-hi);box-shadow:inset 0 1px 0 var(--glass-edge),0 2px 10px rgba(0,0,0,.08)}
 
@@ -247,6 +247,43 @@ details[open]>summary .chev{transform:rotate(90deg)}
 .pdfwrap .wm2{position:absolute;right:8px;bottom:6px;z-index:6;pointer-events:none;font:10px sans-serif;color:rgba(0,0,0,.4)}
 .tidyh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .tidy .small{margin:2px 0 8px}
+
+/* login, help, boost, tour */
+.authing #topbar,.authing .tabs{display:none}
+.login{min-height:calc(100dvh - 48px);display:grid;place-items:center;padding:12px 0}
+.lc{width:100%;max-width:420px;padding:26px 20px 22px;border-radius:26px;margin:0 auto}
+.lcrest{display:block;width:84px;height:84px;object-fit:contain;margin:0 auto 10px;border-radius:20px;background:#fff;padding:6px}
+.lh{margin:0;text-align:center;font:700 1.5rem var(--head)}
+.lsub{text-align:center;margin:4px 0 14px}
+.lfoot{text-align:center;margin:12px 0 0}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-edge);margin-bottom:6px}
+.seg2 button{padding:10px;border:0;border-radius:12px;background:none;color:var(--muted);font:600 .9rem var(--body);cursor:pointer}
+.seg2 button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+.pwrow{display:flex;gap:8px;align-items:center}.pwrow .search{flex:1}
+.btn.wide{width:100%}
+.boost{padding:14px 16px;border-radius:20px;margin:12px 0;min-height:118px;cursor:pointer;transition:opacity .35s}
+.boost.fade{opacity:0}
+.boost .bt{margin:10px 0 6px;font:600 1.02rem/1.4 var(--head)}
+.boost small{color:var(--muted)}
+.chat{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.bub{max-width:86%;padding:10px 13px;border-radius:18px;font-size:.92rem;line-height:1.4;white-space:pre-wrap;word-break:break-word}
+.bub small{display:block;opacity:.7;font-size:.68rem;margin-top:4px}
+.bub.me{align-self:flex-end;background:var(--accent);color:var(--accent-fg);border-bottom-right-radius:6px}
+.bub.them{align-self:flex-start;background:var(--glass);border:1px solid var(--glass-edge);border-bottom-left-radius:6px}
+.starters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.starters button{padding:8px 12px;border-radius:999px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--fg);font:600 .8rem var(--body);cursor:pointer}
+.starters button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.compose{display:flex;gap:8px;align-items:flex-end}.compose textarea{flex:1;resize:vertical;min-height:48px;max-height:160px;font:inherit}
+.bdg{position:absolute;top:2px;left:calc(50% + 4px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#d64545;color:#fff;font:700 .62rem/16px sans-serif;text-align:center;font-style:normal}
+.row-item.tlink{width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;cursor:pointer}
+.gnum{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:10px;border-radius:50%;background:var(--copper-bg);color:var(--copper);font:700 .8rem sans-serif}
+.gbody{padding:4px 4px 12px 38px;color:var(--muted);line-height:1.5;font-size:.92rem}
+.hintn{color:var(--copper)}
+.tour{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}
+.tc{width:100%;max-width:380px;padding:22px 20px;border-radius:24px;background:var(--surface,#1b2a24)}
+.tc h2{margin:6px 0 8px;font:700 1.3rem var(--head)}.tc p{margin:0 0 14px;line-height:1.5}
+.tstep{color:var(--copper);font:700 .72rem var(--body);text-transform:uppercase;letter-spacing:.06em}
+.tdots{display:flex;gap:6px;margin-bottom:14px}.tdots span{width:8px;height:8px;border-radius:50%;background:var(--glass-edge)}.tdots span.on{background:var(--accent);width:22px;border-radius:4px}
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -258,6 +295,7 @@ details[open]>summary .chev{transform:rotate(90deg)}
   <a href="#home" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
   <a href="#schools" data-tab="schools"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>Schools</a>
   <a href="#papers" data-tab="papers"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>Papers</a>
+  <a href="#help" data-tab="help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Help<i class="bdg" id="hbdg" hidden></i></a>
   <a href="#account" data-tab="account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Account</a>
 </nav>
 
@@ -563,11 +601,13 @@ function home(app){
       </form>
     </section>
     <div class="stats"><div class="stat"><b>${SCHOOLS.length}</b><span>Schools</span></div><div class="stat"><b>${fmt(papers.length)}</b><span>Files</span></div><div class="stat"><b>${fmt(new Set(papersX.map(p=>p.course)).size)}</b><span>Courses with files</span></div></div>
+    <div class="boost glass" id="boost" aria-label="Daily motivation"></div>
     <div class="sec"><h2>Browse by school</h2><a href="#schools">See all</a></div>
     <div class="rail">${rail}</div>
     <div class="quick">
       <a href="#papers"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><div><b>Past papers</b><small>Search and filter every paper</small></div></a>
-      <a href="#account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><b>Your account</b><small>Sign in and get access</small></div></a>
+      <a href="#help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><div><b>Help and tips</b><small>Message us, study tips</small></div></a>
+      <a href="#account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><b>Your account</b><small>Access and payments</small></div></a>
     </div>
     ${savedCount?`<div class="sec"><h2>Saved by you</h2></div><ul class="grid two" id="hs"></ul>`:''}
     <p class="note-foot">Course lists are being checked and completed school by school.</p>`;
@@ -579,6 +619,7 @@ function home(app){
   const start = () => { clearInterval(heroTimer); heroTimer = setInterval(() => { if (!document.hidden && heroVisible) show(cur + 1); }, 5500); };
   dots.forEach((d,k) => d.onclick = () => { show(k); start(); });
   start();
+  mountBoost($('#boost'));
   $('#hform').onsubmit = e => { e.preventDefault(); pf.q = $('#hq').value; location.hash = '#papers'; };
   if(savedCount){ const ul=$('#hs'); ul.innerHTML=''; papers.filter(p=>savedP.has(p.id)).forEach(p=>ul.appendChild(paperCard(p))); notes.filter(n=>savedN.has(n.id)).forEach(n=>ul.appendChild(noteCard(n))); }
 }
@@ -900,14 +941,14 @@ const S = {user:null, student:null, cfg:{}, noBackend:false, authReady:false, lo
 const isAdmin = () => !!(S.user && S.user.admin);
 const isPaid = () => isAdmin() || !!(S.student && S.student.paidUntil && S.student.paidUntil > new Date());
 const fmtDate = d => d ? new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
-const onFormPage = () => /^(account|admin|read)/.test(location.hash.slice(1));
+const onFormPage = () => /^(account|admin|read|help)/.test(location.hash.slice(1));
 function refresh(){ if (!onFormPage()) route(true); }
 
 function setPapers(list){
   papers.length = 0;
   list.forEach(d => {
     const c = courses.find(x => x.code === d.code); if (!c) return;
-    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path, size:d.size || 0, at:d.createdAt ? +new Date(d.createdAt) : 0});
+    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:cleanTitle(d.title || ''), raw:d.title || '', path:d.path, size:d.size || 0, at:d.createdAt ? +new Date(d.createdAt) : 0});
   });
   papersX.length = 0;
   papers.forEach(p => { papersX.push(p); siblings(p.course).forEach(c2 => { if (c2 !== p.course) papersX.push({...p, course:c2, title:retitle(p.title, c2), orig:p}); }); });
@@ -918,17 +959,18 @@ function setPapers(list){
 function startBackend(FB){
   if (!FB) { S.noBackend = true; S.authReady = true; S.loaded = true; route(true); return; }
   FB.onAuth(async u => {
-    S.user = u; S.student = null;
+    const was = !!S.user; S.user = u; S.student = null;
     if (u) { try { S.student = await FB.getStudent(u.uid); } catch(e){} }
     S.authReady = true;
-    if (/^(account|read)/.test(location.hash.slice(1))) route(true); else refresh();
+    if (!!u !== was || !u) { route(); if (u) setTimeout(() => showTour(), 600); }
+    else if (/^(account|read)/.test(location.hash.slice(1))) route(true); else refresh();
+    updateBadge();
   });
+  setInterval(updateBadge, 60000);
   FB.getConfig().then(c => { S.cfg = c || {}; if (/^account/.test(location.hash.slice(1))) route(true); }).catch(() => {});
   FB.listPapers().then(setPapers).catch(() => { S.error = 'Could not load the paper list. Check your connection.'; })
     .finally(() => { S.loaded = true; refresh(); });
 }
-if (window.FB !== undefined) startBackend(window.FB);
-else window.addEventListener('fb-ready', () => startBackend(window.FB), {once:true});
 
 function niceErr(e){
   const c = String((e && e.code) || e);
@@ -1133,8 +1175,8 @@ function adminScreen(app){
   topbar('Admin','Papers, payments and students','#account');
   if (!isAdmin()) { app.innerHTML = '<div class="empty">Admin only. Sign in with the admin account on the Account page.</div>'; return; }
   app.innerHTML = '<div class="views" id="atabs"></div><div id="abody"></div>';
-  viewSwitch($('#atabs'), [['add','Add papers'],['pay','Payments'],['stu','Students'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
-  ({add:admAdd, pay:admPay, stu:admStu, set:admSet, tidy:admTidy}[adm.tab] || admAdd)($('#abody'));
+  viewSwitch($('#atabs'), [['add','Add papers'],['inbox','Inbox'],['pay','Payments'],['stu','Students'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
+  ({add:admAdd, inbox:admInbox, pay:admPay, stu:admStu, set:admSet, tidy:admTidy}[adm.tab] || admAdd)($('#abody'));
 }
 function admAdd(box){
   if (!adm.school) adm.school = SCHOOLS[0].id;
@@ -1143,6 +1185,7 @@ function admAdd(box){
     <p class="small" id="ashare"></p>
     <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
     <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped. PDFs over ${MAX_PAGES} pages are skipped.</p>
+    <p class="small" id="aread"></p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
@@ -1165,18 +1208,33 @@ function admAdd(box){
   const drawFiles = () => {
     const seen = new Set(); files.forEach(f => { f.dup = findDup(adm.course, f, seen); });
     $('#afl').innerHTML = files.map((f,i) => `<div class="frow"><div class="small" style="word-break:break-all">${esc(f.file.name)} · ${(f.file.size / 1048576).toFixed(1)} MB</div>
-      ${f.dup ? `<div class="dupnote">${esc(f.dup)}. It will be skipped.</div>` : ''}
+      ${f.dup ? `<div class="dupnote">${esc(f.dup)}. It will be skipped.</div>` : ''}${f.note ? `<div class="small hintn">${esc(f.note)}</div>` : ''}
       <input class="search" type="text" data-n="${i}" value="${esc(f.title)}" aria-label="Title">
       <div class="two"><select data-y="${i}">${optionsHtml(YEAR_OPTS.map(y => [y,y]), f.year)}</select><select data-t="${i}">${typeOptions(f.type)}</select></div></div>`).join('');
-    $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); });
-    $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; });
-    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
+    $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); files[s.dataset.y].touched = true; });
+    $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; files[s.dataset.t].touched = true; });
+    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].touched = true; files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
     $('#aup').disabled = !files.some(f => !f.dup);
   };
   drawCourses(); drawExisting();
   $('#as').onchange = e => { adm.school = e.target.value; drawCourses(); drawExisting(); };
   $('#ac').onchange = e => { adm.course = e.target.value; drawShare(); drawExisting(); drawFiles(); };
-  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:guessType(file.name), title:file.name.replace(FILE_EXT, '')})); drawFiles(); };
+  let readTok = 0;
+  const analyse = async arr => {
+    const tok = ++readTok, st = $('#aread');
+    for (let k = 0; k < arr.length; k++) {
+      if (tok !== readTok) return;
+      st.textContent = 'Reading inside file ' + (k + 1) + ' of ' + arr.length + '…';
+      const f = arr[k]; let hh = null;
+      try { if (extOf(f.file.name) === 'pdf') hh = await readHints(f.file); } catch(e) {}
+      const a = analyseFile(f.file, hh);
+      if (!f.touched) { f.type = a.type; f.year = a.year; f.title = a.title; }
+      f.note = [a.typeFrom === 'file' ? 'Type read from inside the file.' : a.typeFrom === 'name' ? 'Type taken from the file name.' : 'Could not tell the type. Please check.', a.yearFrom ? '' : 'Year not found. Please check.', hh && hh.pages > MAX_PAGES ? 'Over ' + MAX_PAGES + ' pages: will be skipped.' : ''].filter(Boolean).join(' ');
+      drawFiles();
+    }
+    if (tok === readTok) st.textContent = '';
+  };
+  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:yearFromName(file.name) || new Date().getFullYear(), type:guessType(file.name), title:cleanTitle(file.name), note:''})); drawFiles(); analyse(files); };
   $('#aup').onclick = async () => {
     const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
     let done = 0, skipped = 0, total = 0; const why = {long:0, big:0, type:0};
@@ -1243,15 +1301,24 @@ async function admTidy(box){
     <div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Files named "Other"</h2><span class="chip ${others.length ? 'hot' : ''}">${others.length}</span></div>
       <p class="small">Pick the right type for each, then save.</p>
       ${others.length ? others.slice(0, 40).map((p, i) => `<div class="frow"><div class="small" style="word-break:break-all"><b>${esc(p.course.code)}</b> · ${esc(p.title)}</div><select data-o="${i}">${typeOptions(guessTypeRaw(p.title) || 'Final exam')}</select></div>`).join('') + (others.length > 40 ? `<div class="small">Showing the first 40. Save, then open this page again for the rest.</div>` : '') + '<div class="btnrow"><button class="btn pri" id="tdo">Save types</button></div>' : '<div class="small">Nothing to fix.</div>'}</div>
+    <div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Check inside files</h2><span class="chip ${scanState.props.length ? 'hot' : ''}">${scanState.props.length}</span></div>
+      <p class="small">Opens files marked "Final exam" and reads inside them to find out if they are really notes, an outline, a worksheet or a book. It also finds a proper topic name when the file name is messy. It checks 100 files at a time and uses some data.</p>
+      ${scanState.props.map((x, i) => `<div class="frow"><div class="small" style="word-break:break-all"><b>${esc(x.p.course.code)}</b> · now: ${esc(x.p.title)} (${esc(x.p.type)})</div><input class="search" type="text" data-st="${i}" value="${esc(x.title)}" aria-label="Title"><select data-sy="${i}">${typeOptions(x.type)}</select><label class="small"><input type="checkbox" data-sc="${i}" checked> Save this change</label></div>`).join('')}
+      <div class="btnrow"><button class="btn" id="tds">Check next 100</button><button class="btn" id="tdx" hidden>Stop</button>${scanState.props.length ? `<button class="btn pri" id="tda">Save changes</button>` : ''}</div></div>
     <p class="msg" id="tmsg" role="status"></p></div>`;
   const msg = $('#tmsg');
   const run = async (btn, items, fn, word) => {
-    btn.disabled = true; let n = 0;
+    btn.disabled = true; let n = 0, good = true;
     try { for (const it of items) { msg.textContent = word + ' ' + (n + 1) + ' of ' + items.length + '…'; await fn(it); n++; } msg.textContent = 'Done: ' + n + '.'; }
-    catch(e) { msg.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; }
-    setTimeout(() => admTidy(box), 900);
+    catch(e) { good = false; msg.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; }
+    setTimeout(() => admTidy(box), 900); return good;
   };
   if ($('#tdd')) $('#tdd').onclick = () => { if (confirm('Delete ' + drops.length + ' extra copies? This cannot be undone.')) run($('#tdd'), drops, p => window.FB.deletePaper({id:p.id, path:p.path}), 'Deleting'); };
+  $('#tds').onclick = () => runScan(box, 100);
+  if ($('#tda')) $('#tda').onclick = () => {
+    const items = scanState.props.map((x, i) => ({x, i, on:box.querySelector('[data-sc="' + i + '"]').checked, type:box.querySelector('[data-sy="' + i + '"]').value, title:box.querySelector('[data-st="' + i + '"]').value.trim()})).filter(o => o.on);
+    run($('#tda'), items, o => window.FB.updatePaper(o.x.p.id, {type:o.type, title:o.title || o.x.p.title}), 'Saving').then(good => { if (good) scanState.props = scanState.props.filter((x, i) => !items.some(o => o.i === i)); });
+  };
   if ($('#tdw')) $('#tdw').onclick = () => run($('#tdw'), wrong, w => window.FB.updatePaper(w.p.id, {code:w.to.code}), 'Moving');
   if ($('#tdo')) $('#tdo').onclick = () => { const items = others.slice(0, 40).map((p, i) => ({p, type:box.querySelector('[data-o="' + i + '"]').value})); run($('#tdo'), items, it => window.FB.updatePaper(it.p.id, {type:it.type}), 'Saving'); };
 }
@@ -1306,16 +1373,347 @@ function admSet(box){
 }
 
 /* ---------- router ---------- */
+/* ----- Reading what a file is about (type, year, topic) ----- */
+const cleanTitle = s => String(s || '').replace(/_+/g, ' ').replace(/\s*\.(pdf|docx|pptx)$/i, '').replace(/\s+/g, ' ').trim();
+const junkTitle = t => !t || /_/.test(t) || t.length < 5 || /^(img|scan|scanned|cam|doc|document|untitled|new|copy|file|download|whatsapp)[\s\d\-().]*$/i.test(t) || /^[\d\s\-().]+$/.test(t);
+const yearOk = y => y >= 2005 && y <= new Date().getFullYear();
+const yearFromName = n => { const m = String(n).match(/(?:^|[^0-9])((?:19|20)\d{2})(?![0-9])/g) || []; for (const s of m) { const y = Number(s.replace(/\D/g, '')); if (yearOk(y)) return y; } return 0; };
+const MONTHS = 'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec';
+function yearFromText(t){
+  t = String(t || '').toLowerCase();
+  let m = t.match(/\b(20\d{2})\s*[\/\-–]\s*(?:20)?\d{2}\b/); if (m && yearOk(Number(m[1]))) return Number(m[1]);
+  m = t.match(new RegExp('\\b(?:' + MONTHS + ')\\.?\\s*,?\\s*(20\\d{2})\\b')); if (m && yearOk(Number(m[1]))) return Number(m[1]);
+  m = t.match(/\byear\s*(20\d{2})\b/); if (m && yearOk(Number(m[1]))) return Number(m[1]);
+  return 0;
+}
+async function readHints(file){
+  const ext = extOf(file.name);
+  if (ext !== 'pdf') return {ext, pages:0, text:'', avgChars:0, landscape:false, title:''};
+  const lib = await loadPdfJs();
+  const d = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+  const n = d.numPages, take = Math.min(n, 3); let text = '', chars = 0, landscape = false, title = '';
+  try {
+    for (let i = 1; i <= take; i++) {
+      const pg = await d.getPage(i), v = pg.getViewport({scale:1}); if (i === 1) landscape = v.width > v.height * 1.1;
+      const items = (await pg.getTextContent()).items.filter(it => it.str && it.str.trim());
+      text += ' ' + items.map(it => it.str).join(' '); chars += items.reduce((s, it) => s + it.str.length, 0);
+      if (i === 1 && items.length) {
+        const sz = it => Math.abs(it.transform[3]) || it.height || 0, max = Math.max(...items.map(sz));
+        const big = items.filter(it => sz(it) >= max * 0.7).sort((a, b) => (b.transform[5] - a.transform[5]) || (a.transform[4] - b.transform[4]));
+        const lines = []; big.forEach(it => { const L = lines[lines.length - 1]; if (L && Math.abs(L.y - it.transform[5]) < sz(it) * 0.6) L.s += ' ' + it.str.trim(); else lines.push({y:it.transform[5], s:it.str.trim()}); });
+        title = cleanTitle(lines.slice(0, 3).map(l => l.s).join(' · ')).slice(0, 90);
+      }
+      pg.cleanup();
+    }
+  } finally { await d.destroy(); }
+  return {ext, pages:n, text:text.slice(0, 9000), avgChars:chars / take, landscape, title};
+}
+function classifyContent(h, name){
+  const t = (' ' + cleanTitle(name) + ' ' + (h.text || '')).toLowerCase();
+  const cnt = a => a.filter(r => r.test(t)).length;
+  const exam = cnt([/time allowed|duration\s*[:\-]/, /instructions? to candidates|candidates? (must|should|are)|do not (open|turn over)/, /answer (all|any|only|question|four|five|three|two|one)|attempt (all|any|only)|compulsory/, /total marks|\[\s*\d+\s*marks?\s*\]|\(\s*\d+\s*marks?\s*\)|\b\d+\s*marks\b/, /final examination|end of (semester|year) examination|university examination|examination paper|supplementary examination|mid[- ]?(term|semester) (test|examination)/, /this paper (consists|contains|has)|read the instructions|section [a-c]\b/]);
+  const outline = cnt([/course (outline|description|objectives|aims|content|synopsis)/, /learning outcomes?/, /\bsyllabus\b|reading list|recommended (text|reading)|assessment (method|scheme|breakdown)|credit (hours?|units?)|contact hours/]);
+  let type = '', why = '';
+  if (outline >= 2) { type = 'Course outline'; why = 'outline'; }
+  else if (exam >= 2) {
+    why = 'exam';
+    type = /supplementary|\bsupp\b/.test(t) ? 'Supplementary exam' : /mid[- ]?(term|semester|year)/.test(t) ? 'Mid-term test' : /\b(test|quiz|continuous assessment)\b/.test(t) && !/final examination|end of (semester|year)/.test(t) ? 'Test' : 'Final exam';
+  } else if (/worksheet|work sheet/.test(t)) { type = 'Worksheet'; why = 'work'; }
+  else if (/tutorial (sheet|questions?|exercises?|problems?)|tutorial \d/.test(t)) { type = 'Tutorial sheet'; why = 'work'; }
+  else if (/assignment/.test(t)) { type = 'Assignment'; why = 'work'; }
+  else if (/\blab(oratory)? (manual|report|sheet|exercise)|practical (manual|sheet)/.test(t)) { type = 'Lab manual'; why = 'work'; }
+  else if (/problem set|exercise sheet/.test(t)) { type = 'Worksheet'; why = 'work'; }
+  else if ((h.pages || 0) >= 150 || ((h.pages || 0) >= 60 && cnt([/isbn/, /all rights reserved|copyright/, /table of contents/, /preface|foreword/, /publisher|published by|\bedition\b/]) >= 2)) { type = 'Textbook'; why = 'book'; }
+  else if (/\b(unit|chapter|lecture|topic|week|module) ?\d|learning objectives?|key terms|in this (lecture|unit|chapter)|summary|\bnotes?\b|slides?/.test(t) || (h.landscape && (h.avgChars || 0) < 1800 && (h.pages || 0) > 2)) { type = 'Lecture notes'; why = 'notes'; }
+  return {type, why, exam, outline};
+}
+/* what the app decides for one file: type, year, title, and whether to double-check */
+function analyseFile(file, h){
+  const name = file.name, nm = cleanTitle(name), c = h ? classifyContent(h, name) : {type:'', why:''};
+  let type = c.type || guessTypeRaw(name), typeFrom = c.type ? 'file' : (type ? 'name' : '');
+  if (!type) { type = 'Final exam'; typeFrom = ''; }
+  let year = yearFromName(name), yearFrom = year ? 'name' : '';
+  if (!year && h) { year = yearFromText(h.text); yearFrom = year ? 'file' : ''; }
+  if (!year) year = new Date().getFullYear();
+  let title = nm;
+  if (junkTitle(String(name).replace(FILE_EXT, '')) && h && h.title && c.why !== 'exam') title = h.title;
+  return {type, typeFrom, year, yearFrom, title};
+}
+
+/* ---------- Login screen, help, tips, motivation, tour ---------- */
+const MOTIV = [
+  'Small steps every day beat big pushes the night before an exam.',
+  'You do not have to be perfect. You only have to show up and try again.',
+  "Today's effort is tomorrow's confidence.",
+  'A hard course is not a sign you are failing. It is a sign you are growing.',
+  'Study for one focused hour. Then rest. You are not a machine, and that is fine.',
+  'Your degree is built one lecture, one page and one past paper at a time.',
+  'Struggling means you are learning something new. Keep going.',
+  'Ask the question. Someone else in the room is wondering the same thing.',
+  'Start with the easiest topic. Momentum will carry you to the hard ones.',
+  'Progress, not perfection.',
+  'Your family and your future are cheering for you. Make today count.',
+  'A bad test result tells you what to fix. It does not tell you who you are.',
+  'Rest, water and sleep are part of studying too.',
+  'Every expert once sat where you are sitting now.',
+  'You have already come this far. Do not stop now.',
+  'Discipline is choosing what you want most over what you want right now.',
+  'Do one past paper today. Future you will say thank you.',
+  'Comparing yourself to others steals your focus. Run your own race.',
+  'Today is a fresh page. Write something you are proud of.',
+  'Be patient with yourself. Growth takes time, even when you cannot see it.',
+  'You belong here. Your hard work will show.'
+];
+const QUOTES = [
+  ['Education is the most powerful weapon which you can use to change the world.', 'Nelson Mandela'],
+  ['It always seems impossible until it is done.', 'Nelson Mandela'],
+  ['It does not matter how slowly you go as long as you do not stop.', 'Confucius'],
+  ['The expert in anything was once a beginner.', 'Helen Hayes'],
+  ['Success is the sum of small efforts, repeated day in and day out.', 'Robert Collier'],
+  ["Don't watch the clock; do what it does. Keep going.", 'Sam Levenson'],
+  ['An investment in knowledge pays the best interest.', 'Benjamin Franklin'],
+  ['The beautiful thing about learning is that no one can take it away from you.', 'B. B. King'],
+  ['Genius is one percent inspiration and ninety-nine percent perspiration.', 'Thomas Edison'],
+  ['The future belongs to those who believe in the beauty of their dreams.', 'Eleanor Roosevelt']
+];
+const TIP_CATS = ['Focus', 'Exams', 'Memory', 'Wellbeing', 'In the app'];
+const TIPS = [
+  ['Focus', 'Study in short bursts', 'Study for 25 to 45 minutes, then rest for 5 to 10. Repeat. Your mind holds focus better this way.'],
+  ['Focus', 'Put your phone away', 'Switch it to silent and keep it out of reach while you study.'],
+  ['Focus', 'Plan tomorrow tonight', 'Write the 3 things you must finish tomorrow. Start with the hardest.'],
+  ['Focus', 'One topic at a time', 'Finish one topic before jumping to the next. Switching all the time wastes energy.'],
+  ['Exams', 'Use past papers early', 'Do not wait for the last week. Try a past paper first to see what lecturers ask, then study the gaps.'],
+  ['Exams', 'Practise with a timer', 'Do a full past paper in the real exam time. Practise writing answers, not only reading.'],
+  ['Exams', 'Read the whole paper first', 'In the exam, read all the questions, then start with the one you know best.'],
+  ['Exams', 'Match time to marks', 'A 5-mark question should not take 30 minutes. Share your time by the marks.'],
+  ['Exams', 'Learn from mistakes', 'After a test, list every mistake and why it happened. Fix those first.'],
+  ['Memory', 'Explain it out loud', 'Teach the topic to a friend or to yourself. If you cannot explain it, you do not know it yet.'],
+  ['Memory', 'Test yourself', 'Close the book and write what you remember, then check. This builds memory faster than re-reading.'],
+  ['Memory', 'Space your revision', 'Review a topic after 1 day, 3 days and 1 week. Short and often beats one long cram.'],
+  ['Memory', 'Make short notes', 'Summarise each topic on one page in your own words, with formulas and key points.'],
+  ['Wellbeing', 'Sleep before exams', 'A full night of sleep helps memory more than one more hour of cramming.'],
+  ['Wellbeing', 'Eat and drink water', 'A hungry or thirsty mind does not focus. Take water to your study spot.'],
+  ['Wellbeing', 'Talk to someone', 'If you feel stressed or stuck, speak to a friend, a lecturer, or message us in Help.'],
+  ['Wellbeing', 'Move your body', 'A 10 minute walk clears your head and helps you study better afterwards.'],
+  ['In the app', 'Look beyond past papers', 'Each course also has Notes, Worksheets, Books and Course outlines. Check them all.'],
+  ['In the app', 'Save what you need', 'Tap the star beside a file to save it. Saved files show on your Home page.'],
+  ['In the app', 'Study with a small group', 'Pick 2 to 4 serious classmates. Each person explains one topic to the rest.']
+];
+const STARTERS = [
+  ['I am struggling with a course', 'Hello, I am struggling with a course and need advice. The course is: '],
+  ['I need study tips', 'Hello, I would like study tips for my exams. I am studying: '],
+  ['I cannot open a file', 'Hello, I cannot open a file. The course and file are: '],
+  ['My payment is not approved', 'Hello, I sent my payment but my access is not active yet. My payment reference is: '],
+  ['I feel overwhelmed', 'Hello, I am feeling overwhelmed with school and life right now. '],
+  ['I have a problem at school or home', 'Hello, I have a problem that is affecting my studies. '],
+  ['I want to suggest a file or course', 'Hello, I would like to suggest this file or course be added: ']
+];
+const GUIDE = [
+  ['Create your account', 'Open the app and tap Create account. Type your email and a password you will remember, then tap the button.'],
+  ['Get access', 'Tap Account. Send the mobile money to the number shown. Type the payment reference from your message and tap Send for approval. Your access switches on once it is checked.'],
+  ['Find your course', 'Tap Schools, then your school, your programme and your year. Tap a course to see everything for it.'],
+  ['Choose what you need', 'Every course has tiles for Past papers, Notes, Worksheets, Books and Course outlines. Tap a tile to see its files.'],
+  ['Read a file', 'Tap a file to read it. It is view only. Scroll to read. Tap the back arrow to return to the same place in the list.'],
+  ['Search fast', 'Tap Papers to search by course code or name. You can filter by school, year or type.'],
+  ['Save your favourites', 'Tap the star beside a file to save it. Saved files show on your Home page.'],
+  ['Add the app to your phone', 'In Chrome tap the three dots at the top right, then tap Install app. It will sit on your home screen like any other app.'],
+  ['Need help?', 'Tap Help, then Messages. Choose a starter message or write your own. Your reply will show there.']
+];
+const TOUR = [
+  ['Welcome to CBU Past Papers', 'Everything you need to study is in one place: past papers, notes, worksheets, books and course outlines.'],
+  ['Find your course', 'Tap Schools, pick your school, programme and year, then tap a course.'],
+  ['Get access', 'Tap Account to pay by mobile money. Send us the payment reference and your access switches on once it is checked.'],
+  ['Read and save', 'Tap a file to read it. Tap the star to save it. The back arrow brings you back to the same spot.'],
+  ['We are here to help', 'Tap Help to message us, read study tips and see the full guide any time.']
+];
+
+/* login */
+function loginScreen(app){
+  if (!S.authReady) { app.innerHTML = `<div class="login"><div class="lc glass"><img class="lcrest" src="${IMGS['logo.png']}" alt=""><p class="small" style="text-align:center;margin:10px 0 0">Loading…</p></div></div>`; return; }
+  const st = loginScreen.st || (loginScreen.st = {mode:'in', em:''});
+  const draw = () => {
+    const inn = st.mode === 'in';
+    app.innerHTML = `<div class="login"><form class="lc glass" id="lf" novalidate>
+      <img class="lcrest" src="${IMGS['logo.png']}" alt="Copperbelt University crest">
+      <h1 class="lh">CBU Past Papers</h1>
+      <p class="small lsub">${inn ? 'Welcome back. Sign in to continue.' : 'Create your account to get started.'}</p>
+      <div class="seg2"><button type="button" id="mi" aria-pressed="${inn}">Sign in</button><button type="button" id="mu" aria-pressed="${!inn}">Create account</button></div>
+      <label class="lbl">Email<input id="em" type="email" autocomplete="email" inputmode="email" class="search" value="${esc(st.em)}"></label>
+      <label class="lbl">Password<span class="pwrow"><input id="pw" type="password" autocomplete="${inn ? 'current-password' : 'new-password'}" class="search" placeholder="At least 6 characters"><button type="button" class="btn" id="sh">Show</button></span></label>
+      <div class="btnrow"><button class="btn pri wide" id="go" type="submit">${inn ? 'Sign in' : 'Create account'}</button></div>
+      <p class="msg" id="msg" role="alert"></p>
+      <p class="small lfoot">${inn ? 'New here? Tap Create account above.' : 'You will get access to browse after signing in. Papers open after payment is approved.'}</p></form></div>`;
+    $('#mi').onclick = () => { st.em = $('#em').value; st.mode = 'in'; draw(); };
+    $('#mu').onclick = () => { st.em = $('#em').value; st.mode = 'up'; draw(); };
+    $('#sh').onclick = () => { const p = $('#pw'), show = p.type === 'password'; p.type = show ? 'text' : 'password'; $('#sh').textContent = show ? 'Hide' : 'Show'; };
+    $('#lf').onsubmit = async e => {
+      e.preventDefault(); const msg = $('#msg'), btn = $('#go'); msg.textContent = ''; st.em = $('#em').value.trim();
+      if (!st.em || !$('#pw').value) { msg.textContent = !st.em ? 'Type your email.' : 'Type your password.'; return; }
+      btn.disabled = true;
+      try { await (inn ? window.FB.signIn(st.em, $('#pw').value) : window.FB.signUp(st.em, $('#pw').value)); }
+      catch(e2) { msg.textContent = niceErr(e2); btn.disabled = false; }
+    };
+  };
+  draw();
+}
+
+/* welcome tour */
+function showTour(force){
+  try { if (!force && localStorage.getItem('cbu-tour')) return; } catch(e) {}
+  if ($('#tour')) return;
+  let i = 0; const el = document.createElement('div'); el.id = 'tour'; el.className = 'tour'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Welcome tour');
+  document.body.appendChild(el);
+  const done = () => { try { localStorage.setItem('cbu-tour', '1'); } catch(e) {} el.remove(); };
+  const draw = () => {
+    const last = i === TOUR.length - 1;
+    el.innerHTML = `<div class="tc glass"><div class="tstep">Step ${i + 1} of ${TOUR.length}</div><h2>${esc(TOUR[i][0])}</h2><p>${esc(TOUR[i][1])}</p>
+      <div class="tdots">${TOUR.map((x, k) => `<span class="${k === i ? 'on' : ''}"></span>`).join('')}</div>
+      <div class="btnrow"><button class="btn" id="tk">${last ? 'Close' : 'Skip'}</button>${i ? '<button class="btn" id="tb">Back</button>' : ''}<button class="btn pri" id="tn">${last ? 'Start' : 'Next'}</button></div></div>`;
+    $('#tk').onclick = done; $('#tn').onclick = () => { if (last) done(); else { i++; draw(); } };
+    if ($('#tb')) $('#tb').onclick = () => { i--; draw(); };
+  };
+  draw();
+}
+
+/* rotating motivation, tips and quotes */
+let boostTimer = null;
+function boostItems(){
+  const d = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5), out = [];
+  for (let j = 0; j < 6; j++) {
+    out.push({k:'Daily motivation', t:MOTIV[(d + j) % MOTIV.length], s:''});
+    const tp = TIPS[(d * 3 + j) % TIPS.length]; out.push({k:'Study tip', t:tp[1] + '. ' + tp[2], s:tp[0]});
+    const q = QUOTES[(d + j) % QUOTES.length]; out.push({k:'Quote', t:'“' + q[0] + '”', s:q[1]});
+  }
+  return out;
+}
+function mountBoost(el){
+  const items = boostItems(); let i = 0;
+  const show = () => { const it = items[i % items.length]; el.innerHTML = `<span class="chip hot">${esc(it.k)}</span><p class="bt">${esc(it.t)}</p>${it.s ? `<small>${esc(it.s)}</small>` : ''}`; };
+  const next = () => { el.classList.add('fade'); setTimeout(() => { i++; show(); el.classList.remove('fade'); }, 350); };
+  show(); clearInterval(boostTimer);
+  boostTimer = setInterval(() => { if (!document.hidden && el.isConnected) next(); else if (!el.isConnected) clearInterval(boostTimer); }, 8000);
+  el.onclick = next;
+}
+
+/* Help screen */
+const hlp = {tab:'msg', timer:null};
+async function updateBadge(){
+  const b = $('#hbdg'); if (!b) return;
+  if (!window.FB || S.noBackend || !S.user || !window.FB.unread) { b.hidden = true; return; }
+  try { const n = await window.FB.unread(isAdmin() ? 'admin' : 'student', S.user.uid); b.textContent = n > 9 ? '9+' : String(n); b.hidden = !n; } catch(e) { b.hidden = true; }
+}
+function helpScreen(app, arg){
+  clearInterval(hlp.timer); clearInterval(boostTimer);
+  topbar('Help & support', 'Messages, study tips and a guide');
+  if (arg && ['msg', 'tips', 'guide'].includes(arg)) hlp.tab = arg;
+  app.innerHTML = '<div class="views" id="htabs"></div><div id="hbody"></div>';
+  viewSwitch($('#htabs'), [['msg','Messages'],['tips','Study tips'],['guide','How to use']], hlp.tab, v => { hlp.tab = v; helpScreen(app); });
+  ({msg:helpMsgs, tips:helpTips, guide:helpGuide}[hlp.tab] || helpMsgs)($('#hbody'));
+}
+const bubbles = (list, me) => list.length ? list.map(m => `<div class="bub ${m.from === me ? 'me' : 'them'}">${esc(m.body)}<small>${m.from === 'admin' && me === 'student' ? 'CBU Papers team · ' : ''}${m.at ? new Date(m.at).toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : ''}</small></div>`).join('') : '';
+function helpMsgs(box){
+  const FB = window.FB;
+  if (S.noBackend || !FB) { box.innerHTML = '<div class="empty">Messages are not switched on yet.</div>'; return; }
+  if (isAdmin()) { box.innerHTML = '<div class="panel pad"><p style="margin:0 0 10px">You are the admin. Read and answer student messages in your inbox.</p><div class="btnrow"><a class="btn pri" id="gi" href="#admin" style="text-decoration:none">Open inbox</a></div></div>'; $('#gi').onclick = () => { adm.tab = 'inbox'; }; return; }
+  box.innerHTML = `<div class="panel pad"><p class="small" style="margin:0">Tell us what is troubling you in your studies or in life. Only the admin can read your messages. We reply here.</p>
+    <div class="chat" id="chat"></div>
+    <div class="small">Not sure what to say? Tap one to start:</div>
+    <div class="starters" id="starters">${STARTERS.map((s, i) => `<button type="button" data-s="${i}">${esc(s[0])}</button>`).join('')}</div>
+    <div class="compose"><textarea id="mt" class="search" rows="2" maxlength="2000" placeholder="Type your message…" aria-label="Your message"></textarea><button class="btn pri" id="ms">Send</button></div>
+    <p class="msg" id="mm" role="status"></p>
+    <p class="small">If you or someone else is in danger, contact emergency services or an adult you trust right away.</p></div>`;
+  const draw = list => { $('#chat').innerHTML = list.length ? bubbles(list, 'student') : '<div class="small" style="text-align:center;padding:10px 0">No messages yet. Tap a starter below or write your own.</div>'; };
+  const load = async () => {
+    if (!$('#chat')) { clearInterval(hlp.timer); return; }
+    let list; try { list = await FB.listMessages(S.user.uid); } catch(e) { if ($('#mm')) $('#mm').textContent = 'Could not load messages. Check your connection.'; return; }
+    draw(list);
+    if (list.some(m => m.from === 'admin' && !m.read)) FB.markRead(S.user.uid, 'admin').then(updateBadge).catch(() => {});
+  };
+  $('#starters').querySelectorAll('button').forEach(b => b.onclick = () => { const t = $('#mt'); t.value = STARTERS[b.dataset.s][1]; t.focus(); t.setSelectionRange(t.value.length, t.value.length); });
+  $('#ms').onclick = async () => {
+    const body = $('#mt').value.trim(), mm = $('#mm'); if (!body) { mm.textContent = 'Type a message first.'; return; }
+    $('#ms').disabled = true; mm.textContent = '';
+    try { await FB.sendMessage({uid:S.user.uid, email:S.user.email, from:'student', body}); $('#mt').value = ''; mm.textContent = 'Sent. We will reply here.'; await load(); }
+    catch(e) { mm.textContent = 'Could not send. Check your connection and try again.'; }
+    $('#ms').disabled = false;
+  };
+  load(); clearInterval(hlp.timer); hlp.timer = setInterval(() => { if (!document.hidden) load(); }, 15000);
+}
+function helpTips(box){
+  let cat = '';
+  box.innerHTML = '<div class="boost glass" id="boost2"></div><div id="tcats"></div><div id="tl"></div><p class="small">Quotes are commonly attributed to the people named.</p>';
+  mountBoost($('#boost2'));
+  const draw = () => {
+    box.querySelector('#tcats').innerHTML = `<div class="starters">${['All'].concat(TIP_CATS).map(c => `<button type="button" class="${(cat || 'All') === c ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>`;
+    box.querySelectorAll('#tcats button').forEach(b => b.onclick = () => { cat = b.dataset.c === 'All' ? '' : b.dataset.c; draw(); });
+    box.querySelector('#tl').innerHTML = '<div class="panel">' + TIPS.filter(t => !cat || t[0] === cat).map(t => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(t[1])}</span><span class="small">${esc(t[2])}</span></div><span class="chip">${esc(t[0])}</span></div>`).join('') + '</div>';
+  };
+  draw();
+}
+function helpGuide(box){
+  box.innerHTML = `<div class="btnrow" style="margin:0 0 10px"><button class="btn pri" id="rt">Play the welcome tour</button></div>` + GUIDE.map((g, i) => `<details class="grp"><summary><span class="gnum">${i + 1}</span><span>${esc(g[0])}</span></summary><div class="gbody">${esc(g[1])}</div></details>`).join('');
+  $('#rt').onclick = () => showTour(true);
+}
+
+/* Admin inbox */
+let inboxOpen = null;
+const QUICK_REPLIES = ['Thank you for reaching out. I am here to help.', 'Please tell me the course code and exactly what is happening.', 'Your payment has been checked and your access is now active.', 'Please sign out and sign in again. If it still fails, send a screenshot.'];
+async function admInbox(box){
+  const FB = window.FB;
+  box.innerHTML = '<div class="empty">Loading…</div>';
+  let all; try { all = await FB.listAllMessages(); } catch(e) { box.innerHTML = '<div class="empty">Could not load the inbox. If messages were never set up, run the Messages setup in Supabase first.</div>'; return; }
+  const th = new Map(); all.forEach(m => { if (!th.has(m.uid)) th.set(m.uid, {uid:m.uid, email:m.email || '', msgs:[]}); const t = th.get(m.uid); t.msgs.push(m); if (m.email) t.email = m.email; });
+  const list = [...th.values()].map(t => ({...t, last:t.msgs[t.msgs.length - 1], unread:t.msgs.filter(m => m.from === 'student' && !m.read).length}))
+    .sort((a, b) => (b.unread > 0) - (a.unread > 0) || (b.last.at || 0) - (a.last.at || 0));
+  const cur = inboxOpen && th.get(inboxOpen);
+  if (cur) {
+    const t = list.find(x => x.uid === cur.uid);
+    box.innerHTML = `<div class="btnrow" style="margin:0 0 8px"><button class="btn" id="ib">← All messages</button></div><div class="panel pad"><b>${esc(t.email || 'Student')}</b><div class="chat" id="chat">${bubbles(t.msgs, 'admin')}</div>
+      <div class="starters">${QUICK_REPLIES.map((q, i) => `<button type="button" data-q="${i}">${esc(q.length > 38 ? q.slice(0, 36) + '…' : q)}</button>`).join('')}</div>
+      <div class="compose"><textarea id="mt" class="search" rows="3" maxlength="2000" placeholder="Write your reply…" aria-label="Reply"></textarea><button class="btn pri" id="ms">Send</button></div><p class="msg" id="mm" role="status"></p></div>`;
+    $('#ib').onclick = () => { inboxOpen = null; admInbox(box); };
+    box.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { $('#mt').value = QUICK_REPLIES[b.dataset.q]; $('#mt').focus(); });
+    $('#ms').onclick = async () => { const body = $('#mt').value.trim(); if (!body) return; $('#ms').disabled = true; try { await FB.sendMessage({uid:t.uid, email:t.email, from:'admin', body}); await admInbox(box); } catch(e) { $('#mm').textContent = 'Could not send. Try again.'; $('#ms').disabled = false; } };
+    if (t.unread) FB.markRead(t.uid, 'student').then(updateBadge).catch(() => {});
+    return;
+  }
+  box.innerHTML = list.length ? '<div class="panel">' + list.map(t => `<button class="row-item tlink" data-u="${esc(t.uid)}"><div class="ri-main"><span class="ri-t">${esc(t.email || 'Student')}</span><span class="small">${esc((t.last.from === 'admin' ? 'You: ' : '') + t.last.body.slice(0, 80))}</span></div>${t.unread ? `<span class="chip hot">${t.unread} new</span>` : `<span class="small">${t.last.at ? fmtDate(t.last.at) : ''}</span>`}</button>`).join('') + '</div>' : '<div class="empty">No messages yet.</div>';
+  box.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { inboxOpen = b.dataset.u; admInbox(box); });
+}
+
+/* ----- Check what is inside files that are already uploaded ----- */
+const scanState = {running:false, stop:false, props:[], done:new Set()};
+async function runScan(box, limit){
+  const msg = $('#tmsg'), stopBtn = $('#tdx'); stopBtn.hidden = false; $('#tds').disabled = true;
+  const todo = papers.filter(p => extOf(p.path) === 'pdf' && !scanState.done.has(p.id) && (p.type === 'Final exam' || !PTYPES.includes(p.type))).slice(0, limit);
+  scanState.stop = false; stopBtn.onclick = () => { scanState.stop = true; };
+  let n = 0;
+  for (const p of todo) {
+    if (scanState.stop) break;
+    msg.textContent = 'Checking ' + (++n) + ' of ' + todo.length + ': ' + p.title;
+    try {
+      const bytes = await window.FB.getPdf(p.path), h = await readHints(new File([bytes], (p.raw || p.title) + '.pdf')), c = classifyContent(h, p.raw || p.title);
+      const title = (junkTitle(p.raw || p.title) && h.title && c.why !== 'exam') ? h.title : p.title, type = c.type || p.type;
+      if (type !== p.type || title !== p.title) scanState.props.push({p, type, title});
+    } catch(e) {}
+    scanState.done.add(p.id);
+  }
+  admTidy(box);
+}
+
 function route(keepScroll){
-  clearInterval(heroTimer);
+  clearInterval(heroTimer); clearInterval(hlp.timer); clearInterval(boostTimer);
   if (heroObs) { heroObs.disconnect(); heroObs = null; }
+  const needLogin = !S.noBackend && !S.user;
+  document.body.classList.toggle('authing', needLogin);
+  if (needLogin) { loginScreen($('#app')); window.scrollTo(0, 0); return; }
   const h = location.hash.slice(1) || 'home';
   const i = h.indexOf('-'); const name = i<0 ? h : h.slice(0,i); const arg = i<0 ? '' : h.slice(i+1);
   const app = $('#app'); const y = window.scrollY;
-  const tab = {home:'home',schools:'schools',school:'schools',prog:'schools',course:'schools',papers:'papers',read:'papers',account:'account',admin:'account',notes:'notes',note:'notes'}[name] || 'home';
+  const tab = {home:'home',schools:'schools',school:'schools',prog:'schools',course:'schools',papers:'papers',read:'papers',account:'account',admin:'account',help:'help',notes:'notes',note:'notes'}[name] || 'home';
   document.querySelectorAll('.tabs a').forEach(a=>{ if(a.dataset.tab===tab) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
-  ({home,schools:schoolsScreen,school:schoolScreen,prog:progScreen,course:courseScreen,papers:papersScreen,read:readScreen,account:accountScreen,admin:adminScreen,notes:notesScreen,note:noteScreen}[name] || home)(app,arg);
-  if (['account','admin','read'].includes(name)) { const tg = document.querySelector('#topbar .tag'); if (tg) tg.remove(); }
+  ({home,schools:schoolsScreen,school:schoolScreen,prog:progScreen,course:courseScreen,papers:papersScreen,read:readScreen,account:accountScreen,admin:adminScreen,help:helpScreen,notes:notesScreen,note:noteScreen}[name] || home)(app,arg);
+  if (['account','admin','read','help'].includes(name)) { const tg = document.querySelector('#topbar .tag'); if (tg) tg.remove(); }
   window.scrollTo(0, keepScroll===true ? y : 0);
 }
 history.scrollRestoration = 'manual';
@@ -1325,6 +1723,8 @@ window.addEventListener('popstate', () => { popped = true; });
 function restoreScroll(y){ let n = 0; const t = () => { window.scrollTo(0, y); if (Math.abs(window.scrollY - y) > 2 && n++ < 15) setTimeout(t, 60); }; t(); }
 window.addEventListener('hashchange', () => { const y = scrollMem[location.hash || '#home'] || 0, back = popped; popped = false; route(); if (back && y) restoreScroll(y); });
 route();
+if (window.FB !== undefined) startBackend(window.FB);
+else window.addEventListener('fb-ready', () => startBackend(window.FB), {once:true});
 </script>
 <script type="module">
 /* Paste your Supabase project URL and anon (publishable) key here. */
@@ -1337,6 +1737,7 @@ if (window.FB === undefined) {
       const {createClient} = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm');
       const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {auth:{persistSession:true, autoRefreshToken:true}});
       const D = t => t ? new Date(t) : null;
+      const MSG = r => ({id:r.id, uid:r.user_id, email:r.email, from:r.sender, body:r.body, read:r.read, at:D(r.created_at)});
       const ok = ({data, error}) => { if (error) throw error; return data; };
       const authErr = e => {
         const c = String((e && (e.code || e.message)) || '').toLowerCase();
@@ -1389,6 +1790,11 @@ if (window.FB === undefined) {
           const ins = await sb.from('papers').insert({code:meta.code, year:meta.year, type:meta.type, title:meta.title, path, size:meta.origSize || file.size});
           if (ins.error) { await sb.storage.from('papers').remove([path]); throw ins.error; }
         },
+        async listMessages(uid){ return ok(await sb.from('messages').select('*').eq('user_id', uid).order('created_at', {ascending:true})).map(MSG); },
+        async listAllMessages(){ return (await all('messages', q => q.order('created_at', {ascending:true}))).map(MSG); },
+        async sendMessage(m){ ok(await sb.from('messages').insert({user_id:m.uid, email:m.email, sender:m.from, body:m.body})); },
+        async markRead(uid, from){ ok(await sb.from('messages').update({read:true}).eq('user_id', uid).eq('sender', from).eq('read', false)); },
+        async unread(role, uid){ let q = sb.from('messages').select('id', {count:'exact', head:true}).eq('read', false).eq('sender', role === 'admin' ? 'student' : 'admin'); if (role !== 'admin') q = q.eq('user_id', uid); const r = await q; if (r.error) throw r.error; return r.count || 0; },
         async updatePaper(id, patch){ ok(await sb.from('papers').update(patch).eq('id', id)); },
         async deletePaper(p){ try { await sb.storage.from('papers').remove([p.path]); } catch(e) {} ok(await sb.from('papers').delete().eq('id', p.id)); },
         async listPayments(){ return (await all('payments', q => q)).map(r => ({id:r.id, uid:r.user_id, email:r.email, reference:r.reference, amount:r.amount, status:r.status, createdAt:D(r.created_at)})); },

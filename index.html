@@ -398,6 +398,14 @@ buildSchool('hum', 'HSS', ['Introduction to Social Sciences','Communication and 
   ['law','Laws','LLB','LAW',['Law of Contract','Criminal Law','Constitutional Law'],['Law of Torts','Property Law','Administrative Law'],['Company Law','Law of Evidence','Legal Research Project']]
 ]);
 
+/* Humanities: launching with Economics and Laws only. Add programme ids here to bring others back. */
+{
+  const hum = SCHOOLS.find(x => x.id === 'hum');
+  hum.programmes = hum.programmes.filter(p => ['ecn','law'].includes(p.id));
+  const used = new Set(); hum.programmes.forEach(p => Object.values(p.years).forEach(a => a.forEach(c => used.add(c))));
+  Object.keys(hum.catalog).forEach(c => { if (!used.has(c)) delete hum.catalog[c]; });
+}
+
 const HERO_SLIDES = [
   [IMGS['img/hero1.jpg'],'Four graduates in black and orange gowns laughing and holding diplomas','50% 30%'],
   [IMGS['img/hero2.jpg'],'Graduates throwing their caps into a bright blue sky','50% 50%'],

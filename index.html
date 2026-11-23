@@ -54,8 +54,8 @@ button,select,input{font:inherit;color:inherit}
 
 /* floating tab capsule */
 .tabs{position:fixed;z-index:25;left:max(14px,env(safe-area-inset-left,0px));right:max(14px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));
-  max-width:520px;margin:0 auto;border-radius:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:6px}
-.tabs a{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:22px;text-decoration:none;color:var(--muted);font:600 .7rem var(--body);transition:background .2s,color .2s}
+  max-width:560px;margin:0 auto;border-radius:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px}
+.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:22px;text-decoration:none;color:var(--muted);font:600 .7rem var(--body);transition:background .2s,color .2s}
 .tabs a svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tabs a[aria-current="page"]{color:var(--accent);background:var(--glass-hi);box-shadow:inset 0 1px 0 var(--glass-edge),0 2px 10px rgba(0,0,0,.08)}
 
@@ -248,42 +248,89 @@ details[open]>summary .chev{transform:rotate(90deg)}
 .tidyh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .tidy .small{margin:2px 0 8px}
 
-/* login, help, boost, tour */
-.authing #topbar,.authing .tabs{display:none}
-.login{min-height:calc(100dvh - 48px);display:grid;place-items:center;padding:12px 0}
-.lc{width:100%;max-width:420px;padding:26px 20px 22px;border-radius:26px;margin:0 auto}
-.lcrest{display:block;width:84px;height:84px;object-fit:contain;margin:0 auto 10px;border-radius:20px;background:#fff;padding:6px}
-.lh{margin:0;text-align:center;font:700 1.5rem var(--head)}
-.lsub{text-align:center;margin:4px 0 14px}
-.lfoot{text-align:center;margin:12px 0 0}
-.seg2{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-edge);margin-bottom:6px}
-.seg2 button{padding:10px;border:0;border-radius:12px;background:none;color:var(--muted);font:600 .9rem var(--body);cursor:pointer}
-.seg2 button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
-.pwrow{display:flex;gap:8px;align-items:center}.pwrow .search{flex:1}
-.btn.wide{width:100%}
-.boost{padding:14px 16px;border-radius:20px;margin:12px 0;min-height:118px;cursor:pointer;transition:opacity .35s}
-.boost.fade{opacity:0}
-.boost .bt{margin:10px 0 6px;font:600 1.02rem/1.4 var(--head)}
-.boost small{color:var(--muted)}
-.chat{display:flex;flex-direction:column;gap:8px;margin:12px 0}
-.bub{max-width:86%;padding:10px 13px;border-radius:18px;font-size:.92rem;line-height:1.4;white-space:pre-wrap;word-break:break-word}
-.bub small{display:block;opacity:.7;font-size:.68rem;margin-top:4px}
+/* ===== v3 additions: gate, help desk, boost, tour, tips ===== */
+.tabs a{position:relative;font-size:.66rem}
+.tabs a .dot{display:none;position:absolute;top:4px;left:calc(50% + 6px);width:11px;height:11px;border-radius:50%;background:var(--copper);border:2px solid var(--bg)}
+.tabs a.has-new .dot{display:block}
+
+.gate{position:fixed;inset:0;z-index:60;overflow-y:auto;background:var(--bg);color:var(--fg);display:flex;justify-content:center;
+  padding:calc(28px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-left,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-right,0px))}
+.gate::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(60% 42% at 12% 0%,var(--amb1),transparent 70%),radial-gradient(60% 42% at 100% 100%,var(--amb2),transparent 70%)}
+.gate-in{position:relative;width:100%;max-width:420px;margin:auto 0}
+.gate-logo{width:78px;height:78px;object-fit:contain;display:block;margin:0 auto 14px}
+.gate h1{font:700 1.7rem var(--head);text-align:center;margin:0 0 6px;text-wrap:balance}
+.gate-sub{text-align:center;color:var(--muted);margin:0 0 16px;text-wrap:balance}
+.gate-card{border-radius:22px;padding:6px 16px 18px}
+.gate-tabs{grid-template-columns:1fr 1fr;margin:0 0 4px}
+.gbtn{width:100%;margin-top:16px;padding:13px;font-size:.95rem}
+.gskip{display:block;margin:16px auto 0;text-align:center}
+.glink{display:block;margin:12px auto 0;text-align:center}
+.pwrow{position:relative;display:block;margin-top:6px}
+.pwrow .search{margin-top:0;padding-right:74px}
+.pwtog{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--accent);font:600 .8rem var(--body);cursor:pointer;padding:8px}
+.gate .msg.ok{color:var(--accent)}
+
+.boost{border-radius:22px;padding:16px;margin-top:14px}
+.boost .bq{cursor:pointer;min-height:92px;display:flex;flex-direction:column;justify-content:center}
+.boost .qt{font:600 1.12rem/1.4 var(--head);margin:0;text-wrap:balance;transition:opacity .45s}
+.boost .qa{display:block;margin-top:8px;color:var(--copper);font:600 .8rem var(--body);transition:opacity .45s;min-height:1.1em}
+.boost .fade{opacity:0}
+.boost .bday{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.boost .bday p{margin:3px 0 0;font-size:.85rem;line-height:1.4}
+.boost .kick{font:700 .66rem var(--head);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.boost .linkbtn{display:inline-block;margin-top:10px}
+.boost.slim{margin-top:0}
+@media (max-width:420px){.boost .bday{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.boost .qt,.boost .qa{transition:none}}
+
+.thread{display:flex;flex-direction:column;gap:10px;max-height:46vh;overflow-y:auto;padding:4px 2px;margin-top:8px}
+.bub{max-width:88%;padding:10px 13px;border-radius:18px;word-break:break-word;font-size:.92rem;line-height:1.4}
 .bub.me{align-self:flex-end;background:var(--accent);color:var(--accent-fg);border-bottom-right-radius:6px}
-.bub.them{align-self:flex-start;background:var(--glass);border:1px solid var(--glass-edge);border-bottom-left-radius:6px}
-.starters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
-.starters button{padding:8px 12px;border-radius:999px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--fg);font:600 .8rem var(--body);cursor:pointer}
-.starters button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.compose{display:flex;gap:8px;align-items:flex-end}.compose textarea{flex:1;resize:vertical;min-height:48px;max-height:160px;font:inherit}
-.bdg{position:absolute;top:2px;left:calc(50% + 4px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#d64545;color:#fff;font:700 .62rem/16px sans-serif;text-align:center;font-style:normal}
-.row-item.tlink{width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;cursor:pointer}
-.gnum{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:10px;border-radius:50%;background:var(--copper-bg);color:var(--copper);font:700 .8rem sans-serif}
-.gbody{padding:4px 4px 12px 38px;color:var(--muted);line-height:1.5;font-size:.92rem}
-.hintn{color:var(--copper)}
-.tour{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}
-.tc{width:100%;max-width:380px;padding:22px 20px;border-radius:24px;background:var(--surface,#1b2a24)}
-.tc h2{margin:6px 0 8px;font:700 1.3rem var(--head)}.tc p{margin:0 0 14px;line-height:1.5}
-.tstep{color:var(--copper);font:700 .72rem var(--body);text-transform:uppercase;letter-spacing:.06em}
-.tdots{display:flex;gap:6px;margin-bottom:14px}.tdots span{width:8px;height:8px;border-radius:50%;background:var(--glass-edge)}.tdots span.on{background:var(--accent);width:22px;border-radius:4px}
+.bub.them{align-self:flex-start;background:var(--glass-hi);border:1px solid var(--line);border-bottom-left-radius:6px}
+.bub small{display:block;margin-top:4px;opacity:.75;font-size:.7rem}
+.tchips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.tchip{font:600 .78rem var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--fg);cursor:pointer}
+.tchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+.sugs{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.sug{text-align:left;font:500 .86rem/1.35 var(--body);padding:10px 12px;border-radius:14px;border:1px dashed var(--line);background:var(--glass);color:var(--fg);cursor:pointer}
+.sug:active{background:var(--glass-hi)}
+.ta{min-height:96px;resize:vertical;font:inherit;display:block;margin-top:6px}
+.care{border:1px solid var(--copper);background:var(--copper-bg);border-radius:14px;padding:12px;margin-top:12px;font-size:.88rem}
+.convrow{display:flex;align-items:center;gap:10px;padding:12px 6px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.convrow:first-child{border-top:0}
+.convrow .ri-main{flex:1;min-width:0}
+.convrow .prev{display:block;font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.urgent{background:#b3261e;color:#fff;border-color:transparent;font-weight:700}
+
+.tour{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;background:rgba(5,12,9,.58);
+  padding:16px max(14px,env(safe-area-inset-left,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-right,0px))}
+.tour-card{width:100%;max-width:440px;border-radius:26px;padding:22px 20px 16px;background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.tour-ic{width:52px;height:52px;border-radius:16px;background:var(--copper-bg);display:grid;place-items:center;margin-bottom:12px}
+.tour-ic svg{width:28px;height:28px;stroke:var(--copper);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tour-card h2{font:700 1.25rem var(--head);margin:0 0 6px;text-wrap:balance}
+.tour-card p{margin:0;color:var(--muted);line-height:1.5}
+.tour-dots{display:flex;gap:6px;margin:16px 0 4px}
+.tour-dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.tour-dots i.on{background:var(--accent);width:20px;border-radius:6px}
+.tour-nav{display:flex;align-items:center;gap:10px;margin-top:12px}
+.tour-nav .sp{flex:1}
+
+.tip{padding:12px 4px;border-top:1px solid var(--line)}
+.tip:first-child{border-top:0}
+.tip b{display:block;font:600 .95rem var(--head)}
+.tip p{margin:3px 0 0;font-size:.88rem;color:var(--muted);line-height:1.45}
+.gstep{display:flex;gap:12px;padding:12px 4px;border-top:1px solid var(--line)}
+.gstep:first-child{border-top:0}
+.gstep .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font:700 .85rem var(--head)}
+.gstep b{display:block;font:600 .95rem var(--head)}
+.gstep p{margin:2px 0 0;font-size:.88rem;color:var(--muted);line-height:1.45}
+details.faq{border-top:1px solid var(--line);padding:10px 4px}
+details.faq summary{font:600 .9rem var(--body);cursor:pointer}
+details.faq p{margin:6px 0 0;font-size:.88rem;color:var(--muted)}
+.relrow{display:flex;gap:10px;align-items:flex-start;padding:10px 2px;border-top:1px solid var(--line)}
+.relrow input{margin-top:4px;flex:none}
+.why{font-size:.74rem;color:var(--muted)}
+
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -295,7 +342,7 @@ details[open]>summary .chev{transform:rotate(90deg)}
   <a href="#home" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
   <a href="#schools" data-tab="schools"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>Schools</a>
   <a href="#papers" data-tab="papers"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>Papers</a>
-  <a href="#help" data-tab="help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Help<i class="bdg" id="hbdg" hidden></i></a>
+  <a href="#help" data-tab="help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Help<span class="dot" id="helpdot"></span></a>
   <a href="#account" data-tab="account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Account</a>
 </nav>
 
@@ -580,6 +627,7 @@ function home(app){
   topbar('CBU Past Papers','Copperbelt University, Kitwe');
   const hr = new Date().getHours();
   const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+  const nm = S.user && S.user.name ? ', ' + esc(S.user.name.split(' ')[0]) : '';
   const savedCount = savedP.size + savedN.size;
   const fmt = n => n.toLocaleString('en-US');
   const rail = SCHOOLS.map(s => {
@@ -592,7 +640,7 @@ function home(app){
       <div class="hero-slides">${HERO_SLIDES.map((h,i) => `<img src="${h[0]}" alt="${esc(h[1])}" style="object-position:${h[2]}" class="${i === 0 ? 'on' : ''}" decoding="async">`).join('')}</div>
       <div class="dots" role="group" aria-label="Photo slides">${HERO_SLIDES.map((h,i) => `<button type="button" aria-label="Show photo ${i+1}" aria-current="${i === 0}"></button>`).join('')}</div>
       <div class="crest"><img src="${IMGS['logo.png']}" alt="Copperbelt University crest"></div>
-      <div class="kicker">${greet}</div>
+      <div class="kicker">${greet}${nm}</div>
       <h2>Study smarter with every past paper.</h2>
       <p>Past exam papers for every school, programme and year at Copperbelt University.</p>
       <form class="hsearch" id="hform" role="search">
@@ -601,16 +649,17 @@ function home(app){
       </form>
     </section>
     <div class="stats"><div class="stat"><b>${SCHOOLS.length}</b><span>Schools</span></div><div class="stat"><b>${fmt(papers.length)}</b><span>Files</span></div><div class="stat"><b>${fmt(new Set(papersX.map(p=>p.course)).size)}</b><span>Courses with files</span></div></div>
-    <div class="boost glass" id="boost" aria-label="Daily motivation"></div>
+    ${boostCard()}
     <div class="sec"><h2>Browse by school</h2><a href="#schools">See all</a></div>
     <div class="rail">${rail}</div>
     <div class="quick">
       <a href="#papers"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg><div><b>Past papers</b><small>Search and filter every paper</small></div></a>
-      <a href="#help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><div><b>Help and tips</b><small>Message us, study tips</small></div></a>
-      <a href="#account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><b>Your account</b><small>Access and payments</small></div></a>
+      <a href="#account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><b>Your account</b><small>Sign in and get access</small></div></a>
+      <a href="#tips"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div><b>Tips &amp; motivation</b><small>Study advice, new every day</small></div></a>
+      <a href="#help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><div><b>Help desk</b><small>Ask us anything</small></div></a>
     </div>
     ${savedCount?`<div class="sec"><h2>Saved by you</h2></div><ul class="grid two" id="hs"></ul>`:''}
-    <p class="note-foot">Course lists are being checked and completed school by school.</p>`;
+    <p class="note-foot">Course lists are being checked and completed school by school. <a href="#guide" style="color:var(--accent);font-weight:600">How to use this app</a></p>`;
   const slides = [...document.querySelectorAll('.hero-slides img')], dots = [...document.querySelectorAll('.dots button')];
   let cur = 0;
   const show = i => { cur = (i + slides.length) % slides.length; slides.forEach((im,k) => im.classList.toggle('on', k === cur)); dots.forEach((d,k) => d.setAttribute('aria-current', String(k === cur))); };
@@ -619,7 +668,7 @@ function home(app){
   const start = () => { clearInterval(heroTimer); heroTimer = setInterval(() => { if (!document.hidden && heroVisible) show(cur + 1); }, 5500); };
   dots.forEach((d,k) => d.onclick = () => { show(k); start(); });
   start();
-  mountBoost($('#boost'));
+  rotateQuotes();
   $('#hform').onsubmit = e => { e.preventDefault(); pf.q = $('#hq').value; location.hash = '#papers'; };
   if(savedCount){ const ul=$('#hs'); ul.innerHTML=''; papers.filter(p=>savedP.has(p.id)).forEach(p=>ul.appendChild(paperCard(p))); notes.filter(n=>savedN.has(n.id)).forEach(n=>ul.appendChild(noteCard(n))); }
 }
@@ -948,7 +997,7 @@ function setPapers(list){
   papers.length = 0;
   list.forEach(d => {
     const c = courses.find(x => x.code === d.code); if (!c) return;
-    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:cleanTitle(d.title || ''), raw:d.title || '', path:d.path, size:d.size || 0, at:d.createdAt ? +new Date(d.createdAt) : 0});
+    papers.push({id:String(d.id), course:c, yr:String(d.year), type:d.type || 'Other', title:d.title || '', path:d.path, size:d.size || 0, at:d.createdAt ? +new Date(d.createdAt) : 0});
   });
   papersX.length = 0;
   papers.forEach(p => { papersX.push(p); siblings(p.course).forEach(c2 => { if (c2 !== p.course) papersX.push({...p, course:c2, title:retitle(p.title, c2), orig:p}); }); });
@@ -957,20 +1006,20 @@ function setPapers(list){
 }
 
 function startBackend(FB){
-  if (!FB) { S.noBackend = true; S.authReady = true; S.loaded = true; route(true); return; }
+  if (!FB) { S.noBackend = true; S.authReady = true; S.loaded = true; route(true); syncGate(); return; }
   FB.onAuth(async u => {
-    const was = !!S.user; S.user = u; S.student = null;
+    S.user = u; S.student = null;
     if (u) { try { S.student = await FB.getStudent(u.uid); } catch(e){} }
     S.authReady = true;
-    if (!!u !== was || !u) { route(); if (u) setTimeout(() => showTour(), 600); }
-    else if (/^(account|read)/.test(location.hash.slice(1))) route(true); else refresh();
-    updateBadge();
+    if (/^(account|read|help|admin)/.test(location.hash.slice(1))) route(true); else refresh();
+    syncGate(); startPolling();
   });
-  setInterval(updateBadge, 60000);
   FB.getConfig().then(c => { S.cfg = c || {}; if (/^account/.test(location.hash.slice(1))) route(true); }).catch(() => {});
   FB.listPapers().then(setPapers).catch(() => { S.error = 'Could not load the paper list. Check your connection.'; })
     .finally(() => { S.loaded = true; refresh(); });
 }
+if (window.FB !== undefined) startBackend(window.FB);
+else window.addEventListener('fb-ready', () => startBackend(window.FB), {once:true});
 
 function niceErr(e){
   const c = String((e && e.code) || e);
@@ -1005,7 +1054,8 @@ function accountScreen(app){
       <label class="lbl">Password<input id="pw" type="password" autocomplete="current-password" class="search" placeholder="At least 6 characters"></label>
       <div class="btnrow"><button class="btn pri" id="si">Sign in</button><button class="btn" id="su">Create account</button></div>
       ${FB.google ? '<div class="btnrow"><button class="btn" id="gg">Continue with Google</button></div>' : ''}
-      <p class="msg" id="msg" role="alert"></p></div>`;
+      <p class="msg" id="msg" role="alert"></p></div>
+      <p class="small" style="text-align:center"><a href="#guide">How to use this app</a></p>`;
     const msg = t => { $('#msg').textContent = t; };
     const run = async fn => { msg(''); try { await fn(); } catch(e) { msg(niceErr(e)); } };
     $('#si').onclick = () => run(() => FB.signIn($('#em').value.trim(), $('#pw').value));
@@ -1018,7 +1068,7 @@ function accountScreen(app){
     <div class="chips" style="margin-top:10px">${paid ? `<span class="chip hot">Access active${isAdmin() ? ' (admin)' : until ? ' until ' + fmtDate(until) : ''}</span>` : '<span class="chip">No access yet</span>'}</div></div>
     ${paid ? '' : paymentPanel(S.cfg || {})}
     <div id="mypay"></div>
-    <div class="btnrow" style="margin:16px 0">${isAdmin() ? '<a class="btn pri" href="#admin" style="text-decoration:none">Open admin</a>' : ''}<button class="btn" id="so">Sign out</button></div>`;
+    <div class="btnrow" style="margin:16px 0">${isAdmin() ? '<a class="btn pri" href="#admin" style="text-decoration:none">Open admin</a>' : ''}<a class="btn" href="#guide" style="text-decoration:none">How to use the app</a><button class="btn" id="so">Sign out</button></div>`;
   $('#so').onclick = async () => { await FB.signOut(); };
   const drawPay = async () => {
     let list = []; try { list = await FB.myPayments(S.user.uid); } catch(e) {}
@@ -1175,7 +1225,7 @@ function adminScreen(app){
   topbar('Admin','Papers, payments and students','#account');
   if (!isAdmin()) { app.innerHTML = '<div class="empty">Admin only. Sign in with the admin account on the Account page.</div>'; return; }
   app.innerHTML = '<div class="views" id="atabs"></div><div id="abody"></div>';
-  viewSwitch($('#atabs'), [['add','Add papers'],['inbox','Inbox'],['pay','Payments'],['stu','Students'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
+  viewSwitch($('#atabs'), [['add','Add papers'],['inbox','Inbox' + (S.adminUnread ? ' (' + S.adminUnread + ')' : '')],['pay','Payments'],['stu','Students'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
   ({add:admAdd, inbox:admInbox, pay:admPay, stu:admStu, set:admSet, tidy:admTidy}[adm.tab] || admAdd)($('#abody'));
 }
 function admAdd(box){
@@ -1183,9 +1233,8 @@ function admAdd(box){
   box.innerHTML = `<div class="panel pad"><label class="lbl">School<select id="as">${optionsHtml(SCHOOLS.map(s => [s.id, s.name]), adm.school)}</select></label>
     <label class="lbl">Course<select id="ac"></select></label>
     <p class="small" id="ashare"></p>
-    <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
+    <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many. The app reads inside each one to label it (exam, notes, tutorial…) and name it by its topic. Check the labels before uploading.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
     <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped. PDFs over ${MAX_PAGES} pages are skipped.</p>
-    <p class="small" id="aread"></p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
@@ -1207,34 +1256,30 @@ function admAdd(box){
   };
   const drawFiles = () => {
     const seen = new Set(); files.forEach(f => { f.dup = findDup(adm.course, f, seen); });
-    $('#afl').innerHTML = files.map((f,i) => `<div class="frow"><div class="small" style="word-break:break-all">${esc(f.file.name)} · ${(f.file.size / 1048576).toFixed(1)} MB</div>
-      ${f.dup ? `<div class="dupnote">${esc(f.dup)}. It will be skipped.</div>` : ''}${f.note ? `<div class="small hintn">${esc(f.note)}</div>` : ''}
+    const gc = courses.find(c => c.code === adm.course);
+    $('#afl').innerHTML = files.map((f,i) => {
+      const other = (f.codes || []).filter(c => !gc || grp(c) !== grp(gc)), same = (f.codes || []).some(c => gc && grp(c) === grp(gc));
+      const hint = !f.busy && other.length === 1 && !same ? `<div class="dupnote">Inside the file this looks like <b>${esc(other[0].code)}</b> · ${esc(other[0].name)}. <button type="button" class="linkbtn" data-sw="${i}">Switch course</button></div>` : '';
+      const tag = f.busy ? '<span class="chip">Reading inside…</span>' : f.type ? `<span class="chip ${f.conf === 'low' ? '' : 'hot'}">${f.conf === 'low' ? 'Please check' : 'Read from the file'}</span>` : '<span class="chip">Pick a type</span>';
+      return `<div class="frow"><div class="small" style="word-break:break-all">${esc(f.file.name)} · ${(f.file.size / 1048576).toFixed(1)} MB</div>
+      <div style="margin-top:4px">${tag}</div>${f.why && f.why.length && !f.busy ? `<div class="why">${esc(f.why.join(' · '))}</div>` : ''}
+      ${f.dup ? `<div class="dupnote">${esc(f.dup)}. It will be skipped.</div>` : ''}${hint}
       <input class="search" type="text" data-n="${i}" value="${esc(f.title)}" aria-label="Title">
-      <div class="two"><select data-y="${i}">${optionsHtml(YEAR_OPTS.map(y => [y,y]), f.year)}</select><select data-t="${i}">${typeOptions(f.type)}</select></div></div>`).join('');
-    $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); files[s.dataset.y].touched = true; });
-    $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; files[s.dataset.t].touched = true; });
-    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].touched = true; files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
-    $('#aup').disabled = !files.some(f => !f.dup);
+      <div class="two"><select data-y="${i}">${optionsHtml(YEAR_OPTS.map(y => [y,y]), f.year)}</select><select data-t="${i}">${f.type ? '' : '<option value="" selected>Pick a type…</option>'}${typeOptions(f.type)}</select></div></div>`; }).join('');
+    $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); });
+    $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; });
+    $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
+    $('#afl').querySelectorAll('[data-sw]').forEach(b => b.onclick = () => { const f = files[b.dataset.sw], o = (f.codes || []).find(c => !gc || grp(c) !== grp(gc)); if (!o) return; adm.school = o.school.id; adm.course = o.code; $('#as').value = adm.school; drawCourses(); drawExisting(); drawFiles(); });
+    $('#aup').disabled = !files.some(f => !f.dup) || files.some(f => f.busy);
   };
   drawCourses(); drawExisting();
   $('#as').onchange = e => { adm.school = e.target.value; drawCourses(); drawExisting(); };
   $('#ac').onchange = e => { adm.course = e.target.value; drawShare(); drawExisting(); drawFiles(); };
-  let readTok = 0;
-  const analyse = async arr => {
-    const tok = ++readTok, st = $('#aread');
-    for (let k = 0; k < arr.length; k++) {
-      if (tok !== readTok) return;
-      st.textContent = 'Reading inside file ' + (k + 1) + ' of ' + arr.length + '…';
-      const f = arr[k]; let hh = null;
-      try { if (extOf(f.file.name) === 'pdf') hh = await readHints(f.file); } catch(e) {}
-      const a = analyseFile(f.file, hh);
-      if (!f.touched) { f.type = a.type; f.year = a.year; f.title = a.title; }
-      f.note = [a.typeFrom === 'file' ? 'Type read from inside the file.' : a.typeFrom === 'name' ? 'Type taken from the file name.' : 'Could not tell the type. Please check.', a.yearFrom ? '' : 'Year not found. Please check.', hh && hh.pages > MAX_PAGES ? 'Over ' + MAX_PAGES + ' pages: will be skipped.' : ''].filter(Boolean).join(' ');
-      drawFiles();
-    }
-    if (tok === readTok) st.textContent = '';
+  $('#af').onchange = async e => {
+    const mine = files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:'', title:file.name.replace(FILE_EXT, '').replace(/_+/g, ' '), busy:true, why:[], codes:[]}));
+    drawFiles();
+    for (const f of mine) { if (files !== mine) return; await analyseFile(f); if (files !== mine) return; drawFiles(); }
   };
-  $('#af').onchange = e => { files = [...e.target.files].map(file => ({file, year:yearFromName(file.name) || new Date().getFullYear(), type:guessType(file.name), title:cleanTitle(file.name), note:''})); drawFiles(); analyse(files); };
   $('#aup').onclick = async () => {
     const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
     let done = 0, skipped = 0, total = 0; const why = {long:0, big:0, type:0};
@@ -1252,7 +1297,7 @@ function admAdd(box){
           try { msg.textContent = label + ': checking pages'; if (await pageCount(f.file) > MAX_PAGES) { why.long++; continue; } } catch(e) {}
           try { up = await shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; }); } catch(e) { up = f.file; }
         }
-        await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type, title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
+        await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type || 'Other', title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
         done++;
       }
       msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '') + (why.long ? ' ' + why.long + ' skipped: over ' + MAX_PAGES + ' pages.' : '') + (why.big ? ' ' + why.big + ' skipped: over 50 MB.' : '') + (why.type ? ' ' + why.type + ' skipped: not PDF, Word (.docx) or PowerPoint (.pptx).' : '');
@@ -1301,24 +1346,16 @@ async function admTidy(box){
     <div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Files named "Other"</h2><span class="chip ${others.length ? 'hot' : ''}">${others.length}</span></div>
       <p class="small">Pick the right type for each, then save.</p>
       ${others.length ? others.slice(0, 40).map((p, i) => `<div class="frow"><div class="small" style="word-break:break-all"><b>${esc(p.course.code)}</b> · ${esc(p.title)}</div><select data-o="${i}">${typeOptions(guessTypeRaw(p.title) || 'Final exam')}</select></div>`).join('') + (others.length > 40 ? `<div class="small">Showing the first 40. Save, then open this page again for the rest.</div>` : '') + '<div class="btnrow"><button class="btn pri" id="tdo">Save types</button></div>' : '<div class="small">Nothing to fix.</div>'}</div>
-    <div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Check inside files</h2><span class="chip ${scanState.props.length ? 'hot' : ''}">${scanState.props.length}</span></div>
-      <p class="small">Opens files marked "Final exam" and reads inside them to find out if they are really notes, an outline, a worksheet or a book. It also finds a proper topic name when the file name is messy. It checks 100 files at a time and uses some data.</p>
-      ${scanState.props.map((x, i) => `<div class="frow"><div class="small" style="word-break:break-all"><b>${esc(x.p.course.code)}</b> · now: ${esc(x.p.title)} (${esc(x.p.type)})</div><input class="search" type="text" data-st="${i}" value="${esc(x.title)}" aria-label="Title"><select data-sy="${i}">${typeOptions(x.type)}</select><label class="small"><input type="checkbox" data-sc="${i}" checked> Save this change</label></div>`).join('')}
-      <div class="btnrow"><button class="btn" id="tds">Check next 100</button><button class="btn" id="tdx" hidden>Stop</button>${scanState.props.length ? `<button class="btn pri" id="tda">Save changes</button>` : ''}</div></div>
-    <p class="msg" id="tmsg" role="status"></p></div>`;
+    <div id="rel"></div><p class="msg" id="tmsg" role="status"></p></div>`;
+  admRelabel($('#rel'));
   const msg = $('#tmsg');
   const run = async (btn, items, fn, word) => {
-    btn.disabled = true; let n = 0, good = true;
+    btn.disabled = true; let n = 0;
     try { for (const it of items) { msg.textContent = word + ' ' + (n + 1) + ' of ' + items.length + '…'; await fn(it); n++; } msg.textContent = 'Done: ' + n + '.'; }
-    catch(e) { good = false; msg.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; }
-    setTimeout(() => admTidy(box), 900); return good;
+    catch(e) { msg.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; }
+    setTimeout(() => admTidy(box), 900);
   };
   if ($('#tdd')) $('#tdd').onclick = () => { if (confirm('Delete ' + drops.length + ' extra copies? This cannot be undone.')) run($('#tdd'), drops, p => window.FB.deletePaper({id:p.id, path:p.path}), 'Deleting'); };
-  $('#tds').onclick = () => runScan(box, 100);
-  if ($('#tda')) $('#tda').onclick = () => {
-    const items = scanState.props.map((x, i) => ({x, i, on:box.querySelector('[data-sc="' + i + '"]').checked, type:box.querySelector('[data-sy="' + i + '"]').value, title:box.querySelector('[data-st="' + i + '"]').value.trim()})).filter(o => o.on);
-    run($('#tda'), items, o => window.FB.updatePaper(o.x.p.id, {type:o.type, title:o.title || o.x.p.title}), 'Saving').then(good => { if (good) scanState.props = scanState.props.filter((x, i) => !items.some(o => o.i === i)); });
-  };
   if ($('#tdw')) $('#tdw').onclick = () => run($('#tdw'), wrong, w => window.FB.updatePaper(w.p.id, {code:w.to.code}), 'Moving');
   if ($('#tdo')) $('#tdo').onclick = () => { const items = others.slice(0, 40).map((p, i) => ({p, type:box.querySelector('[data-o="' + i + '"]').value})); run($('#tdo'), items, it => window.FB.updatePaper(it.p.id, {type:it.type}), 'Saving'); };
 }
@@ -1372,348 +1409,550 @@ function admSet(box){
   };
 }
 
-/* ---------- router ---------- */
-/* ----- Reading what a file is about (type, year, topic) ----- */
-const cleanTitle = s => String(s || '').replace(/_+/g, ' ').replace(/\s*\.(pdf|docx|pptx)$/i, '').replace(/\s+/g, ' ').trim();
-const junkTitle = t => !t || /_/.test(t) || t.length < 5 || /^(img|scan|scanned|cam|doc|document|untitled|new|copy|file|download|whatsapp)[\s\d\-().]*$/i.test(t) || /^[\d\s\-().]+$/.test(t);
-const yearOk = y => y >= 2005 && y <= new Date().getFullYear();
-const yearFromName = n => { const m = String(n).match(/(?:^|[^0-9])((?:19|20)\d{2})(?![0-9])/g) || []; for (const s of m) { const y = Number(s.replace(/\D/g, '')); if (yearOk(y)) return y; } return 0; };
-const MONTHS = 'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec';
-function yearFromText(t){
-  t = String(t || '').toLowerCase();
-  let m = t.match(/\b(20\d{2})\s*[\/\-–]\s*(?:20)?\d{2}\b/); if (m && yearOk(Number(m[1]))) return Number(m[1]);
-  m = t.match(new RegExp('\\b(?:' + MONTHS + ')\\.?\\s*,?\\s*(20\\d{2})\\b')); if (m && yearOk(Number(m[1]))) return Number(m[1]);
-  m = t.match(/\byear\s*(20\d{2})\b/); if (m && yearOk(Number(m[1]))) return Number(m[1]);
-  return 0;
-}
-async function readHints(file){
-  const ext = extOf(file.name);
-  if (ext !== 'pdf') return {ext, pages:0, text:'', avgChars:0, landscape:false, title:''};
-  const lib = await loadPdfJs();
-  const d = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
-  const n = d.numPages, take = Math.min(n, 3); let text = '', chars = 0, landscape = false, title = '';
+
+/* =====================================================================
+   v3 additions
+   1. Smart labelling: reads inside each file to work out what it is
+   2. Login screen (welcome gate)
+   3. Help desk and admin inbox
+   4. Tips, motivation and rotating quotes
+   5. Tutorial and guide
+   ===================================================================== */
+
+/* ---------- 1. Smart labelling ---------- */
+const CDN_JS = 'https://cdn.jsdelivr.net/npm/';
+const EXAMT = ['Final exam','Supplementary exam','Mid-term test','Test'];
+const BOILER = /copperbelt|university|school of|department|faculty|lembawrite|cbu data|©|www\.|^page\b|^\d+$|^slide\b|all rights reserved|^\W+$|^\f$/i;
+const CUES = [
+  ['Supplementary exam', /supplementary|deferred|re-?sit|special exam/, 6],
+  ['Mid-term test', /mid[\s\-]?(semester|term|year)/, 6],
+  ['Test', /\b(test|quiz|continuous assessment)\b/, 4],
+  ['Final exam', /final\s+(exam|examination|paper)|end[\s\-]of[\s\-](semester|year|term)|sessional|semester\s+exam|year[\s\-]end|main exam/, 6],
+  ['Course outline', /course\s+(outline|description|synopsis|guide)|syllabus|learning outcomes|course objectives|prescribed (text|reading)|recommended (text|reading)|contact hours|credit (hours|units)/, 4],
+  ['Assignment', /\bassignment\b|submission (date|deadline)|due date|hand[\s\-]in|to be submitted|group presentation/, 5],
+  ['Tutorial sheet', /\btutorials?\b/, 5],
+  ['Worksheet', /work\s?sheet|problem sets?|practice questions|\bexercises?\b|revision questions|case study questions/, 4],
+  ['Lab manual', /laborator(y|ies)|\blab\s+(manual|report|sheet|\d)|practical\s+(manual|sheet|session|\d)|experiment\s+\d/, 5],
+  ['Summary notes', /summary|revision notes|cheat\s?sheet|quick notes|key points|study guide/, 4],
+  ['Lecture notes', /lecture|\bunit\s*\d|chapter\s*\d|\btopic\s*\d|learning objectives|\bweek\s*\d|\bmodule\s*\d|\bslides?\b/, 3],
+  ['Textbook', /\bisbn\b|publisher|all rights reserved|table of contents|\bedition\b|copyright/, 4],
+  ['Reference book', /handbook|encyclopedia|journal of|proceedings|et al\./, 3]
+];
+const EXAM_SIGNS = [/time allowed/, /duration\s*[:\-]?\s*\d/, /instructions? to (candidates|students)/, /answer (any|all|both|four|three|two|five|six|question)/,
+  /attempt (any|all|both|four|three|two|five|question)/, /do not open (this|the) (paper|question)/, /this (paper|examination|exam) (consists|contains|has|comprises)/,
+  /\(\s*\d+\s*marks?\s*\)|\[\s*\d+\s*marks?\s*\]/, /total (marks|of)/, /\bmarks?\s*[:\-]\s*\d+/, /examiner/, /invigilat/, /candidate/, /question\s*(one|1)\b/, /section\s*[ab]\b/];
+const JUNK_NAME = /^(document|doc|scan|scanned|image|img|untitled|camscanner|whatsapp|screenshot|photo|new document|file)\b|^[0-9a-f]{16,}(\(\d+\))?$|^\d+$|image to pdf/i;
+
+async function readSampleBytes(buf, ext){
+  const out = {lines:[], pages:0, ext};
   try {
-    for (let i = 1; i <= take; i++) {
-      const pg = await d.getPage(i), v = pg.getViewport({scale:1}); if (i === 1) landscape = v.width > v.height * 1.1;
-      const items = (await pg.getTextContent()).items.filter(it => it.str && it.str.trim());
-      text += ' ' + items.map(it => it.str).join(' '); chars += items.reduce((s, it) => s + it.str.length, 0);
-      if (i === 1 && items.length) {
-        const sz = it => Math.abs(it.transform[3]) || it.height || 0, max = Math.max(...items.map(sz));
-        const big = items.filter(it => sz(it) >= max * 0.7).sort((a, b) => (b.transform[5] - a.transform[5]) || (a.transform[4] - b.transform[4]));
-        const lines = []; big.forEach(it => { const L = lines[lines.length - 1]; if (L && Math.abs(L.y - it.transform[5]) < sz(it) * 0.6) L.s += ' ' + it.str.trim(); else lines.push({y:it.transform[5], s:it.str.trim()}); });
-        title = cleanTitle(lines.slice(0, 3).map(l => l.s).join(' · ')).slice(0, 90);
+    if (ext === 'pdf') {
+      const lib = await loadPdfJs(), d = await lib.getDocument({data:buf.slice()}).promise;
+      out.pages = d.numPages;
+      for (let i = 1; i <= Math.min(3, d.numPages); i++) {
+        const pg = await d.getPage(i), tc = await pg.getTextContent();
+        const items = tc.items.filter(it => it.str && it.str.trim()).map(it => ({x:it.transform[4], y:it.transform[5], s:it.str})).sort((a, b) => b.y - a.y || a.x - b.x);
+        let row = [], cy = null;
+        const flush = () => { if (row.length) { const ln = row.sort((a, b) => a.x - b.x).map(r => r.s).join(' ').replace(/\s+/g, ' ').trim(); if (ln) out.lines.push(ln); } row = []; };
+        items.forEach(it => { if (cy === null || Math.abs(it.y - cy) > 3) { flush(); cy = it.y; } row.push(it); });
+        flush(); out.lines.push('\f');
       }
-      pg.cleanup();
+      if (d.destroy) d.destroy();
+    } else if (ext === 'pptx' || ext === 'docx') {
+      await loadScript(CDN_JS + 'jszip@3.10.1/dist/jszip.min.js');
+      const z = await window.JSZip.loadAsync(buf);
+      const dec = x => x.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+      const paras = (xml, p, t) => (xml.match(new RegExp('<' + p + '[ >][\\s\\S]*?</' + p + '>', 'g')) || []).map(pp => dec([...pp.matchAll(new RegExp('<' + t + '(?: [^>]*)?>([^<]*)</' + t + '>', 'g'))].map(m => m[1]).join('')).replace(/\s+/g, ' ').trim()).filter(Boolean);
+      if (ext === 'pptx') {
+        const names = Object.keys(z.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a, b) => a.match(/(\d+)\.xml/)[1] - b.match(/(\d+)\.xml/)[1]);
+        out.pages = names.length;
+        for (const n of names.slice(0, 3)) { out.lines.push(...paras(await z.files[n].async('string'), 'a:p', 'a:t')); out.lines.push('\f'); }
+      } else {
+        out.lines.push(...paras(await z.files['word/document.xml'].async('string'), 'w:p', 'w:t').slice(0, 80));
+      }
     }
-  } finally { await d.destroy(); }
-  return {ext, pages:n, text:text.slice(0, 9000), avgChars:chars / take, landscape, title};
-}
-function classifyContent(h, name){
-  const t = (' ' + cleanTitle(name) + ' ' + (h.text || '')).toLowerCase();
-  const cnt = a => a.filter(r => r.test(t)).length;
-  const exam = cnt([/time allowed|duration\s*[:\-]/, /instructions? to candidates|candidates? (must|should|are)|do not (open|turn over)/, /answer (all|any|only|question|four|five|three|two|one)|attempt (all|any|only)|compulsory/, /total marks|\[\s*\d+\s*marks?\s*\]|\(\s*\d+\s*marks?\s*\)|\b\d+\s*marks\b/, /final examination|end of (semester|year) examination|university examination|examination paper|supplementary examination|mid[- ]?(term|semester) (test|examination)/, /this paper (consists|contains|has)|read the instructions|section [a-c]\b/]);
-  const outline = cnt([/course (outline|description|objectives|aims|content|synopsis)/, /learning outcomes?/, /\bsyllabus\b|reading list|recommended (text|reading)|assessment (method|scheme|breakdown)|credit (hours?|units?)|contact hours/]);
-  let type = '', why = '';
-  if (outline >= 2) { type = 'Course outline'; why = 'outline'; }
-  else if (exam >= 2) {
-    why = 'exam';
-    type = /supplementary|\bsupp\b/.test(t) ? 'Supplementary exam' : /mid[- ]?(term|semester|year)/.test(t) ? 'Mid-term test' : /\b(test|quiz|continuous assessment)\b/.test(t) && !/final examination|end of (semester|year)/.test(t) ? 'Test' : 'Final exam';
-  } else if (/worksheet|work sheet/.test(t)) { type = 'Worksheet'; why = 'work'; }
-  else if (/tutorial (sheet|questions?|exercises?|problems?)|tutorial \d/.test(t)) { type = 'Tutorial sheet'; why = 'work'; }
-  else if (/assignment/.test(t)) { type = 'Assignment'; why = 'work'; }
-  else if (/\blab(oratory)? (manual|report|sheet|exercise)|practical (manual|sheet)/.test(t)) { type = 'Lab manual'; why = 'work'; }
-  else if (/problem set|exercise sheet/.test(t)) { type = 'Worksheet'; why = 'work'; }
-  else if ((h.pages || 0) >= 150 || ((h.pages || 0) >= 60 && cnt([/isbn/, /all rights reserved|copyright/, /table of contents/, /preface|foreword/, /publisher|published by|\bedition\b/]) >= 2)) { type = 'Textbook'; why = 'book'; }
-  else if (/\b(unit|chapter|lecture|topic|week|module) ?\d|learning objectives?|key terms|in this (lecture|unit|chapter)|summary|\bnotes?\b|slides?/.test(t) || (h.landscape && (h.avgChars || 0) < 1800 && (h.pages || 0) > 2)) { type = 'Lecture notes'; why = 'notes'; }
-  return {type, why, exam, outline};
-}
-/* what the app decides for one file: type, year, title, and whether to double-check */
-function analyseFile(file, h){
-  const name = file.name, nm = cleanTitle(name), c = h ? classifyContent(h, name) : {type:'', why:''};
-  let type = c.type || guessTypeRaw(name), typeFrom = c.type ? 'file' : (type ? 'name' : '');
-  if (!type) { type = 'Final exam'; typeFrom = ''; }
-  let year = yearFromName(name), yearFrom = year ? 'name' : '';
-  if (!year && h) { year = yearFromText(h.text); yearFrom = year ? 'file' : ''; }
-  if (!year) year = new Date().getFullYear();
-  let title = nm;
-  if (junkTitle(String(name).replace(FILE_EXT, '')) && h && h.title && c.why !== 'exam') title = h.title;
-  return {type, typeFrom, year, yearFrom, title};
-}
-
-/* ---------- Login screen, help, tips, motivation, tour ---------- */
-const MOTIV = [
-  'Small steps every day beat big pushes the night before an exam.',
-  'You do not have to be perfect. You only have to show up and try again.',
-  "Today's effort is tomorrow's confidence.",
-  'A hard course is not a sign you are failing. It is a sign you are growing.',
-  'Study for one focused hour. Then rest. You are not a machine, and that is fine.',
-  'Your degree is built one lecture, one page and one past paper at a time.',
-  'Struggling means you are learning something new. Keep going.',
-  'Ask the question. Someone else in the room is wondering the same thing.',
-  'Start with the easiest topic. Momentum will carry you to the hard ones.',
-  'Progress, not perfection.',
-  'Your family and your future are cheering for you. Make today count.',
-  'A bad test result tells you what to fix. It does not tell you who you are.',
-  'Rest, water and sleep are part of studying too.',
-  'Every expert once sat where you are sitting now.',
-  'You have already come this far. Do not stop now.',
-  'Discipline is choosing what you want most over what you want right now.',
-  'Do one past paper today. Future you will say thank you.',
-  'Comparing yourself to others steals your focus. Run your own race.',
-  'Today is a fresh page. Write something you are proud of.',
-  'Be patient with yourself. Growth takes time, even when you cannot see it.',
-  'You belong here. Your hard work will show.'
-];
-const QUOTES = [
-  ['Education is the most powerful weapon which you can use to change the world.', 'Nelson Mandela'],
-  ['It always seems impossible until it is done.', 'Nelson Mandela'],
-  ['It does not matter how slowly you go as long as you do not stop.', 'Confucius'],
-  ['The expert in anything was once a beginner.', 'Helen Hayes'],
-  ['Success is the sum of small efforts, repeated day in and day out.', 'Robert Collier'],
-  ["Don't watch the clock; do what it does. Keep going.", 'Sam Levenson'],
-  ['An investment in knowledge pays the best interest.', 'Benjamin Franklin'],
-  ['The beautiful thing about learning is that no one can take it away from you.', 'B. B. King'],
-  ['Genius is one percent inspiration and ninety-nine percent perspiration.', 'Thomas Edison'],
-  ['The future belongs to those who believe in the beauty of their dreams.', 'Eleanor Roosevelt']
-];
-const TIP_CATS = ['Focus', 'Exams', 'Memory', 'Wellbeing', 'In the app'];
-const TIPS = [
-  ['Focus', 'Study in short bursts', 'Study for 25 to 45 minutes, then rest for 5 to 10. Repeat. Your mind holds focus better this way.'],
-  ['Focus', 'Put your phone away', 'Switch it to silent and keep it out of reach while you study.'],
-  ['Focus', 'Plan tomorrow tonight', 'Write the 3 things you must finish tomorrow. Start with the hardest.'],
-  ['Focus', 'One topic at a time', 'Finish one topic before jumping to the next. Switching all the time wastes energy.'],
-  ['Exams', 'Use past papers early', 'Do not wait for the last week. Try a past paper first to see what lecturers ask, then study the gaps.'],
-  ['Exams', 'Practise with a timer', 'Do a full past paper in the real exam time. Practise writing answers, not only reading.'],
-  ['Exams', 'Read the whole paper first', 'In the exam, read all the questions, then start with the one you know best.'],
-  ['Exams', 'Match time to marks', 'A 5-mark question should not take 30 minutes. Share your time by the marks.'],
-  ['Exams', 'Learn from mistakes', 'After a test, list every mistake and why it happened. Fix those first.'],
-  ['Memory', 'Explain it out loud', 'Teach the topic to a friend or to yourself. If you cannot explain it, you do not know it yet.'],
-  ['Memory', 'Test yourself', 'Close the book and write what you remember, then check. This builds memory faster than re-reading.'],
-  ['Memory', 'Space your revision', 'Review a topic after 1 day, 3 days and 1 week. Short and often beats one long cram.'],
-  ['Memory', 'Make short notes', 'Summarise each topic on one page in your own words, with formulas and key points.'],
-  ['Wellbeing', 'Sleep before exams', 'A full night of sleep helps memory more than one more hour of cramming.'],
-  ['Wellbeing', 'Eat and drink water', 'A hungry or thirsty mind does not focus. Take water to your study spot.'],
-  ['Wellbeing', 'Talk to someone', 'If you feel stressed or stuck, speak to a friend, a lecturer, or message us in Help.'],
-  ['Wellbeing', 'Move your body', 'A 10 minute walk clears your head and helps you study better afterwards.'],
-  ['In the app', 'Look beyond past papers', 'Each course also has Notes, Worksheets, Books and Course outlines. Check them all.'],
-  ['In the app', 'Save what you need', 'Tap the star beside a file to save it. Saved files show on your Home page.'],
-  ['In the app', 'Study with a small group', 'Pick 2 to 4 serious classmates. Each person explains one topic to the rest.']
-];
-const STARTERS = [
-  ['I am struggling with a course', 'Hello, I am struggling with a course and need advice. The course is: '],
-  ['I need study tips', 'Hello, I would like study tips for my exams. I am studying: '],
-  ['I cannot open a file', 'Hello, I cannot open a file. The course and file are: '],
-  ['My payment is not approved', 'Hello, I sent my payment but my access is not active yet. My payment reference is: '],
-  ['I feel overwhelmed', 'Hello, I am feeling overwhelmed with school and life right now. '],
-  ['I have a problem at school or home', 'Hello, I have a problem that is affecting my studies. '],
-  ['I want to suggest a file or course', 'Hello, I would like to suggest this file or course be added: ']
-];
-const GUIDE = [
-  ['Create your account', 'Open the app and tap Create account. Type your email and a password you will remember, then tap the button.'],
-  ['Get access', 'Tap Account. Send the mobile money to the number shown. Type the payment reference from your message and tap Send for approval. Your access switches on once it is checked.'],
-  ['Find your course', 'Tap Schools, then your school, your programme and your year. Tap a course to see everything for it.'],
-  ['Choose what you need', 'Every course has tiles for Past papers, Notes, Worksheets, Books and Course outlines. Tap a tile to see its files.'],
-  ['Read a file', 'Tap a file to read it. It is view only. Scroll to read. Tap the back arrow to return to the same place in the list.'],
-  ['Search fast', 'Tap Papers to search by course code or name. You can filter by school, year or type.'],
-  ['Save your favourites', 'Tap the star beside a file to save it. Saved files show on your Home page.'],
-  ['Add the app to your phone', 'In Chrome tap the three dots at the top right, then tap Install app. It will sit on your home screen like any other app.'],
-  ['Need help?', 'Tap Help, then Messages. Choose a starter message or write your own. Your reply will show there.']
-];
-const TOUR = [
-  ['Welcome to CBU Past Papers', 'Everything you need to study is in one place: past papers, notes, worksheets, books and course outlines.'],
-  ['Find your course', 'Tap Schools, pick your school, programme and year, then tap a course.'],
-  ['Get access', 'Tap Account to pay by mobile money. Send us the payment reference and your access switches on once it is checked.'],
-  ['Read and save', 'Tap a file to read it. Tap the star to save it. The back arrow brings you back to the same spot.'],
-  ['We are here to help', 'Tap Help to message us, read study tips and see the full guide any time.']
-];
-
-/* login */
-function loginScreen(app){
-  if (!S.authReady) { app.innerHTML = `<div class="login"><div class="lc glass"><img class="lcrest" src="${IMGS['logo.png']}" alt=""><p class="small" style="text-align:center;margin:10px 0 0">Loading…</p></div></div>`; return; }
-  const st = loginScreen.st || (loginScreen.st = {mode:'in', em:''});
-  const draw = () => {
-    const inn = st.mode === 'in';
-    app.innerHTML = `<div class="login"><form class="lc glass" id="lf" novalidate>
-      <img class="lcrest" src="${IMGS['logo.png']}" alt="Copperbelt University crest">
-      <h1 class="lh">CBU Past Papers</h1>
-      <p class="small lsub">${inn ? 'Welcome back. Sign in to continue.' : 'Create your account to get started.'}</p>
-      <div class="seg2"><button type="button" id="mi" aria-pressed="${inn}">Sign in</button><button type="button" id="mu" aria-pressed="${!inn}">Create account</button></div>
-      <label class="lbl">Email<input id="em" type="email" autocomplete="email" inputmode="email" class="search" value="${esc(st.em)}"></label>
-      <label class="lbl">Password<span class="pwrow"><input id="pw" type="password" autocomplete="${inn ? 'current-password' : 'new-password'}" class="search" placeholder="At least 6 characters"><button type="button" class="btn" id="sh">Show</button></span></label>
-      <div class="btnrow"><button class="btn pri wide" id="go" type="submit">${inn ? 'Sign in' : 'Create account'}</button></div>
-      <p class="msg" id="msg" role="alert"></p>
-      <p class="small lfoot">${inn ? 'New here? Tap Create account above.' : 'You will get access to browse after signing in. Papers open after payment is approved.'}</p></form></div>`;
-    $('#mi').onclick = () => { st.em = $('#em').value; st.mode = 'in'; draw(); };
-    $('#mu').onclick = () => { st.em = $('#em').value; st.mode = 'up'; draw(); };
-    $('#sh').onclick = () => { const p = $('#pw'), show = p.type === 'password'; p.type = show ? 'text' : 'password'; $('#sh').textContent = show ? 'Hide' : 'Show'; };
-    $('#lf').onsubmit = async e => {
-      e.preventDefault(); const msg = $('#msg'), btn = $('#go'); msg.textContent = ''; st.em = $('#em').value.trim();
-      if (!st.em || !$('#pw').value) { msg.textContent = !st.em ? 'Type your email.' : 'Type your password.'; return; }
-      btn.disabled = true;
-      try { await (inn ? window.FB.signIn(st.em, $('#pw').value) : window.FB.signUp(st.em, $('#pw').value)); }
-      catch(e2) { msg.textContent = niceErr(e2); btn.disabled = false; }
-    };
-  };
-  draw();
-}
-
-/* welcome tour */
-function showTour(force){
-  try { if (!force && localStorage.getItem('cbu-tour')) return; } catch(e) {}
-  if ($('#tour')) return;
-  let i = 0; const el = document.createElement('div'); el.id = 'tour'; el.className = 'tour'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Welcome tour');
-  document.body.appendChild(el);
-  const done = () => { try { localStorage.setItem('cbu-tour', '1'); } catch(e) {} el.remove(); };
-  const draw = () => {
-    const last = i === TOUR.length - 1;
-    el.innerHTML = `<div class="tc glass"><div class="tstep">Step ${i + 1} of ${TOUR.length}</div><h2>${esc(TOUR[i][0])}</h2><p>${esc(TOUR[i][1])}</p>
-      <div class="tdots">${TOUR.map((x, k) => `<span class="${k === i ? 'on' : ''}"></span>`).join('')}</div>
-      <div class="btnrow"><button class="btn" id="tk">${last ? 'Close' : 'Skip'}</button>${i ? '<button class="btn" id="tb">Back</button>' : ''}<button class="btn pri" id="tn">${last ? 'Start' : 'Next'}</button></div></div>`;
-    $('#tk').onclick = done; $('#tn').onclick = () => { if (last) done(); else { i++; draw(); } };
-    if ($('#tb')) $('#tb').onclick = () => { i--; draw(); };
-  };
-  draw();
-}
-
-/* rotating motivation, tips and quotes */
-let boostTimer = null;
-function boostItems(){
-  const d = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5), out = [];
-  for (let j = 0; j < 6; j++) {
-    out.push({k:'Daily motivation', t:MOTIV[(d + j) % MOTIV.length], s:''});
-    const tp = TIPS[(d * 3 + j) % TIPS.length]; out.push({k:'Study tip', t:tp[1] + '. ' + tp[2], s:tp[0]});
-    const q = QUOTES[(d + j) % QUOTES.length]; out.push({k:'Quote', t:'“' + q[0] + '”', s:q[1]});
-  }
+  } catch (e) { out.err = String(e && e.message || e); }
   return out;
 }
-function mountBoost(el){
-  const items = boostItems(); let i = 0;
-  const show = () => { const it = items[i % items.length]; el.innerHTML = `<span class="chip hot">${esc(it.k)}</span><p class="bt">${esc(it.t)}</p>${it.s ? `<small>${esc(it.s)}</small>` : ''}`; };
-  const next = () => { el.classList.add('fade'); setTimeout(() => { i++; show(); el.classList.remove('fade'); }, 350); };
-  show(); clearInterval(boostTimer);
-  boostTimer = setInterval(() => { if (!document.hidden && el.isConnected) next(); else if (!el.isConnected) clearInterval(boostTimer); }, 8000);
-  el.onclick = next;
+async function readSample(file){ return readSampleBytes(new Uint8Array(await file.arrayBuffer()), extOf(file.name)); }
+
+const toTitle = s => { s = s.replace(/\s+/g, ' ').trim().replace(/^[\W_]+|[\W_]+$/g, ''); return /^[^a-z]*$/.test(s) && /[A-Z]{3}/.test(s) ? s.toLowerCase().replace(/(^|[\s(\-\/])([a-z])/g, (m, a, b) => a + b.toUpperCase()) : s; };
+function findYear(lines, fname){
+  const cur = new Date().getFullYear(), txt = lines.filter(l => !BOILER.test(l) || /20\d\d/.test(l)).slice(0, 40).join('\n');
+  let m = txt.match(/\b(20[0-3]\d)\s*[\/\-–]\s*(?:20)?\d\d\b/);
+  if (m && +m[1] >= 2005 && +m[1] <= cur) return +m[1];
+  const cnt = {}; (txt.match(/\b(?:20[0-3]\d)\b/g) || []).forEach(y => { if (+y >= 2005 && +y <= cur) cnt[y] = (cnt[y] || 0) + 1; });
+  const top = Object.entries(cnt).sort((a, b) => b[1] - a[1] || b[0] - a[0])[0];
+  return top ? +top[0] : guessYear(fname);
+}
+function codeResList(){
+  if (!codeRes) codeRes = courses.map(c => { const m = c.code.match(/^([A-Za-z]+)\s*([0-9][0-9A-Za-z]*)/); return m ? {c, re:new RegExp('(^|[^A-Za-z0-9])' + m[1] + '[\\s_.\\-]*' + m[2] + '(?![0-9])', 'i')} : null; }).filter(Boolean);
+  return codeRes;
+}
+/* info = {lines, pages, ext}, fname = file name or title. Returns the best guess and the evidence for it. */
+function classify(info, fname){
+  const lines = info.lines.filter(l => l !== '\f');
+  const raw = lines.join('\n'), t = raw.toLowerCase();
+  const base = fname.replace(FILE_EXT, ''), fn = base.replace(/[_\-.]+/g, ' ').toLowerCase();
+  const slides = info.ext === 'pptx', score = {}, why = [];
+  const bump = (k, n, w) => { score[k] = (score[k] || 0) + n; if (w && why.length < 4 && !why.includes(w)) why.push(w); };
+  const head = lines.slice(0, 6).join(' ').toLowerCase();   /* the heading is the best evidence of what a file is */
+  CUES.forEach(([type, re, pts]) => {
+    const a = fn.match(re), b = t.match(re);
+    if (a) bump(type, pts, 'file name says "' + a[0].trim() + '"');
+    if (b && !(slides && EXAMT.includes(type))) {
+      const n = (t.match(new RegExp(re.source, 'g')) || []).length, inHead = re.test(head);
+      bump(type, Math.max(2, pts - 2) + (EXAMT.includes(type) ? 0 : Math.min(n - 1, 3)) + (inHead ? 3 : 0), (inHead ? 'heading says "' : 'inside: "') + b[0].trim().slice(0, 28) + '"');
+    }
+  });
+  const ex = slides ? 0 : EXAM_SIGNS.filter(r => r.test(t)).length;
+  if (ex >= 3) { EXAMT.forEach(k => { score[k] = (score[k] || 0) + ex + (k === 'Final exam' ? 1 : 0); }); if (why.length < 4) why.push('exam wording (' + ex + ' signs)'); }
+  if (slides) bump('Lecture notes', 4, info.pages ? 'slides (' + info.pages + ')' : 'slides');
+  if (info.pages >= 120 && ex < 3) bump('Textbook', info.pages >= 250 ? 8 : 6, info.pages + ' pages');
+  const order = CUES.map(c => c[0]);
+  const best = Object.entries(score).sort((a, b) => b[1] - a[1] || order.indexOf(a[0]) - order.indexOf(b[0]))[0];
+  let type = '', conf = 'low';
+  if (best && best[1] >= 3) { type = best[0]; conf = best[1] >= 8 ? 'high' : best[1] >= 5 ? 'ok' : 'low'; }
+  else if (slides) type = 'Lecture notes';
+  const year = findYear(lines, fname);
+  /* title */
+  const fallback = base.replace(/_+/g, ' ').replace(/\s+/g, ' ').trim();
+  const junk = JUNK_NAME.test(fallback);
+  const sol = /marking (scheme|key|guide)|solutions?|\bmemo\b/.test(fn + ' ' + lines.slice(0, 5).join(' ').toLowerCase()) ? ' (solutions)' : '';
+  let title;
+  if (EXAMT.includes(type)) title = (junk ? type + ' ' + year : fallback) + (sol && !/solution|marking|memo/i.test(fallback) ? sol : '');
+  else {
+    const codeLine = /\b[A-Za-z]{2,5}[\s_\-]?\d{3}[A-Za-z]?\b/;
+    const cand = lines.slice(0, 16).map(s => s.trim()).filter(s => s.length >= 3 && s.length <= 100 && !BOILER.test(s));
+    const unit = cand.find(s => /^(unit|chapter|topic|lecture|week|module|part|section)\s*\d+/i.test(s));
+    let topic = '';
+    if (unit) { const nx = cand[cand.indexOf(unit) + 1]; topic = /[:\-–—]\s*\S/.test(unit) ? unit : unit + (nx && nx.length <= 70 ? ': ' + nx : ''); }
+    else topic = cand.filter(s => !codeLine.test(s))[0] || '';
+    title = topic ? toTitle(topic).slice(0, 90) : (junk ? (type || 'Document') : fallback);
+    if (type === 'Course outline' && !/outline/i.test(title)) title += ' (course outline)';
+    if (sol && !/solution|marking|memo/i.test(title)) title += sol;
+  }
+  const codes = codeResList().filter(x => x.re.test(raw)).map(x => x.c);
+  return {type, title, year, why, conf, codes, hasText:lines.length > 0};
+}
+async function analyseFile(f){
+  try {
+    const info = await readSample(f.file), r = classify(info, f.file.name);
+    f.type = r.type || guessTypeRaw(f.file.name) || ''; f.title = r.title; f.year = r.year; f.why = r.why; f.conf = r.conf; f.codes = r.codes;
+    if (!r.hasText) { f.why = ['no readable text inside (scanned?)'].concat(r.why); if (!r.type) f.conf = 'low'; }
+  } catch (e) { f.type = guessTypeRaw(f.file.name) || ''; f.why = ['could not read inside']; f.conf = 'low'; }
+  f.busy = false;
 }
 
-/* Help screen */
-const hlp = {tab:'msg', timer:null};
-async function updateBadge(){
-  const b = $('#hbdg'); if (!b) return;
-  if (!window.FB || S.noBackend || !S.user || !window.FB.unread) { b.hidden = true; return; }
-  try { const n = await window.FB.unread(isAdmin() ? 'admin' : 'student', S.user.uid); b.textContent = n > 9 ? '9+' : String(n); b.hidden = !n; } catch(e) { b.hidden = true; }
-}
-function helpScreen(app, arg){
-  clearInterval(hlp.timer); clearInterval(boostTimer);
-  topbar('Help & support', 'Messages, study tips and a guide');
-  if (arg && ['msg', 'tips', 'guide'].includes(arg)) hlp.tab = arg;
-  app.innerHTML = '<div class="views" id="htabs"></div><div id="hbody"></div>';
-  viewSwitch($('#htabs'), [['msg','Messages'],['tips','Study tips'],['guide','How to use']], hlp.tab, v => { hlp.tab = v; helpScreen(app); });
-  ({msg:helpMsgs, tips:helpTips, guide:helpGuide}[hlp.tab] || helpMsgs)($('#hbody'));
-}
-const bubbles = (list, me) => list.length ? list.map(m => `<div class="bub ${m.from === me ? 'me' : 'them'}">${esc(m.body)}<small>${m.from === 'admin' && me === 'student' ? 'CBU Papers team · ' : ''}${m.at ? new Date(m.at).toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : ''}</small></div>`).join('') : '';
-function helpMsgs(box){
-  const FB = window.FB;
-  if (S.noBackend || !FB) { box.innerHTML = '<div class="empty">Messages are not switched on yet.</div>'; return; }
-  if (isAdmin()) { box.innerHTML = '<div class="panel pad"><p style="margin:0 0 10px">You are the admin. Read and answer student messages in your inbox.</p><div class="btnrow"><a class="btn pri" id="gi" href="#admin" style="text-decoration:none">Open inbox</a></div></div>'; $('#gi').onclick = () => { adm.tab = 'inbox'; }; return; }
-  box.innerHTML = `<div class="panel pad"><p class="small" style="margin:0">Tell us what is troubling you in your studies or in life. Only the admin can read your messages. We reply here.</p>
-    <div class="chat" id="chat"></div>
-    <div class="small">Not sure what to say? Tap one to start:</div>
-    <div class="starters" id="starters">${STARTERS.map((s, i) => `<button type="button" data-s="${i}">${esc(s[0])}</button>`).join('')}</div>
-    <div class="compose"><textarea id="mt" class="search" rows="2" maxlength="2000" placeholder="Type your message…" aria-label="Your message"></textarea><button class="btn pri" id="ms">Send</button></div>
-    <p class="msg" id="mm" role="status"></p>
-    <p class="small">If you or someone else is in danger, contact emergency services or an adult you trust right away.</p></div>`;
-  const draw = list => { $('#chat').innerHTML = list.length ? bubbles(list, 'student') : '<div class="small" style="text-align:center;padding:10px 0">No messages yet. Tap a starter below or write your own.</div>'; };
-  const load = async () => {
-    if (!$('#chat')) { clearInterval(hlp.timer); return; }
-    let list; try { list = await FB.listMessages(S.user.uid); } catch(e) { if ($('#mm')) $('#mm').textContent = 'Could not load messages. Check your connection.'; return; }
-    draw(list);
-    if (list.some(m => m.from === 'admin' && !m.read)) FB.markRead(S.user.uid, 'admin').then(updateBadge).catch(() => {});
+/* Admin: relabel files that are already uploaded */
+const rel = {done:new Set(), props:[], all:false};
+const relabelCands = () => papers.filter(p => !rel.done.has(p.id) && (rel.all || p.type === 'Other' || (p.type === 'Final exam' && guessTypeRaw(p.title) !== 'Final exam')));
+function admRelabel(box){
+  const left = relabelCands().length;
+  box.innerHTML = `<div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Fix labels by reading inside</h2><span class="chip ${left ? 'hot' : ''}">${left}</span></div>
+    <p class="small">Opens each file, reads the first pages, and works out what it really is (exam, notes, tutorial…) and its topic. You review the list before anything changes.</p>
+    <label class="lbl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="rall" ${rel.all ? 'checked' : ''}> Check every file, not only the ones that look mislabelled</label>
+    <div class="btnrow"><button class="btn pri" id="rscan" ${left ? '' : 'disabled'}>Scan next 15</button></div>
+    <p class="msg" id="rmsg" role="status"></p><div id="rres"></div></div>`;
+  const msg = $('#rmsg', box);
+  $('#rall', box).onchange = e => { rel.all = e.target.checked; rel.done.clear(); admRelabel(box); };
+  const drawRes = () => {
+    $('#rres', box).innerHTML = rel.props.length ? `<p class="small"><b>${rel.props.length}</b> suggestions. Untick any you disagree with.</p>` + rel.props.map((r, i) => `<label class="relrow"><input type="checkbox" data-r="${i}" ${r.on ? 'checked' : ''}><span><b>${esc(r.p.course.code)}</b> · ${esc(r.p.type)} → <b>${esc(r.type)}</b><br><span class="small">${esc(r.p.title)}</span><br><span class="small">New title: ${esc(r.title)}</span><br><span class="why">${esc(r.why.join(' · '))}</span></span></label>`).join('') + '<div class="btnrow"><button class="btn pri" id="rapply">Apply ticked changes</button></div>' : '';
+    $('#rres', box).querySelectorAll('[data-r]').forEach(c => c.onchange = () => { rel.props[c.dataset.r].on = c.checked; });
+    if ($('#rapply', box)) $('#rapply', box).onclick = async () => {
+      const todo = rel.props.filter(r => r.on); let n = 0; $('#rapply', box).disabled = true;
+      try { for (const r of todo) { msg.textContent = 'Saving ' + (++n) + ' of ' + todo.length + '…'; await window.FB.updatePaper(r.p.id, {type:r.type, title:r.title}); }
+        rel.props = rel.props.filter(r => !r.on); setPapers(await window.FB.listPapers()); msg.textContent = 'Done: ' + n + ' updated.'; admRelabel(box); $('#rmsg', box).textContent = 'Done: ' + n + ' updated.';
+      } catch (e) { msg.textContent = 'Stopped after ' + (n - 1) + ' of ' + todo.length + '. Check your connection and try again.'; $('#rapply', box).disabled = false; }
+    };
   };
-  $('#starters').querySelectorAll('button').forEach(b => b.onclick = () => { const t = $('#mt'); t.value = STARTERS[b.dataset.s][1]; t.focus(); t.setSelectionRange(t.value.length, t.value.length); });
-  $('#ms').onclick = async () => {
-    const body = $('#mt').value.trim(), mm = $('#mm'); if (!body) { mm.textContent = 'Type a message first.'; return; }
-    $('#ms').disabled = true; mm.textContent = '';
-    try { await FB.sendMessage({uid:S.user.uid, email:S.user.email, from:'student', body}); $('#mt').value = ''; mm.textContent = 'Sent. We will reply here.'; await load(); }
-    catch(e) { mm.textContent = 'Could not send. Check your connection and try again.'; }
-    $('#ms').disabled = false;
+  drawRes();
+  $('#rscan', box).onclick = async () => {
+    const batch = relabelCands().slice(0, 15); if (!batch.length) return; $('#rscan', box).disabled = true; let n = 0;
+    for (const p of batch) {
+      msg.textContent = 'Reading ' + (++n) + ' of ' + batch.length + ': ' + p.title.slice(0, 40);
+      try {
+        const bytes = await window.FB.getPdf(p.path), ext = extOf(p.path), r = classify(await readSampleBytes(bytes, ext), p.title + '.' + ext);
+        rel.done.add(p.id);
+        if (r.type && (r.type !== p.type || r.title !== p.title)) rel.props.push({p, type:r.type, title:r.title, why:r.why, on:r.type !== p.type});
+      } catch (e) { rel.done.add(p.id); }
+    }
+    admRelabel(box); $('#rmsg', box).textContent = 'Scanned ' + batch.length + '. ' + (relabelCands().length ? 'Scan again for the next batch.' : 'No more files to check.');
   };
-  load(); clearInterval(hlp.timer); hlp.timer = setInterval(() => { if (!document.hidden) load(); }, 15000);
 }
-function helpTips(box){
-  let cat = '';
-  box.innerHTML = '<div class="boost glass" id="boost2"></div><div id="tcats"></div><div id="tl"></div><p class="small">Quotes are commonly attributed to the people named.</p>';
-  mountBoost($('#boost2'));
+
+/* ---------- 4. Tips, motivation, quotes ---------- */
+const QUOTES = [
+  ["It always seems impossible until it's done.", "Nelson Mandela"],
+  ["Education is the most powerful weapon which you can use to change the world.", "Nelson Mandela"],
+  ["The beautiful thing about learning is that no one can take it away from you.", "B. B. King"],
+  ["Success is the sum of small efforts, repeated day in and day out.", "Robert Collier"],
+  ["You don't need to feel ready. You just need to start.", ""],
+  ["Tired is allowed. Quitting is optional.", ""],
+  ["A bad test result is information, not a verdict on you.", ""],
+  ["Small steps every day beat big panic the night before.", ""],
+  ["One past paper a day is a degree in the making.", ""],
+  ["Hard courses are only unfamiliar courses. Keep showing up.", ""],
+  ["Your future self is watching what you do tonight. Make them proud.", ""],
+  ["Progress, not perfection.", ""],
+  ["The grade is the result. The habit is the achievement.", ""],
+  ["Every graduate you admire once sat where you are sitting now.", ""],
+  ["Do it tired. Do it nervous. Do it anyway.", ""],
+  ["Great things on the Copperbelt were built one shift at a time. So is a degree.", ""],
+  ["You are not behind. You are on your own timeline.", ""],
+  ["Ask the question. Someone else in the room is waiting for the answer too.", ""],
+  ["Discipline is choosing between what you want now and what you want most.", ""],
+  ["Study like the exam is tomorrow. Rest like it was yesterday.", ""],
+  ["Be proud of how far you have come, and stay hungry for the road ahead.", ""],
+  ["Your struggle today is the story you will tell with a smile on graduation day.", ""],
+  ["Don't compare your chapter 3 to someone else's chapter 20.", ""],
+  ["Failing a paper does not make you a failure. Quitting does not make you free. Learning from it makes you wise.", ""],
+  ["Courage is going to the lecture when you did not understand the last one.", ""],
+  ["Be the student your younger self prayed to become.", ""],
+  ["Consistency beats talent when talent does not show up.", ""],
+  ["Today's effort is tomorrow's confidence.", ""],
+  ["A little revision every day builds a mountain of marks.", ""],
+  ["Doubt will knock. Keep studying anyway.", ""]
+];
+const DAILY = [
+  "Start with the smallest task. Momentum will do the rest.",
+  "Open one past paper today. Just one. See what you already know.",
+  "You have survived every hard day so far. Today is no different.",
+  "Switch off your phone for 25 minutes and see what you can finish.",
+  "Today, ask one question you have been afraid to ask.",
+  "Rest is part of studying. Sleep well tonight.",
+  "Help a classmate with one topic today. Teaching is the best revision.",
+  "Review yesterday's notes for ten minutes before starting something new.",
+  "Be kind to yourself. You are doing something difficult.",
+  "Write down three things you understand better than last month.",
+  "Do the hardest subject first while your mind is fresh.",
+  "A tidy desk and a clear plan make a calm mind.",
+  "Your family, your community and your future are cheering for you.",
+  "Make a to-do list of only three things. Finish all three.",
+  "Drink water, eat well, walk a little. Your brain needs it.",
+  "Mistakes in practice are cheaper than mistakes in the exam.",
+  "Don't wait for motivation. Start, and motivation will follow.",
+  "Message a friend and plan a short study session together.",
+  "Time yourself on one past question today. Exam pace is a skill.",
+  "Whatever happened yesterday, today is a fresh page.",
+  "Read the lecturer's course outline again. It tells you what matters.",
+  "Celebrate a small win today. You earned it.",
+  "Treat every lecture as a chance to learn one new thing.",
+  "Tell someone you trust how you are really doing.",
+  "Today's goal: understand, not memorise.",
+  "Plan tomorrow tonight. You will wake up with a direction.",
+  "You belong here. Your seat at the university was earned.",
+  "Finish what you started yesterday before chasing something new.",
+  "Hard work in silence makes success loud.",
+  "Take a five-minute break every hour. Come back sharper.",
+  "Believe in the version of you that finishes."
+];
+const TIPS = [
+  ["study", "Start from the past paper", "Read the last two years' questions first. You will see what lecturers love to ask, then study your notes with those questions in mind."],
+  ["study", "25 minutes on, 5 minutes off", "Work in short focused rounds with a real break. Four rounds, then a longer rest. Your brain learns better in bursts."],
+  ["study", "Teach it out loud", "Explain a topic to a friend, or to the wall. Anywhere you get stuck is exactly where to revise next."],
+  ["study", "Review within 24 hours", "Spend ten minutes going over a lecture on the same day. It saves hours of relearning before exams."],
+  ["study", "Turn headings into questions", "Rewrite each topic as three questions you could be asked, then answer them from memory without looking."],
+  ["study", "Hard subject, best energy", "Study the course you fear when you are freshest, often early morning. Save easy revision for when you are tired."],
+  ["study", "Phone in another room", "Notifications break concentration for much longer than you think. Put the phone out of reach while you study."],
+  ["study", "Form a small study group", "Three or four serious people is ideal. Share past papers, quiz each other and keep each other honest."],
+  ["study", "Use notes and papers together", "Read the notes for understanding, then do the questions for speed. One without the other leaves gaps."],
+  ["exam", "Read the whole paper first", "Spend five minutes reading every question and the instructions. Decide your order before writing."],
+  ["exam", "Start with your strongest question", "An early win calms the nerves and gives you confidence for the hard ones."],
+  ["exam", "Share time by marks", "If a question carries 10 of 100 marks, give it about a tenth of your time. Don't let one question eat the paper."],
+  ["exam", "Show your working", "In calculations, marks go to the method as well as the answer. Write each step clearly."],
+  ["exam", "Practise under exam conditions", "Do a past paper in the real time limit with no notes. It teaches pacing and exposes weak spots early."],
+  ["exam", "Follow the instruction exactly", "If it says answer any four, answering six wastes time. Check how many questions and which sections."],
+  ["exam", "Leave a gap, then come back", "Stuck for more than a few minutes? Skip, finish the rest, and return with a clear head."],
+  ["exam", "Sleep beats an all-nighter", "Memory is stored during sleep. A rested mind recalls more than a tired one that read until dawn."],
+  ["life", "Sleep 7 to 8 hours", "It is not lazy. It is how your brain saves what you studied. Protect your sleep, especially during exams."],
+  ["life", "Eat a real meal, drink water", "Skipping meals and drinking only coffee makes it harder to concentrate. Small, regular meals help."],
+  ["life", "Move for 15 minutes", "A short walk clears your head and lowers stress. Do it between study rounds."],
+  ["life", "Talk to someone", "Stress shrinks when shared. A friend, a lecturer, a counsellor or our Help desk. You don't have to carry it alone."],
+  ["life", "Plan your week, including rest", "Write a simple timetable with lectures, study, meals and free time. A plan removes the panic."],
+  ["life", "Track your money", "Write down what comes in and goes out each week. Small leaks, like airtime and snacks, add up fast."],
+  ["life", "Ask for help early", "Don't wait until you have failed. Visit lecturers in their office hours the moment a topic stops making sense."],
+  ["life", "Back up your notes", "Keep photos and files in two places, such as your phone and an email or cloud folder. Phones get lost."],
+  ["life", "Compare yourself to last month's you", "Other people's results hide their struggles. Measure your own growth instead."]
+];
+const dayIndex = () => { const d = new Date(); return Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(d.getFullYear(), 0, 0)) / 864e5); };
+const todayMotivation = () => DAILY[dayIndex() % DAILY.length];
+const todayTip = () => TIPS[(dayIndex() * 7) % TIPS.length];
+let quoteTimer = null, helpTimer = null, pollTimer = null;
+function rotateQuotes(){
+  const qt = $('#qt'), qa = $('#qa'), bq = $('#bq'); if (!qt) return;
+  let i = Math.floor(Math.random() * QUOTES.length);
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const draw = () => { qt.textContent = '“' + QUOTES[i][0] + '”'; qa.textContent = QUOTES[i][1] ? '— ' + QUOTES[i][1] : ''; qt.classList.remove('fade'); qa.classList.remove('fade'); };
+  const next = () => { i = (i + 1) % QUOTES.length; if (reduce) return draw(); qt.classList.add('fade'); qa.classList.add('fade'); setTimeout(draw, 450); };
+  draw();
+  clearInterval(quoteTimer); quoteTimer = setInterval(() => { if (!document.hidden && qt.isConnected) next(); }, 8000);
+  bq.onclick = () => { next(); clearInterval(quoteTimer); quoteTimer = setInterval(() => { if (!document.hidden && qt.isConnected) next(); }, 8000); };
+  bq.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bq.onclick(); } };
+}
+const quoteBox = () => `<div class="bq" id="bq" role="button" tabindex="0" aria-label="Motivational quote. Tap for another."><p class="qt" id="qt" aria-live="off"></p><small class="qa" id="qa"></small></div>`;
+const boostCard = () => `<section class="boost glass" aria-label="Daily boost">${quoteBox()}
+  <div class="bday"><div><span class="kick">Today's motivation</span><p>${esc(todayMotivation())}</p></div><div><span class="kick">Study tip of the day</span><p>${esc(todayTip()[2])}</p></div></div>
+  <a class="linkbtn" href="#tips">More tips and motivation →</a></section>`;
+function tipsScreen(app){
+  topbar('Tips & motivation', 'Fresh every day', '#home');
+  const views = [['study','Study'],['exam','Exams'],['life','Life'],['quotes','Quotes']];
+  if (!tipsScreen.v) tipsScreen.v = 'study';
+  app.innerHTML = `<section class="boost glass slim">${quoteBox()}<div class="bday"><div><span class="kick">Today's motivation</span><p>${esc(todayMotivation())}</p></div><div><span class="kick">Study tip of the day</span><p>${esc(todayTip()[2])}</p></div></div></section>
+    <div class="views" id="tv" style="grid-template-columns:repeat(4,1fr)"></div><div class="panel pad" id="tb" style="margin-top:12px"></div>
+    <div class="panel pad"><h2 class="ph2">Need someone to talk to?</h2><p class="small" style="margin:0 0 10px">Struggling with studies, money or life? Send a message to the help desk. We read every one.</p><a class="btn pri" href="#help" style="text-decoration:none;display:inline-block">Open help desk</a></div>`;
+  rotateQuotes();
   const draw = () => {
-    box.querySelector('#tcats').innerHTML = `<div class="starters">${['All'].concat(TIP_CATS).map(c => `<button type="button" class="${(cat || 'All') === c ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>`;
-    box.querySelectorAll('#tcats button').forEach(b => b.onclick = () => { cat = b.dataset.c === 'All' ? '' : b.dataset.c; draw(); });
-    box.querySelector('#tl').innerHTML = '<div class="panel">' + TIPS.filter(t => !cat || t[0] === cat).map(t => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(t[1])}</span><span class="small">${esc(t[2])}</span></div><span class="chip">${esc(t[0])}</span></div>`).join('') + '</div>';
+    viewSwitch($('#tv'), views, tipsScreen.v, v => { tipsScreen.v = v; draw(); });
+    $('#tb').innerHTML = tipsScreen.v === 'quotes'
+      ? '<h2 class="ph2">Words to keep going</h2>' + QUOTES.map(q => `<div class="tip"><b style="font-weight:500">“${esc(q[0])}”</b>${q[1] ? `<p>— ${esc(q[1])}</p>` : ''}</div>`).join('')
+      : TIPS.filter(t => t[0] === tipsScreen.v).map(t => `<div class="tip"><b>${esc(t[1])}</b><p>${esc(t[2])}</p></div>`).join('');
   };
   draw();
 }
-function helpGuide(box){
-  box.innerHTML = `<div class="btnrow" style="margin:0 0 10px"><button class="btn pri" id="rt">Play the welcome tour</button></div>` + GUIDE.map((g, i) => `<details class="grp"><summary><span class="gnum">${i + 1}</span><span>${esc(g[0])}</span></summary><div class="gbody">${esc(g[1])}</div></details>`).join('');
-  $('#rt').onclick = () => showTour(true);
+
+/* ---------- 5. Tutorial and guide ---------- */
+const TOUR = [
+  {i:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>', t:'Welcome to CBU Past Papers', b:'Past papers, notes and worksheets for every school at Copperbelt University, in one place. This 1-minute tour shows you around.'},
+  {i:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>', t:'Find your course', b:'Open Schools, choose your school, then your programme and year. Tap a course to see everything uploaded for it.'},
+  {i:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>', t:'Search the Papers tab', b:'Type a course code or name, then filter by school, level, year or type. Each file is labelled by what it really is: exam, test, notes, tutorial and more.'},
+  {i:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>', t:'Open and save', b:'Tap a file to read it right in the app. Tap the star to save it, and your saved files appear on the Home screen.'},
+  {i:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>', t:'Sign in and get access', b:'Create an account in the Account tab. To read papers, pay by mobile money and send the payment reference. Your access is switched on after it is checked.'},
+  {i:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>', t:'Talk to the Help desk', b:'Stuck with a course, stressed, or have a problem with access or money? Open Help and send us a message. Not sure what to write? Tap a suggestion to begin.'},
+  {i:'<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/>', t:'Daily boost', b:'On Home you will find a quote that changes by itself, plus a motivation and a study tip every day. Tap More tips for exam and life advice.'}
+];
+function maybeTour(){
+  try { if (localStorage.getItem('cbu-tour-v1')) return; } catch (e) { return; }
+  setTimeout(() => { if (!$('#gate') && !$('#tour')) startTour(); }, 600);
+}
+function startTour(){
+  if ($('#tour')) return;
+  let i = 0; const el = document.createElement('div'); el.id = 'tour'; el.className = 'tour'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'App tour');
+  document.body.appendChild(el);
+  const done = () => { try { localStorage.setItem('cbu-tour-v1', '1'); } catch (e) {} el.remove(); };
+  const draw = () => {
+    const s = TOUR[i], last = i === TOUR.length - 1;
+    el.innerHTML = `<div class="tour-card"><div class="tour-ic"><svg viewBox="0 0 24 24">${s.i}</svg></div><h2>${esc(s.t)}</h2><p>${esc(s.b)}</p>
+      <div class="tour-dots" aria-hidden="true">${TOUR.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
+      <div class="tour-nav">${i ? '<button class="btn" id="tb">Back</button>' : '<button class="linkbtn" id="ts">Skip</button>'}<span class="sp"></span>${i && !last ? '<button class="linkbtn" id="ts">Skip</button>' : ''}<button class="btn pri" id="tn">${last ? 'Get started' : 'Next'}</button></div></div>`;
+    $('#tn', el).onclick = () => { if (last) done(); else { i++; draw(); } };
+    if ($('#tb', el)) $('#tb', el).onclick = () => { i--; draw(); };
+    if ($('#ts', el)) $('#ts', el).onclick = done;
+    $('#tn', el).focus();
+  };
+  draw();
+}
+function guideScreen(app){
+  topbar('How to use the app', 'A one-minute guide', '#home');
+  app.innerHTML = `<div class="panel pad"><h2 class="ph2">Getting around</h2>${TOUR.slice(1).map((s, k) => `<div class="gstep"><span class="n">${k + 1}</span><div><b>${esc(s.t)}</b><p>${esc(s.b)}</p></div></div>`).join('')}
+    <div class="btnrow"><button class="btn pri" id="gt">Replay the quick tour</button></div></div>
+    <div class="sec"><h2>Common questions</h2></div><div class="panel pad">
+    <details class="faq"><summary>Do I need an account?</summary><p>You can browse schools and courses without one. To read a paper you need an account with active access.</p></details>
+    <details class="faq"><summary>How do I get access?</summary><p>Open Account, create an account, send the mobile money payment and type the reference. Access switches on once the payment is checked, usually within a day.</p></details>
+    <details class="faq"><summary>Why does a file have a different name or type?</summary><p>When files are uploaded, the app reads inside them to work out whether they are exams, tests, notes or tutorials, and names them by their topic. If you spot a wrong label, tell us in the Help desk.</p></details>
+    <details class="faq"><summary>Can I download or share papers?</summary><p>Papers are view only, to protect the work of lecturers and students. You can save the ones you need and open them any time you are signed in.</p></details>
+    <details class="faq"><summary>A paper is missing or in the wrong course</summary><p>Send us a message in the Help desk with the course code and what is missing. We will fix it.</p></details>
+    <details class="faq"><summary>I forgot my password</summary><p>On the sign in screen, tap Forgot password and we will email you a reset link.</p></details></div>
+    <div class="btnrow" style="justify-content:center"><a class="btn" href="#help" style="text-decoration:none">Open help desk</a><a class="btn" href="#tips" style="text-decoration:none">Tips and motivation</a></div>`;
+  $('#gt').onclick = startTour;
 }
 
-/* Admin inbox */
-let inboxOpen = null;
-const QUICK_REPLIES = ['Thank you for reaching out. I am here to help.', 'Please tell me the course code and exactly what is happening.', 'Your payment has been checked and your access is now active.', 'Please sign out and sign in again. If it still fails, send a screenshot.'];
+/* ---------- 2. Login screen ---------- */
+const REQUIRE_LOGIN = true;    /* true = students must sign in before they can browse. false = they can skip. */
+const GUEST_DAYS = 7;
+let gateMode = 'in';
+function guestOk(){ try { const t = Number(localStorage.getItem('cbu-guest') || 0); return !!t && Date.now() - t < GUEST_DAYS * 864e5; } catch (e) { return false; } }
+function hideGate(){ const g = $('#gate'); if (g) g.remove(); document.body.style.overflow = ''; }
+function syncGate(){
+  if (gateMode === 'reset') return;
+  if (S.noBackend || !S.authReady) { return maybeTour(); }
+  if (S.user) { hideGate(); return maybeTour(); }
+  if (REQUIRE_LOGIN || !guestOk()) return showGate(gateMode === 'forgot' ? 'forgot' : gateMode === 'up' ? 'up' : 'in');
+  hideGate(); maybeTour();
+}
+function showGate(mode){
+  gateMode = mode || 'in';
+  const FB = window.FB; if (!FB) return;
+  let g = $('#gate'); if (!g) { g = document.createElement('div'); g.id = 'gate'; g.className = 'gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-modal', 'true'); g.setAttribute('aria-label', 'Sign in'); document.body.appendChild(g); }
+  document.body.style.overflow = 'hidden';
+  const up = gateMode === 'up', reset = gateMode === 'reset', forgot = gateMode === 'forgot';
+  const head = reset ? 'Set a new password' : forgot ? 'Reset your password' : up ? 'Create your account' : 'Welcome back';
+  const sub = reset ? 'Choose a new password for your account.' : forgot ? 'Type your email and we will send you a link to reset it.' : up ? 'Free to create. Save papers, read them in the app and message our help desk.' : 'Sign in to read papers, save your favourites and reach the help desk.';
+  g.innerHTML = `<div class="gate-in"><img class="gate-logo" src="${IMGS['logo.png']}" alt="Copperbelt University crest"><h1>${head}</h1><p class="gate-sub">${sub}</p>
+    <div class="glass gate-card">
+    ${reset || forgot ? '' : `<div class="views gate-tabs" role="group" aria-label="Sign in or create account"><button type="button" data-m="in" aria-pressed="${!up}">Sign in</button><button type="button" data-m="up" aria-pressed="${up}">Create account</button></div>`}
+    <form id="gf" novalidate>
+      ${up ? '<label class="lbl">Your name<input class="search" id="gn" autocomplete="name" placeholder="e.g. Chanda Mwila"></label>' : ''}
+      ${reset ? '' : '<label class="lbl">Email<input class="search" id="ge" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>'}
+      ${forgot ? '' : `<label class="lbl">${reset ? 'New password' : 'Password'}<span class="pwrow"><input class="search" id="gp" type="password" autocomplete="${up || reset ? 'new-password' : 'current-password'}" placeholder="At least 6 characters"><button type="button" class="pwtog" id="gt" aria-label="Show password">Show</button></span></label>`}
+      <button class="btn pri gbtn" id="gs" type="submit">${reset ? 'Save new password' : forgot ? 'Send reset link' : up ? 'Create account' : 'Sign in'}</button>
+      <p class="msg" id="gm" role="alert"></p>
+    </form>
+    ${forgot ? '<button class="linkbtn glink" id="gb" type="button">← Back to sign in</button>' : !up && !reset ? '<button class="linkbtn glink" id="gf2" type="button">Forgot password?</button>' : ''}
+    ${FB.google && !reset && !forgot ? '<div class="btnrow"><button class="btn" id="gg" type="button" style="width:100%">Continue with Google</button></div>' : ''}
+    </div>
+    ${REQUIRE_LOGIN || reset ? '' : '<button class="linkbtn gskip" id="gk" type="button">Continue browsing without an account</button>'}
+    <p class="small" style="text-align:center;margin-top:14px">Copperbelt University past papers and study help.</p></div>`;
+  const msg = (t, ok) => { const m = $('#gm', g); m.textContent = t; m.classList.toggle('ok', !!ok); };
+  g.querySelectorAll('[data-m]').forEach(b => b.onclick = () => showGate(b.dataset.m));
+  if ($('#gt', g)) $('#gt', g).onclick = () => { const p = $('#gp', g), s = p.type === 'password'; p.type = s ? 'text' : 'password'; $('#gt', g).textContent = s ? 'Hide' : 'Show'; };
+  if ($('#gb', g)) $('#gb', g).onclick = () => showGate('in');
+  if ($('#gf2', g)) $('#gf2', g).onclick = () => showGate('forgot');
+  if ($('#gk', g)) $('#gk', g).onclick = () => { try { localStorage.setItem('cbu-guest', String(Date.now())); } catch (e) {} hideGate(); maybeTour(); };
+  if ($('#gg', g)) $('#gg', g).onclick = async () => { try { await FB.google(); } catch (e) { msg(niceErr(e)); } };
+  $('#gf', g).onsubmit = async ev => {
+    ev.preventDefault(); msg(''); const btn = $('#gs', g);
+    const em = $('#ge', g) ? $('#ge', g).value.trim() : '', pw = $('#gp', g) ? $('#gp', g).value : '';
+    if (!reset && !/^\S+@\S+\.\S+$/.test(em)) return msg('Type a valid email address.');
+    if (!forgot && pw.length < 6 && (up || reset)) return msg('The password must be at least 6 characters.');
+    if (!forgot && !pw) return msg('Type your password.');
+    btn.disabled = true;
+    try {
+      if (forgot) { await FB.resetPassword(em); msg('If that email has an account, a reset link is on its way. Check your inbox and spam.', true); }
+      else if (reset) { await FB.updatePassword(pw); gateMode = 'in'; hideGate(); maybeTour(); }
+      else if (up) { await FB.signUp(em, pw, ($('#gn', g).value || '').trim()); }
+      else { await FB.signIn(em, pw); }
+    } catch (e) {
+      if (e && e.code === 'auth/confirm-email') msg('Account created. Check your email and tap the link to confirm, then sign in.', true);
+      else msg(niceErr(e));
+    }
+    btn.disabled = false;
+  };
+}
+window.addEventListener('fb-recovery', () => showGate('reset'));
+
+/* ---------- 3. Help desk ---------- */
+const HELP_TOPICS = [['Studies','Studies'],['Personal','Life and feelings'],['Money','Money'],['Access','App and access'],['Other','Something else']];
+const HELP_SUG = {
+  Studies:["I am struggling to understand a course and don't know where to start.", "I have an exam coming and need help planning my revision.", "I failed a test and I'm feeling discouraged.", "Can you help me find past papers for my course?", "How do I balance studying with group assignments?"],
+  Personal:["I'm feeling overwhelmed and stressed with school.", "I'm finding it hard to settle in and I miss home.", "I can't concentrate or sleep well lately.", "I'm having problems where I stay (accommodation).", "I just need someone to talk to."],
+  Money:["I'm struggling to pay for fees or study materials.", "I can't afford data to study online.", "Do you know of any bursary or support I can apply for?"],
+  Access:["I paid but my access is not active yet.", "I can't open a paper.", "A paper is under the wrong course.", "A paper I need is missing.", "I forgot my password or can't sign in."],
+  Other:["Hello! I have a question.", "I have an idea to make this app better.", "I'd like to share my own past papers or notes."]
+};
+const URGENT_RE = /suicid|kill myself|end my life|self[\s\-]?harm|hurt myself|want to die|don'?t want to live|abus(e|ed|ing)|rape|assault|threat/i;
+const topicLabel = t => (HELP_TOPICS.find(x => x[0] === t) || [t, t])[1];
+const fmtTime = d => d ? new Date(d).toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
+const helpSeen = () => { try { return localStorage.getItem('cbu-help-seen') || ''; } catch (e) { return ''; } };
+function markHelpSeen(){ try { localStorage.setItem('cbu-help-seen', new Date().toISOString()); } catch (e) {} setDot(false); }
+function setDot(on){ const d = $('#helpdot'); if (d) d.parentElement.classList.toggle('has-new', !!on); }
+async function pollInbox(){
+  const FB = window.FB; if (!S.user || !FB || !FB.myMessages) return;
+  try {
+    if (isAdmin()) { const n = await FB.unreadCount(); S.adminUnread = n; setDot(n > 0); }
+    else { const l = await FB.myMessages(S.user.uid), seen = helpSeen(); setDot(!/^help/.test(location.hash.slice(1)) && l.some(m => m.fromAdmin && (!seen || m.createdAt > new Date(seen)))); }
+  } catch (e) {}
+}
+function startPolling(){ clearInterval(pollTimer); if (S.user) { pollInbox(); pollTimer = setInterval(() => { if (!document.hidden) pollInbox(); }, 60000); } else setDot(false); }
+const bubble = (m, mine) => `<div class="bub ${mine ? 'me' : 'them'}">${esc(m.body).replace(/\n/g, '<br>')}<small>${m.fromAdmin && !mine ? 'CBU Past Papers team · ' : ''}${fmtTime(m.createdAt)}${m.topic && !m.fromAdmin && m.topic !== 'Other' ? ' · ' + esc(topicLabel(m.topic)) : ''}</small></div>`;
+const hs = {topic:'Studies'};
+function helpScreen(app){
+  topbar('Help desk', 'Tell us what is hard. We read every message');
+  if (S.noBackend) { app.innerHTML = '<div class="empty">The help desk is not switched on yet.</div>'; return; }
+  if (!S.authReady) { app.innerHTML = '<div class="empty">Loading…</div>'; return; }
+  if (!S.user) {
+    app.innerHTML = `<div class="panel pad" style="text-align:center"><h2 class="ph2">Sign in to message us</h2><p class="small">The help desk is for students with an account, so we can reply to you. Struggling with studies, money, stress or the app? Write to us.</p><div class="btnrow" style="justify-content:center"><button class="btn pri" id="hin">Sign in or create account</button></div></div>
+      <section class="boost glass slim" style="margin-top:14px">${quoteBox()}</section>
+      <p class="small" style="text-align:center;margin-top:14px"><a href="#tips">Tips & motivation</a> · <a href="#guide">How to use the app</a></p>`;
+    $('#hin').onclick = () => showGate('in'); rotateQuotes(); return;
+  }
+  if (isAdmin()) {
+    app.innerHTML = `<div class="panel pad" style="text-align:center"><h2 class="ph2">You are signed in as admin</h2><p class="small">Read and reply to student messages in the admin inbox.</p><div class="btnrow" style="justify-content:center"><a class="btn pri" href="#admin" id="hadm" style="text-decoration:none">Open inbox</a></div></div>`;
+    $('#hadm').onclick = () => { adm.tab = 'inbox'; adm.thread = ''; }; return;
+  }
+  const FB = window.FB;
+  app.innerHTML = `<section class="boost glass slim">${quoteBox()}</section>
+    <div class="panel pad" style="margin-top:14px"><h2 class="ph2">Your conversation</h2><div class="thread" id="hth" aria-live="polite"><div class="small">Loading…</div></div></div>
+    <div class="panel pad"><h2 class="ph2">Start a conversation</h2>
+      <p class="small" style="margin:0">Not sure what to say? Pick a topic and tap a suggestion. You can change it before you send.</p>
+      <div class="tchips" id="htop" role="group" aria-label="Topic"></div><div class="sugs" id="hsug"></div>
+      <label class="lbl" for="hmsg">Your message</label><textarea id="hmsg" class="search ta" rows="4" maxlength="1500" placeholder="Write here…"></textarea>
+      <div class="btnrow"><button class="btn pri" id="hsend">Send message</button><span class="small" id="hcount">0 / 1500</span></div><p class="msg" id="hm" role="status"></p>
+      <p class="small" style="margin:0">Private: only the CBU Past Papers team can read this. We usually reply within 1 to 2 days.</p></div>
+    <p class="small" style="text-align:center"><a href="#guide">How to use the app</a> · <a href="#tips">Tips & motivation</a></p>`;
+  rotateQuotes();
+  const ta = $('#hmsg'), th = $('#hth'), hm = $('#hm');
+  const drawTopics = () => {
+    $('#htop').innerHTML = HELP_TOPICS.map(([k, l]) => `<button type="button" class="tchip" data-t="${k}" aria-pressed="${hs.topic === k}">${esc(l)}</button>`).join('');
+    $('#hsug').innerHTML = HELP_SUG[hs.topic].map((s, i) => `<button type="button" class="sug" data-s="${i}">${esc(s)}</button>`).join('');
+    $('#htop').querySelectorAll('[data-t]').forEach(b => b.onclick = () => { hs.topic = b.dataset.t; drawTopics(); });
+    $('#hsug').querySelectorAll('[data-s]').forEach(b => b.onclick = () => { ta.value = HELP_SUG[hs.topic][b.dataset.s]; ta.dispatchEvent(new Event('input')); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); });
+  };
+  drawTopics();
+  ta.oninput = () => { $('#hcount').textContent = ta.value.length + ' / 1500'; };
+  let lastN = -1;
+  const loadThread = async () => {
+    try {
+      const list = await FB.myMessages(S.user.uid);
+      th.innerHTML = list.length ? list.map(m => bubble(m, !m.fromAdmin)).join('') : '<div class="small">No messages yet. Pick a suggestion below to start, or write your own. 👋</div>';
+      if (list.length !== lastN) { th.scrollTop = th.scrollHeight; lastN = list.length; }
+      markHelpSeen();
+    } catch (e) { th.innerHTML = '<div class="small">Could not load messages. Check your connection. If this keeps happening, the help desk may not be switched on yet.</div>'; }
+  };
+  loadThread();
+  clearInterval(helpTimer); helpTimer = setInterval(() => { if (!document.hidden && th.isConnected && document.activeElement !== ta) loadThread(); }, 25000);
+  $('#hsend').onclick = async () => {
+    const body = ta.value.trim(); hm.classList.remove('ok');
+    if (body.length < 3) { hm.textContent = 'Write a short message first, or tap a suggestion.'; return; }
+    const urgent = URGENT_RE.test(body), btn = $('#hsend'); btn.disabled = true; hm.textContent = '';
+    try {
+      await FB.sendMessage({uid:S.user.uid, email:S.user.email, body, topic:urgent ? 'Urgent' : hs.topic, fromAdmin:false});
+      ta.value = ''; ta.dispatchEvent(new Event('input')); await loadThread(); th.scrollTop = th.scrollHeight;
+      hm.classList.add('ok'); hm.textContent = 'Sent. Thank you for reaching out.';
+      const old = $('.care'); if (old) old.remove();
+      if (urgent) $('#hm').insertAdjacentHTML('afterend', '<div class="care"><b>We have received your message and a real person will read it.</b><br>If you are in danger or thinking about harming yourself, please tell someone you trust right now, go to the nearest clinic or hospital, or visit the university Student Affairs or counselling office. You are not alone.</div>');
+    } catch (e) { hm.textContent = 'Could not send. Check your connection and try again.'; }
+    btn.disabled = false;
+  };
+}
+
+const CANNED = ["Hi, thanks for reaching out. We have your message and we are looking into it.",
+  "Your access has been checked and switched on. Please sign out and back in if you don't see it.",
+  "Please send your payment reference (from the mobile money message) in the Account page so we can approve your access.",
+  "That paper has been fixed. Thanks for letting us know!",
+  "We are sorry you are going through this. You are not alone. Please also speak to someone you trust, or Student Affairs on campus.",
+  "Thank you for the idea! We have noted it."];
 async function admInbox(box){
   const FB = window.FB;
   box.innerHTML = '<div class="empty">Loading…</div>';
-  let all; try { all = await FB.listAllMessages(); } catch(e) { box.innerHTML = '<div class="empty">Could not load the inbox. If messages were never set up, run the Messages setup in Supabase first.</div>'; return; }
-  const th = new Map(); all.forEach(m => { if (!th.has(m.uid)) th.set(m.uid, {uid:m.uid, email:m.email || '', msgs:[]}); const t = th.get(m.uid); t.msgs.push(m); if (m.email) t.email = m.email; });
-  const list = [...th.values()].map(t => ({...t, last:t.msgs[t.msgs.length - 1], unread:t.msgs.filter(m => m.from === 'student' && !m.read).length}))
-    .sort((a, b) => (b.unread > 0) - (a.unread > 0) || (b.last.at || 0) - (a.last.at || 0));
-  const cur = inboxOpen && th.get(inboxOpen);
-  if (cur) {
-    const t = list.find(x => x.uid === cur.uid);
-    box.innerHTML = `<div class="btnrow" style="margin:0 0 8px"><button class="btn" id="ib">← All messages</button></div><div class="panel pad"><b>${esc(t.email || 'Student')}</b><div class="chat" id="chat">${bubbles(t.msgs, 'admin')}</div>
-      <div class="starters">${QUICK_REPLIES.map((q, i) => `<button type="button" data-q="${i}">${esc(q.length > 38 ? q.slice(0, 36) + '…' : q)}</button>`).join('')}</div>
-      <div class="compose"><textarea id="mt" class="search" rows="3" maxlength="2000" placeholder="Write your reply…" aria-label="Reply"></textarea><button class="btn pri" id="ms">Send</button></div><p class="msg" id="mm" role="status"></p></div>`;
-    $('#ib').onclick = () => { inboxOpen = null; admInbox(box); };
-    box.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { $('#mt').value = QUICK_REPLIES[b.dataset.q]; $('#mt').focus(); });
-    $('#ms').onclick = async () => { const body = $('#mt').value.trim(); if (!body) return; $('#ms').disabled = true; try { await FB.sendMessage({uid:t.uid, email:t.email, from:'admin', body}); await admInbox(box); } catch(e) { $('#mm').textContent = 'Could not send. Try again.'; $('#ms').disabled = false; } };
-    if (t.unread) FB.markRead(t.uid, 'student').then(updateBadge).catch(() => {});
+  let list = []; try { list = await FB.listMessages(); } catch (e) { box.innerHTML = '<div class="empty">Could not load messages. Have you run help-inbox.sql in Supabase?</div>'; return; }
+  const convs = new Map();
+  list.slice().reverse().forEach(m => { let c = convs.get(m.uid); if (!c) { c = {uid:m.uid, email:m.email, msgs:[], unread:0, urgent:false, last:0}; convs.set(m.uid, c); } c.msgs.push(m); if (m.email) c.email = m.email; });
+  convs.forEach(c => { c.unread = c.msgs.filter(m => !m.fromAdmin && !m.read).length; c.urgent = c.msgs.some(m => !m.fromAdmin && !m.read && m.topic === 'Urgent'); c.last = +c.msgs[c.msgs.length - 1].createdAt; });
+  S.adminUnread = [...convs.values()].reduce((a, c) => a + c.unread, 0); setDot(S.adminUnread > 0);
+  if (adm.thread && convs.has(adm.thread)) {
+    const c = convs.get(adm.thread);
+    box.innerHTML = `<button class="linkbtn" id="ibk">← All conversations</button><div class="panel pad" style="margin-top:6px"><h2 class="ph2">${esc(c.email || 'Student')}</h2><div class="thread" id="ith" style="max-height:52vh">${c.msgs.map(m => bubble(m, m.fromAdmin)).join('')}</div></div>
+      <div class="panel pad"><div class="small">Quick replies</div><div class="sugs" id="icn">${CANNED.map((s, i) => `<button type="button" class="sug" data-c="${i}">${esc(s)}</button>`).join('')}</div>
+      <label class="lbl" for="irep">Your reply</label><textarea id="irep" class="search ta" rows="4" maxlength="1500"></textarea><div class="btnrow"><button class="btn pri" id="isend">Send reply</button></div><p class="msg" id="im" role="status"></p></div>`;
+    const th = $('#ith'); th.scrollTop = th.scrollHeight;
+    $('#ibk').onclick = () => { adm.thread = ''; admInbox(box); };
+    box.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { $('#irep').value = CANNED[b.dataset.c]; $('#irep').focus(); });
+    $('#isend').onclick = async () => {
+      const body = $('#irep').value.trim(); if (body.length < 2) { $('#im').textContent = 'Write a reply first.'; return; }
+      $('#isend').disabled = true;
+      try { await FB.sendMessage({uid:c.uid, email:c.email, body, topic:'Reply', fromAdmin:true}); admInbox(box); } catch (e) { $('#im').textContent = 'Could not send. Try again.'; $('#isend').disabled = false; }
+    };
+    if (c.unread) { try { await FB.markRead(c.uid); S.adminUnread = Math.max(0, S.adminUnread - c.unread); setDot(S.adminUnread > 0); } catch (e) {} }
     return;
   }
-  box.innerHTML = list.length ? '<div class="panel">' + list.map(t => `<button class="row-item tlink" data-u="${esc(t.uid)}"><div class="ri-main"><span class="ri-t">${esc(t.email || 'Student')}</span><span class="small">${esc((t.last.from === 'admin' ? 'You: ' : '') + t.last.body.slice(0, 80))}</span></div>${t.unread ? `<span class="chip hot">${t.unread} new</span>` : `<span class="small">${t.last.at ? fmtDate(t.last.at) : ''}</span>`}</button>`).join('') + '</div>' : '<div class="empty">No messages yet.</div>';
-  box.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { inboxOpen = b.dataset.u; admInbox(box); });
+  adm.thread = '';
+  const rows = [...convs.values()].sort((a, b) => (b.urgent - a.urgent) || (b.unread > 0) - (a.unread > 0) || b.last - a.last);
+  box.innerHTML = rows.length ? `<p class="small">${rows.length} conversations · ${S.adminUnread} unread</p><div class="panel">${rows.map(c => { const lm = c.msgs[c.msgs.length - 1]; return `<button class="convrow" data-u="${esc(c.uid)}"><span class="ri-main"><span class="ri-t">${esc(c.email || 'Student')}</span><span class="prev">${lm.fromAdmin ? 'You: ' : ''}${esc(lm.body)}</span><span class="small">${fmtTime(lm.createdAt)}</span></span>${c.urgent ? '<span class="chip urgent">Urgent</span>' : ''}${c.unread ? `<span class="chip hot">${c.unread} new</span>` : ''}</button>`; }).join('')}</div>` : '<div class="empty">No messages yet.</div>';
+  box.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { adm.thread = b.dataset.u; admInbox(box); });
 }
 
-/* ----- Check what is inside files that are already uploaded ----- */
-const scanState = {running:false, stop:false, props:[], done:new Set()};
-async function runScan(box, limit){
-  const msg = $('#tmsg'), stopBtn = $('#tdx'); stopBtn.hidden = false; $('#tds').disabled = true;
-  const todo = papers.filter(p => extOf(p.path) === 'pdf' && !scanState.done.has(p.id) && (p.type === 'Final exam' || !PTYPES.includes(p.type))).slice(0, limit);
-  scanState.stop = false; stopBtn.onclick = () => { scanState.stop = true; };
-  let n = 0;
-  for (const p of todo) {
-    if (scanState.stop) break;
-    msg.textContent = 'Checking ' + (++n) + ' of ' + todo.length + ': ' + p.title;
-    try {
-      const bytes = await window.FB.getPdf(p.path), h = await readHints(new File([bytes], (p.raw || p.title) + '.pdf')), c = classifyContent(h, p.raw || p.title);
-      const title = (junkTitle(p.raw || p.title) && h.title && c.why !== 'exam') ? h.title : p.title, type = c.type || p.type;
-      if (type !== p.type || title !== p.title) scanState.props.push({p, type, title});
-    } catch(e) {}
-    scanState.done.add(p.id);
-  }
-  admTidy(box);
-}
-
+/* ---------- router ---------- */
 function route(keepScroll){
-  clearInterval(heroTimer); clearInterval(hlp.timer); clearInterval(boostTimer);
+  clearInterval(heroTimer); clearInterval(quoteTimer); clearInterval(helpTimer);
   if (heroObs) { heroObs.disconnect(); heroObs = null; }
-  const needLogin = !S.noBackend && !S.user;
-  document.body.classList.toggle('authing', needLogin);
-  if (needLogin) { loginScreen($('#app')); window.scrollTo(0, 0); return; }
   const h = location.hash.slice(1) || 'home';
   const i = h.indexOf('-'); const name = i<0 ? h : h.slice(0,i); const arg = i<0 ? '' : h.slice(i+1);
   const app = $('#app'); const y = window.scrollY;
-  const tab = {home:'home',schools:'schools',school:'schools',prog:'schools',course:'schools',papers:'papers',read:'papers',account:'account',admin:'account',help:'help',notes:'notes',note:'notes'}[name] || 'home';
+  const tab = {home:'home',schools:'schools',school:'schools',prog:'schools',course:'schools',papers:'papers',read:'papers',account:'account',admin:'account',notes:'notes',note:'notes',help:'help',tips:'home',guide:'home'}[name] || 'home';
   document.querySelectorAll('.tabs a').forEach(a=>{ if(a.dataset.tab===tab) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
-  ({home,schools:schoolsScreen,school:schoolScreen,prog:progScreen,course:courseScreen,papers:papersScreen,read:readScreen,account:accountScreen,admin:adminScreen,help:helpScreen,notes:notesScreen,note:noteScreen}[name] || home)(app,arg);
-  if (['account','admin','read','help'].includes(name)) { const tg = document.querySelector('#topbar .tag'); if (tg) tg.remove(); }
+  ({home,schools:schoolsScreen,school:schoolScreen,prog:progScreen,course:courseScreen,papers:papersScreen,read:readScreen,account:accountScreen,admin:adminScreen,notes:notesScreen,note:noteScreen,help:helpScreen,tips:tipsScreen,guide:guideScreen}[name] || home)(app,arg);
+  if (['account','admin','read','help','tips','guide'].includes(name)) { const tg = document.querySelector('#topbar .tag'); if (tg) tg.remove(); }
   window.scrollTo(0, keepScroll===true ? y : 0);
 }
 history.scrollRestoration = 'manual';
@@ -1723,8 +1962,6 @@ window.addEventListener('popstate', () => { popped = true; });
 function restoreScroll(y){ let n = 0; const t = () => { window.scrollTo(0, y); if (Math.abs(window.scrollY - y) > 2 && n++ < 15) setTimeout(t, 60); }; t(); }
 window.addEventListener('hashchange', () => { const y = scrollMem[location.hash || '#home'] || 0, back = popped; popped = false; route(); if (back && y) restoreScroll(y); });
 route();
-if (window.FB !== undefined) startBackend(window.FB);
-else window.addEventListener('fb-ready', () => startBackend(window.FB), {once:true});
 </script>
 <script type="module">
 /* Paste your Supabase project URL and anon (publishable) key here. */
@@ -1737,7 +1974,6 @@ if (window.FB === undefined) {
       const {createClient} = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm');
       const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {auth:{persistSession:true, autoRefreshToken:true}});
       const D = t => t ? new Date(t) : null;
-      const MSG = r => ({id:r.id, uid:r.user_id, email:r.email, from:r.sender, body:r.body, read:r.read, at:D(r.created_at)});
       const ok = ({data, error}) => { if (error) throw error; return data; };
       const authErr = e => {
         const c = String((e && (e.code || e.message)) || '').toLowerCase();
@@ -1757,12 +1993,14 @@ if (window.FB === undefined) {
         }
         return out;
       };
+      const msgRow = r => ({id:r.id, uid:r.user_id, email:r.email, body:r.body, topic:r.topic, fromAdmin:!!r.from_admin, read:!!r.read, createdAt:D(r.created_at)});
       const fromSession = async s => {
         if (!s || !s.user) return null;
         let admin = false;
         try { const r = await sb.from('admins').select('user_id').eq('user_id', s.user.id).maybeSingle(); admin = !!(r.data); } catch(e) {}
-        return {uid:s.user.id, email:s.user.email, admin, emailVerified:true};
+        return {uid:s.user.id, email:s.user.email, admin, name:String((s.user.user_metadata && s.user.user_metadata.name) || ''), emailVerified:true};
       };
+      sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') setTimeout(() => window.dispatchEvent(new Event('fb-recovery')), 0); });
       window.FB = {
         onAuth(cb){
           let last = null;
@@ -1771,7 +2009,7 @@ if (window.FB === undefined) {
           sb.auth.onAuthStateChange((ev, s) => { setTimeout(() => push(s), 0); });
         },
         async signIn(e, p){ const r = await sb.auth.signInWithPassword({email:e, password:p}); if (r.error) throw authErr(r.error); },
-        async signUp(e, p){ const r = await sb.auth.signUp({email:e, password:p}); if (r.error) throw authErr(r.error); if (!r.data.session) throw {code:'auth/confirm-email'}; },
+        async signUp(e, p, name){ const r = await sb.auth.signUp({email:e, password:p, options:{data:name ? {name} : {}}}); if (r.error) throw authErr(r.error); if (!r.data.session) throw {code:'auth/confirm-email'}; },
         signOut: async () => { await sb.auth.signOut(); },
         async getStudent(uid){ const r = ok(await sb.from('students').select('email,paid_until').eq('user_id', uid).maybeSingle()); return r ? {email:r.email, paidUntil:D(r.paid_until)} : null; },
         async getConfig(){ const r = ok(await sb.from('config').select('data').eq('id', 1).maybeSingle()); return r ? r.data : {}; },
@@ -1790,11 +2028,6 @@ if (window.FB === undefined) {
           const ins = await sb.from('papers').insert({code:meta.code, year:meta.year, type:meta.type, title:meta.title, path, size:meta.origSize || file.size});
           if (ins.error) { await sb.storage.from('papers').remove([path]); throw ins.error; }
         },
-        async listMessages(uid){ return ok(await sb.from('messages').select('*').eq('user_id', uid).order('created_at', {ascending:true})).map(MSG); },
-        async listAllMessages(){ return (await all('messages', q => q.order('created_at', {ascending:true}))).map(MSG); },
-        async sendMessage(m){ ok(await sb.from('messages').insert({user_id:m.uid, email:m.email, sender:m.from, body:m.body})); },
-        async markRead(uid, from){ ok(await sb.from('messages').update({read:true}).eq('user_id', uid).eq('sender', from).eq('read', false)); },
-        async unread(role, uid){ let q = sb.from('messages').select('id', {count:'exact', head:true}).eq('read', false).eq('sender', role === 'admin' ? 'student' : 'admin'); if (role !== 'admin') q = q.eq('user_id', uid); const r = await q; if (r.error) throw r.error; return r.count || 0; },
         async updatePaper(id, patch){ ok(await sb.from('papers').update(patch).eq('id', id)); },
         async deletePaper(p){ try { await sb.storage.from('papers').remove([p.path]); } catch(e) {} ok(await sb.from('papers').delete().eq('id', p.id)); },
         async listPayments(){ return (await all('payments', q => q)).map(r => ({id:r.id, uid:r.user_id, email:r.email, reference:r.reference, amount:r.amount, status:r.status, createdAt:D(r.created_at)})); },
@@ -1808,7 +2041,14 @@ if (window.FB === undefined) {
         async rejectPayment(pay){ ok(await sb.from('payments').update({status:'rejected', decided_at:new Date().toISOString()}).eq('id', pay.id)); },
         async listStudents(){ return (await all('students', q => q)).map(r => ({uid:r.user_id, email:r.email, paidUntil:D(r.paid_until)})); },
         async setPaidUntil(uid, email, date){ ok(await sb.from('students').upsert({user_id:uid, email, paid_until:date.toISOString()})); },
-        async saveConfig(cfg){ ok(await sb.from('config').upsert({id:1, data:cfg})); }
+        async saveConfig(cfg){ ok(await sb.from('config').upsert({id:1, data:cfg})); },
+        async resetPassword(email){ const r = await sb.auth.resetPasswordForEmail(email, {redirectTo:location.origin + location.pathname}); if (r.error) throw authErr(r.error); },
+        async updatePassword(pw){ const r = await sb.auth.updateUser({password:pw}); if (r.error) throw authErr(r.error); },
+        async myMessages(uid){ return ok(await sb.from('messages').select('*').eq('user_id', uid).order('created_at', {ascending:true})).map(msgRow); },
+        async sendMessage(m){ ok(await sb.from('messages').insert({user_id:m.uid, email:m.email, body:m.body, topic:m.topic || '', from_admin:!!m.fromAdmin})); },
+        async listMessages(){ return (await all('messages', q => q.order('created_at', {ascending:false}))).map(msgRow); },
+        async markRead(uid){ ok(await sb.from('messages').update({read:true}).eq('user_id', uid).eq('from_admin', false)); },
+        async unreadCount(){ const r = await sb.from('messages').select('id', {count:'exact', head:true}).eq('from_admin', false).eq('read', false); if (r.error) throw r.error; return r.count || 0; }
       };
     } catch(e) { console.error(e); window.FB = false; }
   }

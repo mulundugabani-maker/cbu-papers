@@ -387,6 +387,38 @@ h1,h2,h3{font-family:var(--head);font-weight:600;letter-spacing:-.01em}
 .bub{border-radius:20px;box-shadow:var(--lift)}
 .bub.me{background:linear-gradient(135deg,#127048,#0b4a30);color:#fff}
 @media (prefers-reduced-motion:reduce){.boost .qt,.boost .qa,.boost .bday p{transition:none}}
+
+/* ===== Refined finish (v3): lighter, compact, quiet gold on ink ===== */
+:root{--ink:#10201a;--paper:#fbf9f3;--gold:#b08a3c;--hair:rgba(176,138,60,.38)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#15211c;--gold:#d9b66a;--hair:rgba(217,182,106,.34)}}
+:root[data-theme="dark"]{--paper:#15211c;--gold:#d9b66a;--hair:rgba(217,182,106,.34)}
+
+/* Daily boost: compact paper card, gold hairline, small italic serif quote */
+.boost,.boost.glass:not(.topbar){border-radius:18px;padding:14px 16px 12px;margin-top:12px;color:var(--fg);border:1px solid var(--hair);
+  background:linear-gradient(180deg,var(--paper),var(--glass-solid));box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 18px rgba(16,32,26,.07)}
+.boost::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;background:linear-gradient(var(--gold),transparent);font:0}
+.boost .bq{min-height:62px;padding:0 0 0 6px;justify-content:center}
+.boost .qt{font:italic 500 1.04rem/1.45 var(--head);color:var(--fg);letter-spacing:0}
+.boost .qa{color:var(--gold);font:600 .66rem var(--ui);letter-spacing:.16em;text-transform:uppercase;margin-top:8px}
+.boost .bday{grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.boost .kick{color:var(--gold);font:700 .6rem var(--ui);letter-spacing:.16em}
+.boost .bday p{color:var(--muted);font-size:.78rem;line-height:1.45;margin-top:2px}
+.boost .linkbtn{color:var(--accent);font:600 .78rem var(--ui);margin-top:8px}
+@media (max-width:420px){.boost .bday{grid-template-columns:1fr;gap:8px}}
+
+/* Tab bar: slim, quiet; active tab shown by an ink label and a gold bar, no big fill */
+.tabs{left:max(18px,env(safe-area-inset-left,0px));right:max(18px,env(safe-area-inset-right,0px));max-width:420px;bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  border-radius:22px;padding:4px;gap:2px;border:1px solid var(--line);background:var(--glass-solid);
+  box-shadow:0 10px 28px rgba(16,32,26,.16),0 1px 0 rgba(255,255,255,.7) inset}
+.tabs a{position:relative;padding:6px 2px 5px;gap:1px;border-radius:18px;font:600 .64rem var(--ui);letter-spacing:.02em;color:var(--muted)}
+.tabs a svg{width:19px;height:19px;stroke-width:1.7}
+.tabs a[aria-current="page"],.tabs a[aria-current="page"]:hover{background:transparent;box-shadow:none;color:var(--fg)}
+.tabs a[aria-current="page"] svg{stroke:var(--accent)}
+.tabs a[aria-current="page"]::after{content:"";position:absolute;top:0;left:50%;width:18px;height:3px;margin-left:-9px;border-radius:0 0 4px 4px;background:var(--gold)}
+body{padding-block:0 84px}
+.tchip[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tchip[aria-pressed="true"]{background:var(--gold);color:#1a1405}}
+:root[data-theme="dark"] .tchip[aria-pressed="true"]{background:var(--gold);color:#1a1405}
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -545,6 +577,26 @@ setRealYears('nat', 'nrm', {
 });
 /* Year 1 is the same for every School of Natural Resources programme. */
 SCHOOLS.find(x => x.id === 'nat').programmes.forEach(p => { if (p.id !== 'nrm') p.years[1] = SCHOOLS.find(x => x.id === 'nat').programmes.find(q => q.id === 'nrm').years[1].slice(); });
+
+/* School of ICT: real course lists (Course Lecturers sheet). Computer Science and Computer Engineering share one list. */
+setRealYears('ict', 'csc', {
+  1: [['CS 120','Introduction to Computer Systems'],['CS 130','Software Development'],['CS 150','Introduction to Programming Fundamentals'],['LA 111','Communication Skills'],['MA 110','Mathematics'],['PH 110','Physics']],
+  2: [['CS 220','Computer Architecture and Organisation'],['CS 225','Introduction to Operating Systems'],['CS 230','Software Engineering'],['CS 235','Database Systems'],['CS 250','Data Structures, Algorithms and Programming'],['CS 270','Digital Design'],['MA 210','Engineering Mathematics'],['PH 212','Physics II']],
+  3: [['CS 301','Project Management'],['CS 320','Computer Communication and Parallel Processing'],['CS 345','Compiler Construction and Theory of Automata'],['CS 350','Object Oriented Programming'],['CS 351','Numerical Analysis'],['CS 361','Introduction to Web Programming'],['MA 320','Statistics'],['CSE 310','Circuits and Electronics'],['CSE 320','Embedded Systems'],['CSE 351','Computing Algorithms']],
+  4: [['CS 400','Project Seminars'],['CS 432','Object-Oriented Software Engineering (Elective)'],['CS 445','Computer Security'],['CS 453','System Modelling and Simulation'],['CS 455','Mobile Programming (Elective)'],['CS 460','Internet Technologies'],['CS 471','Introduction to Artificial Intelligence'],['CS 480','Mobile Networks'],['MG 411','Management Skills and Entrepreneurship'],['CS 421','High Performance Computing'],['CS 440','Computer and Information Security'],['CSE 415','Signal Processing'],['CSE 497','Robotics'],['CS 425','Computer Graphics Theory']]
+});
+setRealYears('ict', 'cpe', {
+  1: [['CS 120','Introduction to Computer Systems'],['CS 130','Software Development'],['CS 150','Introduction to Programming Fundamentals'],['LA 111','Communication Skills'],['MA 110','Mathematics'],['PH 110','Physics']],
+  2: [['CS 220','Computer Architecture and Organisation'],['CS 225','Introduction to Operating Systems'],['CS 230','Software Engineering'],['CS 235','Database Systems'],['CS 250','Data Structures, Algorithms and Programming'],['CS 270','Digital Design'],['MA 210','Engineering Mathematics'],['PH 212','Physics II']],
+  3: [['CS 301','Project Management'],['CS 320','Computer Communication and Parallel Processing'],['CS 345','Compiler Construction and Theory of Automata'],['CS 350','Object Oriented Programming'],['CS 351','Numerical Analysis'],['CS 361','Introduction to Web Programming'],['MA 320','Statistics'],['CSE 310','Circuits and Electronics'],['CSE 320','Embedded Systems'],['CSE 351','Computing Algorithms']],
+  4: [['CS 400','Project Seminars'],['CS 432','Object-Oriented Software Engineering (Elective)'],['CS 445','Computer Security'],['CS 453','System Modelling and Simulation'],['CS 455','Mobile Programming (Elective)'],['CS 460','Internet Technologies'],['CS 471','Introduction to Artificial Intelligence'],['CS 480','Mobile Networks'],['MG 411','Management Skills and Entrepreneurship'],['CS 421','High Performance Computing'],['CS 440','Computer and Information Security'],['CSE 415','Signal Processing'],['CSE 497','Robotics'],['CS 425','Computer Graphics Theory']]
+});
+setRealYears('ict', 'isy', {
+  1: [['BS 120','Financial Accounting'],['BS 140','Mathematical Analysis'],['BS 151','Business Communication'],['BS 153','Business Environment'],['IS 110','Foundations of Information Systems'],['IS 130','Introduction to Programming and Data Structures']],
+  2: [['BIT 140','Data Communication and Networks'],['BIT 250','Object-Oriented Programming'],['BS 224','Managerial Finance'],['IS 212','Principles of Internet Technology'],['IS 230','Systems Analysis and Design'],['IS 260','Database Systems']],
+  3: [['BIT 300','Research Methods'],['BIT 420','Object-Oriented Systems Analysis and Design'],['IS 311','Web Design & Mobile Technologies'],['IS 315','E-Commerce and ERP Systems'],['IS 320','Data Mining and Business Analytics'],['IS 360','Information Systems Project Management'],['IS 390','Systems Security and Quality Assurance']],
+  4: [['IS 400','IS Research Project'],['IS 410','Enterprise Architecture'],['IS 420','IS Strategy, Management and Acquisition'],['IS 442','Social and Ethical Issues'],['IS 460','Advanced Systems Development'],['IS 465','Business Process Re-engineering and Management'],['IS 472','Big Data and Cloud Computing'],['BIT 421','Entrepreneurship']]
+});
 
 /* Mining Engineering (real codes from the CUMMES LIBRARY Drive folder). Titles still to be added, except CH 110. */
 setRealYears('mines', 'min', {
@@ -1499,6 +1551,9 @@ async function admPay(box){
 async function admStu(box){
   box.innerHTML = '<div class="empty">Loading…</div>';
   let list = []; try { list = await window.FB.listStudents(); } catch(e) { box.innerHTML = '<div class="empty">Could not load students.</div>'; return; }
+  const adminIds = new Set(S.user ? [S.user.uid] : []), adminMails = new Set(S.user && S.user.email ? [String(S.user.email).toLowerCase()] : []);
+  try { (await window.FB.listAdmins()).forEach(a => { adminIds.add(a.uid); if (a.email) adminMails.add(String(a.email).toLowerCase()); }); } catch(e) {}
+  list = list.filter(s => !adminIds.has(s.uid) && !adminMails.has(String(s.email || '').toLowerCase()));
   const now = new Date(), months = Number(S.cfg && S.cfg.months) || 6;
   list.sort((a,b) => String(a.email).localeCompare(String(b.email)));
   const active = list.filter(s => s.paidUntil && s.paidUntil > now).length;
@@ -1698,7 +1753,7 @@ function admRelabel(box){
   box.innerHTML = `<div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Fix labels by reading inside</h2><span class="chip ${left ? 'hot' : ''}">${left}</span></div>
     <p class="small">Opens each file, reads the first pages, and works out what it really is (exam, notes, tutorial…) and its topic. You review the list before anything changes.</p>
     <label class="lbl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="rall" ${rel.all ? 'checked' : ''}> Check every file, not only the ones that look mislabelled</label>
-    <div class="btnrow"><button class="btn pri" id="rscan" ${left ? '' : 'disabled'}>Scan next 15</button></div>
+    <div class="btnrow"><button class="btn pri" id="rscan" ${left ? '' : 'disabled'}>${left ? 'Scan all ' + left + ' files at once' : 'Nothing to scan'}</button></div>
     <p class="msg" id="rmsg" role="status"></p><div id="rres"></div></div>`;
   const msg = $('#rmsg', box);
   $('#rall', box).onchange = e => { rel.all = e.target.checked; rel.done.clear(); admRelabel(box); };
@@ -1714,16 +1769,20 @@ function admRelabel(box){
   };
   drawRes();
   $('#rscan', box).onclick = async () => {
-    const batch = relabelCands().slice(0, 15); if (!batch.length) return; $('#rscan', box).disabled = true; let n = 0;
-    for (const p of batch) {
-      msg.textContent = 'Reading ' + (++n) + ' of ' + batch.length + ': ' + p.title.slice(0, 40);
-      try {
-        const bytes = await window.FB.getPdf(p.path), ext = extOf(p.path), r = classify(await readSampleBytes(bytes, ext), p.title + '.' + ext);
-        rel.done.add(p.id);
-        if (r.type && (r.type !== p.type || r.title !== p.title)) rel.props.push({p, type:r.type, title:r.title, why:r.why, on:r.type !== p.type});
-      } catch (e) { rel.done.add(p.id); }
-    }
-    admRelabel(box); $('#rmsg', box).textContent = 'Scanned ' + batch.length + '. ' + (relabelCands().length ? 'Scan again for the next batch.' : 'No more files to check.');
+    const batch = relabelCands(); if (!batch.length) return; $('#rscan', box).disabled = true; let next = 0, n = 0;
+    const worker = async () => {
+      while (next < batch.length) {
+        const p = batch[next++];
+        try {
+          const bytes = await window.FB.getPdf(p.path), ext = extOf(p.path), r = classify(await readSampleBytes(bytes, ext), p.title + '.' + ext);
+          rel.done.add(p.id);
+          if (r.type && (r.type !== p.type || r.title !== p.title)) rel.props.push({p, type:r.type, title:r.title, why:r.why, on:r.type !== p.type});
+        } catch (e) { rel.done.add(p.id); }
+        msg.textContent = 'Reading inside the files… ' + (++n) + ' of ' + batch.length + ' done';
+      }
+    };
+    await Promise.all([worker(), worker(), worker(), worker()]);
+    admRelabel(box); $('#rmsg', box).textContent = 'Scanned all ' + batch.length + ' files. ' + (rel.props.length ? 'Check the suggestions below, then tap Apply.' : 'Nothing needs changing.');
   };
 }
 

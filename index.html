@@ -72,6 +72,7 @@ a.card:active,.quick a:active,.sch:active{transform:scale(.985)}
 .title{font:600 1.02rem/1.3 var(--head);margin:2px 0 0;overflow-wrap:anywhere}
 .small{font-size:.8rem;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip.smp{background:#fff1c2;color:#7a4b00;border-color:#e3b93c;font-weight:700;letter-spacing:.03em}
 .chip{font-size:.74rem;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--glass)}
 .chip.hot{border-color:transparent;background:var(--copper-bg);color:var(--copper);font-weight:600}
 .chips a.chip{color:var(--accent)}
@@ -414,13 +415,14 @@ const SCHOOLS = [
 
 /* Builds a school's programmes from a shared Year 1 list plus per-programme Year 2 to Year 4 course names.
    Programme names come from the school; course names and codes are samples. */
+const SAMPLE = new Set();   /* school|code of every made-up sample course; real data removes them */
 function buildSchool(id, y1pre, y1names, defs){
   const s = SCHOOLS.find(x => x.id === id);
   s.catalog = {};
-  const y1 = y1names.map((n,i) => { const c = y1pre + ' 1' + (i+1) + '10'; s.catalog[c] = n; return c; });
+  const y1 = y1names.map((n,i) => { const c = y1pre + ' 1' + (i+1) + '10'; s.catalog[c] = n; SAMPLE.add(id+'|'+c); return c; });
   s.programmes = defs.map(([pid, name, degree, pre, y2, y3, y4]) => {
     const years = {1: y1};
-    [y2, y3, y4].forEach((arr, k) => { const y = k + 2; years[y] = arr.map((n,i) => { const c = pre + ' ' + y + (i+1) + '10'; s.catalog[c] = n; return c; }); });
+    [y2, y3, y4].forEach((arr, k) => { const y = k + 2; years[y] = arr.map((n,i) => { const c = pre + ' ' + y + (i+1) + '10'; s.catalog[c] = n; SAMPLE.add(id+'|'+c); return c; }); });
     return {id: pid, name, degree, years};
   });
 }
@@ -477,7 +479,7 @@ function setRealYears(schoolId, progId, real){
   const sc = SCHOOLS.find(x => x.id === schoolId);
   const pr = sc.programmes.find(x => x.id === progId);
   Object.keys(real).forEach(y => {
-    pr.years[y] = real[y].map(([c, n]) => { sc.catalog[c] = n; return c; });
+    pr.years[y] = real[y].map(([c, n]) => { sc.catalog[c] = n; SAMPLE.delete(schoolId+'|'+c); return c; });
   });
 }
 setRealYears('nat', 'nrm', {
@@ -517,6 +519,40 @@ buildSchool('hum', 'HSS', ['Introduction to Social Sciences','Communication and 
   const used = new Set(); hum.programmes.forEach(p => Object.values(p.years).forEach(a => a.forEach(c => used.add(c))));
   Object.keys(hum.catalog).forEach(c => { if (!used.has(c)) delete hum.catalog[c]; });
 }
+
+/* First year is the same for every programme in Natural Resources and Mines */
+const Y1_SCI = [['MA 110','Mathematics'],['CH 110','Chemistry'],['PH 110','Physics'],['LA 111','Language Skills'],['ED 111','Design'],['CS 110','Computer Science']];
+['nat','mines'].forEach(sid => SCHOOLS.find(x => x.id === sid).programmes.forEach(p => setRealYears(sid, p.id, {1: Y1_SCI})));
+
+/* Mining Engineering, Years 2 and 3 (from handwritten lists) */
+setRealYears('mines', 'min', {
+  2: [['MA 210','Mathematics'],['EM 290','Engineering Mechanics'],['EE 211','Electrical Engineering I'],['GY 213','Introduction to Geology'],['MS 210','Principles of Surveying'],['MI 210','Introduction to Mining']],
+  3: [['CE 313','Fluid Mechanics'],['MA 310','Mathematics'],['MI 310','Mining Methods'],['MS 313','Mine Surveying'],['MT 321','Introduction to Metallurgy'],['MI 353','Mine Geostatistics'],['MI 320','Mine Development']]
+});
+
+/* Mining Engineering Year 4, Metallurgy Year 2 */
+setRealYears('mines', 'min', {
+  4: [['GY 413','Engineering Geology'],['MI 410','Rock Mechanics'],['MI 413','Research Methodology'],['MI 415','Social and Environmental'],['MI 431','Mine Ventilation'],['MI 441','Mineral Economics'],['MI 450','Rock Excavation Engineering'],['MI 461','Operations Research']]
+});
+setRealYears('mines', 'mtl', {
+  2: [['EE 211','Electrical Engineering I'],['EM 290','Engineering Mechanics'],['GY 213','Introduction to Geology'],['MA 210','Mathematics'],['MI 213','MI 213'],['MT 210','MT 210'],['MT 221','MT 221']]
+});
+/* Purchasing and Supply (BSP) */
+setRealYears('bus', 'ps', {
+  1: [['BSP 110','Principles of Economics'],['BSP 140','Business Mathematics'],['BSP 150','Principles of Management'],['BSP 151','Business Communication'],['BSP 153','Business Environment'],['BSP 170','Material Science'],['BSP 190','Business Law']],
+  2: [['BSP 220','Financial Accounting'],['BSP 236','Operations Management'],['BSP 238','Productivity Management'],['BSP 241','Introduction to Computing'],['BSP 243','Business Information Systems'],['BSP 244','Business Statistics'],['BSP 282','Introduction to Purchasing and Supply Chain Management']],
+  3: [['BSP 320','Cost Accounting'],['BSP 336','Stores and Inventory Management'],['BSP 340','Operations Research'],['BSP 354','Logistics and Distribution Management'],['BSP 382','Purchasing and Supply Chain Management'],['BSP 390','Law for Purchasing and Supply']],
+  4: [['BSP 400','Research Project'],['BSP 442','Quality Management'],['BSP 451','Industrial Placement Programme'],['BSP 462','Industrial Marketing'],['BSP 466','Contract Management'],['BSP 470','Project Management'],['BSP 482','Purchasing and Supply Chain Management Strategy']]
+});
+/* Business Communication (151) and Business Environment (153) are half courses in first year */
+BUS_CAT['BS 153'] = BUS_CAT['HRM 153'] = 'Business Environment';
+Y1.splice(Y1.indexOf('BS 151') + 1, 0, 'BS 153');
+BUS_PROGS.find(p => p.id === 'hrm').years[1].splice(3, 0, 'HRM 153');
+/* Banking and Finance has no BF 120: its Financial Accounting is BF 220 in Year 2 */
+{ const bf = BUS_PROGS.find(p => p.id === 'bf'); bf.years[1] = bf.years[1].filter(c => c !== 'BF 120'); delete BUS_CAT['BF 120']; }
+/* One name for courses shared under different codes */
+BUS_CAT['BS 224'] = BUS_CAT['BF 224'] = 'Managerial Finance (Corporate Finance)';
+BUS_CAT['BS 222'] = BUS_CAT['HRM 220'] = 'Cost Accounting';
 
 const HERO_SLIDES = [
   [IMGS['img/hero1.jpg'],'Four graduates in black and orange gowns laughing and holding diplomas','50% 30%'],
@@ -558,8 +594,18 @@ SCHOOLS.forEach(s => { if (s.programmes) { const seen = new Set();
 const courses = [];
 SCHOOLS.forEach(s => s.courses.forEach(([code,name,lvl]) => courses.push({code,name,lvl,school:s})));
 const slug = c => c.code.replace(' ','');
+/* Flags so you can see what is not updated yet: SAMPLE = made-up course, TITLE = real code but the name is still just the code */
+const isSample = c => SAMPLE.has(c.school.id + '|' + c.code);
+const needsTitle = c => !isSample(c) && String(c.name).trim().toUpperCase() === String(c.code).trim().toUpperCase();
+const halfTag = c => (c.school.id === 'bus' && /^[A-Za-z]+\s*15[13]$/.test(c.code)) ? ' · Half course' : '';
+const sampleChip = c => isSample(c) ? '<span class="chip smp">SAMPLE COURSE</span>' : needsTitle(c) ? '<span class="chip smp">TITLE TO ADD</span>' : '';
 /* In the School of Business every first-year course is shared: BS 110, BEC 110 and so on are the same course with different prefixes. */
-const eqKey = c => (c.school.id === 'bus' && /^[A-Za-z]+\s*1\d\d$/.test(c.code)) ? 'bus1-' + c.code.match(/(\d+)$/)[1] : '';
+/* Business courses that are the same course under different codes (outside first year) */
+const SHARED_BUS = [['BF 224','BS 224'],['BS 222','HRM 220','BSP 320'],['BF 240','BS 240','HRM 240'],['BF 242','BS 242','HRM 242'],['BF 260','BS 260','HRM 260']];
+const SHARE_KEY = {}; SHARED_BUS.forEach((g,i) => g.forEach(c => SHARE_KEY[c] = 'bus-x' + i));
+/* Financial Accounting: BS 120 in first year is BF 220 / BSP 220 in second year */
+SHARE_KEY['BF 220'] = SHARE_KEY['BSP 220'] = 'bus1-120';
+const eqKey = c => c.school.id !== 'bus' ? '' : (SHARE_KEY[c.code] || (/^[A-Za-z]+\s*1\d\d$/.test(c.code) ? 'bus1-' + c.code.match(/(\d+)$/)[1] : ''));
 const grp = c => eqKey(c) || c.code;
 const siblings = c => { const k = eqKey(c); return k ? courses.filter(x => eqKey(x) === k) : [c]; };
 function retitle(title, c2){
@@ -706,7 +752,7 @@ function schoolScreen(app,id){
 function courseCard(c, withLevel, nm){
   const pc = papersX.filter(p=>p.course===c).length, nc = notes.filter(n=>n.course===c).length;
   const li=document.createElement('li');
-  li.innerHTML = `<a class="card course" href="#course-${slug(c)}"><div><div class="code">${esc(c.code)}</div><h3 class="title">${esc(nm||c.name)}</h3><div class="small">${pc} papers</div></div>${withLevel?`<span class="chip lv">${LEVELS[c.lvl]}</span>`:''}</a>`;
+  li.innerHTML = `<a class="card course" href="#course-${slug(c)}"><div><div class="code">${esc(c.code)}</div><h3 class="title">${esc(nm||c.name)}</h3><div class="small">${pc} papers${halfTag(c)}</div>${sampleChip(c) ? `<div style="margin-top:6px">${sampleChip(c)}</div>` : ''}</div>${withLevel?`<span class="chip lv">${LEVELS[c.lvl]}</span>`:''}</a>`;
   return li;
 }
 function programmesScreen(app,s){
@@ -736,7 +782,7 @@ function progScreen(app,arg){
   const year = yl.includes(parseInt(ys,10)) ? parseInt(ys,10) : yl[0];
   topbar(p.name, s.name+' · '+p.degree, '#school-'+s.id);
   app.innerHTML = `<div class="yrs" role="tablist" aria-label="Year of study">${yl.map(n=>`<a href="#prog-${sid}-${pid}-${n}" role="tab" aria-selected="${n===year}">Year ${n}</a>`).join('')}</div>
-    ${yearNote(p,s,year)}<div class="sec"><h2>Year ${year} courses</h2><span class="small">${(p.years[year]||[]).length} courses</span></div><ul class="grid two" id="yc"></ul>`;
+    ${yearNote(p,s,year)}${(()=>{const l=(p.years[year]||[]).map(cd=>courses.find(x=>x.code===cd)).filter(Boolean),n=l.filter(c=>isSample(c)||needsTitle(c)).length;return n?`<p class="small" style="margin:12px 0 0"><span class="chip smp">${n} of ${l.length} still to update</span></p>`:`<p class="small" style="margin:12px 0 0"><span class="chip" style="color:#1a7f37;border-color:#1a7f37">All ${l.length} updated</span></p>`})()}<div class="sec"><h2>Year ${year} courses</h2><span class="small">${(p.years[year]||[]).length} courses</span></div><ul class="grid two" id="yc"></ul>`;
   document.querySelectorAll('.yrs a').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); history.replaceState(null,'',a.getAttribute('href')); route(); }));
   const ul=$('#yc');
   (p.years[year]||[]).forEach(code=>{ const c=courses.find(x=>x.code===code); if(c) ul.appendChild(courseCard(c,false,p.names&&p.names[code])); });
@@ -755,7 +801,7 @@ function courseScreen(app,key){
   const mine = papersX.filter(p => p.course === c);
   const of = id => mine.filter(p => catOf(p.type).id === id);
   let cur = courseCat[key] || (CATS.find(k => of(k.id).length) || CATS[0]).id;
-  app.innerHTML = `${offered(c)}<div class="cats" id="cats"></div><div id="cp"></div>`;
+  app.innerHTML = `${halfTag(c) ? '<div class="small" style="margin:4px 0 8px">Half course. Taken together with its other half in the same year.</div>' : ''}${sampleChip(c) ? `<div style="margin:4px 0 10px">${sampleChip(c)} <span class="small">${isSample(c) ? 'This course is made up. Replace it with the real course.' : 'The real code is in, the course name still needs updating.'}</span></div>` : ''}${offered(c)}<div class="cats" id="cats"></div><div id="cp"></div>`;
   const draw = () => {
     $('#cats').innerHTML = CATS.map(k => { const n = of(k.id).length; return `<button class="cat${n ? '' : ' off'}" data-k="${k.id}" aria-pressed="${k.id === cur}"><span class="ci"><svg viewBox="0 0 24 24" aria-hidden="true">${k.icon}</svg></span><span><b>${esc(k.name)}</b><small>${n ? n + (n === 1 ? ' file' : ' files') : 'Coming soon'}</small></span></button>`; }).join('');
     $('#cats').querySelectorAll('.cat').forEach(b => b.onclick = () => { cur = b.dataset.k; courseCat[key] = cur; draw(); });
@@ -835,7 +881,7 @@ function noteRow(n, mode, after){
 function courseRow(c, arr){
   const yrs = arr.map(p => p.yr).sort();
   const a = document.createElement('a'); a.className = 'row-item'; a.href = '#course-' + slug(c);
-  a.innerHTML = `<div class="ri-main"><span class="code">${esc(c.code)}</span><span class="ri-t">${esc(c.name)}</span><span class="small">${arr.length} papers · ${yrs[0]}${yrs[0] !== yrs[yrs.length-1] ? ' to ' + yrs[yrs.length-1] : ''}</span></div><span class="go">›</span>`;
+  a.innerHTML = `<div class="ri-main"><span class="code">${esc(c.code)}</span><span class="ri-t">${esc(c.name)}</span>${sampleChip(c)}<span class="small">${arr.length} papers · ${yrs[0]}${yrs[0] !== yrs[yrs.length-1] ? ' to ' + yrs[yrs.length-1] : ''}</span></div><span class="go">›</span>`;
   return a;
 }
 
@@ -1240,7 +1286,7 @@ function admAdd(box){
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
   const courseList = () => courses.filter(c => c.school.id === adm.school).sort((a,b) => a.code.localeCompare(b.code));
-  const drawShare = () => { const c = courses.find(x => x.code === adm.course), s = c ? siblings(c).filter(x => x !== c) : []; $('#ashare').textContent = s.length ? 'Shared first-year course. Files added here also show under ' + s.map(x => x.code).join(', ') + ', with the code changed to match.' : ''; };
+  const drawShare = () => { const c = courses.find(x => x.code === adm.course), s = c ? siblings(c).filter(x => x !== c) : []; $('#ashare').textContent = s.length ? 'Shared course. Files added here also show under ' + s.map(x => x.code).join(', ') + ', with the code changed to match.' : ''; };
   const drawCourses = () => {
     const cl = courseList(); if (!cl.some(c => c.code === adm.course)) adm.course = cl.length ? cl[0].code : '';
     $('#ac').innerHTML = optionsHtml(cl.map(c => [c.code, c.code + ' · ' + c.name]), adm.course);

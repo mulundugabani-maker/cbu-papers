@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="manifest.json?v=2"><meta name="theme-color" content="#17714b"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CBU Papers"></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="manifest.json?v=2"><meta name="theme-color" content="#0f5a3b"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CBU Papers"></head><body>
 <title>CBU Past Papers</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -332,6 +332,61 @@ details.faq p{margin:6px 0 0;font-size:.88rem;color:var(--muted)}
 .relrow input{margin-top:4px;flex:none}
 .why{font-size:.74rem;color:var(--muted)}
 
+
+/* ===== Premium finish: deep emerald, gold accent, serif headlines, softer depth ===== */
+:root{
+  --accent:#0f5a3b; --copper:#9a6a1f; --copper-bg:rgba(176,128,40,.14);
+  --gold:#b88a2e; --gold-soft:#e9d9a8; --ink:#0c1a14;
+  --head:'Fraunces','Iowan Old Style','Georgia',serif; --ui:'Space Grotesk','Inter',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  --lift:0 1px 2px rgba(12,40,28,.06),0 8px 24px rgba(12,40,28,.08);
+  --radius:20px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--accent:#5fd0a0;--copper:#e2b765;--copper-bg:rgba(226,183,101,.16);--gold:#e2b765;--gold-soft:#3a3320;--lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--accent:#5fd0a0;--copper:#e2b765;--copper-bg:rgba(226,183,101,.16);--gold:#e2b765;--gold-soft:#3a3320;--lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35)}
+h1,h2,h3{font-family:var(--head);font-weight:600;letter-spacing:-.01em}
+.code,.kick,.subh b,.chip,.tabs a,.btn,.lbl{font-family:var(--ui)}
+.card,.panel,.stat,.reader,.quick a,details.grp{border-radius:var(--radius);box-shadow:inset 0 1px 0 var(--glass-edge),var(--lift)}
+.card{transition:transform .18s ease,box-shadow .18s ease}
+.card:active{transform:scale(.985)}
+.sec h2{font-size:1.2rem;position:relative;padding-left:14px}
+.sec h2::before{content:"";position:absolute;left:0;top:.2em;bottom:.2em;width:4px;border-radius:4px;background:linear-gradient(var(--gold),var(--accent))}
+.btn{border-radius:14px;font-weight:600;letter-spacing:.01em;padding:11px 18px}
+.btn.pri{background:linear-gradient(135deg,#127048,#0b4a30);color:#fff;box-shadow:0 6px 16px rgba(11,74,48,.28)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.pri{background:linear-gradient(135deg,#5fd0a0,#3aa77b);color:#06140d}}
+:root[data-theme="dark"] .btn.pri{background:linear-gradient(135deg,#5fd0a0,#3aa77b);color:#06140d}
+.chip.hot{background:linear-gradient(135deg,var(--gold-soft),transparent);color:var(--copper);border:1px solid rgba(184,138,46,.35)}
+.tabs{border-radius:26px;box-shadow:0 12px 34px rgba(8,30,20,.22),inset 0 1px 0 var(--glass-edge)}
+.tabs a[aria-current="page"]{background:var(--accent);color:var(--accent-fg);box-shadow:0 6px 14px rgba(11,74,48,.3)}
+.search,select,input[type=file]{border-radius:14px}
+.search:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,90,59,.16);outline:0}
+
+/* Daily boost: dark emerald panel, gold hairline, big serif quote */
+.boost,.boost.glass:not(.topbar){position:relative;overflow:hidden;border-radius:26px;padding:22px 20px 18px;color:#f3efe2;border:1px solid rgba(233,217,168,.28);
+  background:radial-gradient(120% 90% at 100% 0%,rgba(184,138,46,.30),transparent 60%),linear-gradient(155deg,#0d4a31 0%,#0a2f21 60%,#081f16 100%);
+  box-shadow:0 18px 40px rgba(6,30,20,.34),inset 0 1px 0 rgba(255,255,255,.14)}
+.boost::before{content:"“";position:absolute;top:-22px;left:10px;font:700 8rem/1 var(--head);color:rgba(233,217,168,.16);pointer-events:none}
+.boost .bq{position:relative;min-height:128px;padding-top:10px}
+.boost .qt{font:500 1.28rem/1.45 var(--head);color:#fbf7ea;letter-spacing:.005em;transition:opacity .6s ease,transform .6s ease}
+.boost .qa{color:#e9d9a8;font:600 .78rem var(--ui);letter-spacing:.14em;text-transform:uppercase;margin-top:14px;transition:opacity .6s ease}
+.boost .fade{opacity:0}
+.boost .qt.fade{transform:translateY(6px)}
+.boost .bday{border-top:1px solid rgba(233,217,168,.24);margin-top:18px;padding-top:16px;gap:18px}
+.boost .kick{color:#e9d9a8;font-size:.64rem;letter-spacing:.16em}
+.boost .bday p{color:#eef3ee;font-size:.88rem;line-height:1.5;transition:opacity .6s ease}
+.boost .linkbtn{color:#e9d9a8;font-family:var(--ui);letter-spacing:.02em;margin-top:14px}
+.boost.slim{margin-top:0}
+
+/* Tips list */
+.tip{padding:16px 6px;border-top:1px solid var(--line)}
+.tip b,.tip h3{font-family:var(--head);font-size:1.05rem}
+.tchip{border-radius:999px;font-family:var(--ui)}
+.tchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);box-shadow:0 4px 12px rgba(11,74,48,.25)}
+
+/* Login gate and help desk */
+.gate{background:radial-gradient(90% 55% at 50% 0%,rgba(184,138,46,.18),transparent 70%),var(--bg)}
+.bub{border-radius:20px;box-shadow:var(--lift)}
+.bub.me{background:linear-gradient(135deg,#127048,#0b4a30);color:#fff}
+@media (prefers-reduced-motion:reduce){.boost .qt,.boost .qa,.boost .bday p{transition:none}}
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -357,7 +412,7 @@ const BUS_CAT = {
   'ACC 3110':'Advanced Financial Accounting','ACC 3120':'Auditing I','ACC 3130':'Taxation','FIN 3310':'Advanced Corporate Finance',
   'ACC 4110':'Auditing II','ACC 4120':'Advanced Management Accounting','ACC 4130':'Public Sector Accounting','BUS 4900':'Research Project',
   'BUS 2210':'Organisational Behaviour','BS 260':'Marketing','BUS 3110':'Operations Management','BUS 3120':'Human Resource Management','BS 361':'Entrepreneurship',
-  'BS 310':'Managerial Economics','BS 341':'Operations Research','BS 343':'Production and Operations Management','BS 350':'Portfolio Management and Investment Theory','BS 380':'Personnel Administration and Labour Relations','BS 390':'Company Law',
+  'BS 310':'Managerial Economics','BS 320':'Financial Reporting','BS 322':'Advanced Cost Accounting','BS 325':'Auditing','BS 327':'Taxation','BS 341':'Operations Research','BS 343':'Production and Operations Management','BS 350':'Portfolio Management and Investment Theory','BS 380':'Personnel Administration and Labour Relations','BS 390':'Company Law',
   'BUS 4110':'Strategic Management','BUS 4120':'International Business','BUS 4130':'Business Ethics',
   'BS 210':'Intermediate Economics','ECO 2230':'Intermediate Macroeconomics','MAT 2140':'Mathematics for Economists',
   'ECO 3110':'Econometrics','ECO 3120':'Development Economics','ECO 3130':'Public Economics','ECO 3140':'International Trade',
@@ -376,8 +431,8 @@ const BUS_CAT = {
   'BF 110':'Principles of Microeconomics',
   /* HRM Year 1: same numbers as the business common year, HRM prefix (names to be confirmed) */
   'HRM 120':'Financial Accounting','HRM 140':'Mathematical Analysis','HRM 151':'Business Communication','HRM 190':'Business Law','HRM 150':'Business Management','HRM 110':'Economics',
-  'BF 120':'Basic Financial Accounting','BF 130':'Banking Operations, Lending & International Business','BF 140':'Mathematical Analysis','BF 150':'Principles of Management','BF 190':'Business Law',
-  'BF 210':'Monetary and Financial Systems','BF 220':'Financial Reporting, Analysis and Management Control','BF 224':'Corporate Finance','BF 240':'Introduction to Data Processing','BF 242':'Decision Making Techniques','BF 260':'Principles of Marketing',
+  'BF 120':'Financial Accounting','BF 130':'Banking Operations, Lending & International Business','BF 140':'Mathematical Analysis','BF 150':'Principles of Management','BF 190':'Business Law',
+  'BF 210':'Monetary and Financial Systems','BF 220':'Cost Accounting','BF 224':'Corporate Finance','BF 240':'Introduction to Data Processing','BF 242':'Decision Making Techniques','BF 260':'Principles of Marketing',
   'BF 310':'International Trade and Finance','BF 320':'Investment Analysis and Portfolio Management','BF 330':'Risk Management','BF 341':'Operations Research','BF 343':'Production and Operations Management (POM)','BF 390':'Banking Law & Practice','BF 392':'Regulatory Framework of Financial Institutions',
   'BF 400':'Research Methods','BF 424':'Lease and Project Finance','BF 430':'Corporate & Merchant Banking','BF 432':'International Banking','BF 450':'Strategy and Strategic Management','BF 452':'Insurance and Pensions Management','BF 454':'Microfinance Institutional Management',
   /* Human Resource Management Year 2 (real) */
@@ -399,7 +454,7 @@ const BUS_PROGS = [
   {id:'pp', name:'Public Procurement', degree:'BSc', years:{1:Y1,2:['PRO 2110','PRO 2120','BUS 2240','BS 242','ECO 2210'],3:['PRO 3110','PRO 3120','PRO 3130','FIN 3310'],4:['PRO 4110','PRO 4120','PRO 4130','BUS 4900']}},
   {id:'ps', name:'Purchasing and Supply', degree:'BSc', years:{1:Y1,2:['PUR 2110','PUR 2120','BUS 2240','BS 242','ECO 2210'],3:['PUR 3110','PUR 3120','PUR 3130','FIN 3310'],4:['PUR 4110','PUR 4120','PUR 4130','BUS 4900']}},
   {id:'ba', name:'Business Administration', degree:'BSc', from:'cmn', years:{3:['BS 310','BS 341','BS 343','BS 350','BS 360','BS 380','BS 390'],4:['BUS 4110','BUS 4120','BUS 4130','BUS 4900']}},
-  {id:'acc', name:'Accountancy', degree:'BSc', from:'cmn', years:{3:['ACC 3110','ACC 3120','ACC 3130','ACC 3140','FIN 3310'],4:['ACC 4110','ACC 4120','ACC 4130','BUS 4900']}},
+  {id:'acc', name:'Accountancy', degree:'BSc', from:'cmn', names:{'BS 343':'Production Management'}, years:{3:['BS 320','BS 322','BS 325','BS 327','BS 341','BS 343','BS 390'],4:['ACC 4110','ACC 4120','ACC 4130','BUS 4900']}},
   {id:'eco', name:'Economics', degree:'BSc', years:{1:['BEC 110','BEC 120','BEC 130','BEC 140','BEC 150','BEC 190'],2:['BEC 210','BEC 220','BEC 230','BEC 240','BEC 242','BEC 244'],3:['BEC 310','BEC 320','BEC 330','BEC 340','BEC 350','BEC 360'],4:['BEC 400','BEC 410','BEC 411','BEC 420','BEC 440','BEC 442']}}
 ];
 const SCHOOLS = [
@@ -1272,8 +1327,23 @@ function adminScreen(app){
   topbar('Admin','Papers, payments and students','#account');
   if (!isAdmin()) { app.innerHTML = '<div class="empty">Admin only. Sign in with the admin account on the Account page.</div>'; return; }
   app.innerHTML = '<div class="views" id="atabs"></div><div id="abody"></div>';
-  viewSwitch($('#atabs'), [['add','Add papers'],['inbox','Inbox' + (S.adminUnread ? ' (' + S.adminUnread + ')' : '')],['pay','Payments'],['stu','Students'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
-  ({add:admAdd, inbox:admInbox, pay:admPay, stu:admStu, set:admSet, tidy:admTidy}[adm.tab] || admAdd)($('#abody'));
+  viewSwitch($('#atabs'), [['add','Add papers'],['inbox','Inbox' + (S.adminUnread ? ' (' + S.adminUnread + ')' : '')],['pay','Payments'],['stu','Students'],['adm','Admins'],['set','Settings'],['tidy','Tidy up']], adm.tab, v => { adm.tab = v; adminScreen(app); });
+  ({add:admAdd, inbox:admInbox, pay:admPay, stu:admStu, adm:admAdmins, set:admSet, tidy:admTidy}[adm.tab] || admAdd)($('#abody'));
+}
+function groupedCourses(cl, cur){
+  const sc = SCHOOLS.find(x => x.id === cl[0].school.id), byCode = new Map(cl.map(c => [c.code, c])), used = new Set(), out = [];
+  const opt = (c, nm) => `<option value="${esc(c.code)}"${c.code === cur ? ' selected' : ''}>${esc(c.code)} · ${esc(nm || c.name)}</option>`;
+  const natural = (a, b) => a.localeCompare(b, undefined, {numeric:true});
+  sc.programmes.forEach(p => {
+    [1,2,3,4].forEach(y => {
+      const codes = (p.years[y] || []).filter(c => byCode.has(c) && !used.has(c)).sort(natural); if (!codes.length) return;
+      codes.forEach(c => used.add(c));
+      out.push(`<optgroup label="${esc(p.name)} · Year ${y}">` + codes.map(c => opt(byCode.get(c), p.names && p.names[c])).join('') + '</optgroup>');
+    });
+  });
+  const rest = cl.filter(c => !used.has(c.code)).sort((a, b) => natural(a.code, b.code));
+  if (rest.length) out.push('<optgroup label="Other courses">' + rest.map(c => opt(c)).join('') + '</optgroup>');
+  return out.join('');
 }
 function admAdd(box){
   if (!adm.school) adm.school = SCHOOLS[0].id;
@@ -1289,7 +1359,7 @@ function admAdd(box){
   const drawShare = () => { const c = courses.find(x => x.code === adm.course), s = c ? siblings(c).filter(x => x !== c) : []; $('#ashare').textContent = s.length ? 'Shared course. Files added here also show under ' + s.map(x => x.code).join(', ') + ', with the code changed to match.' : ''; };
   const drawCourses = () => {
     const cl = courseList(); if (!cl.some(c => c.code === adm.course)) adm.course = cl.length ? cl[0].code : '';
-    $('#ac').innerHTML = optionsHtml(cl.map(c => [c.code, c.code + ' · ' + c.name]), adm.course);
+    $('#ac').innerHTML = groupedCourses(cl, adm.course);
     drawShare();
   };
   const drawExisting = () => {
@@ -1325,7 +1395,10 @@ function admAdd(box){
   $('#af').onchange = async e => {
     const mine = files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:'', title:file.name.replace(FILE_EXT, '').replace(/_+/g, ' '), busy:true, why:[], codes:[]}));
     drawFiles();
-    for (const f of mine) { if (files !== mine) return; await analyseFile(f); if (files !== mine) return; drawFiles(); }
+    let next = 0, done = 0;
+    const worker = async () => { while (next < mine.length) { const f = mine[next++]; if (files !== mine) return; try { await analyseFile(f); } catch(e) { f.busy = false; } done++; if (files !== mine) return; drawFiles(); $('#amsg').textContent = done < mine.length ? 'Reading inside the files… ' + done + ' of ' + mine.length + ' done' : 'All ' + mine.length + ' files read and labelled. Check them, then tap Upload.'; } };
+    $('#amsg').textContent = 'Reading inside the files… 0 of ' + mine.length + ' done';
+    await Promise.all([worker(), worker(), worker(), worker()]);
   };
   $('#aup').onclick = async () => {
     const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
@@ -1441,6 +1514,32 @@ async function admStu(box){
     const s = byId(b.dataset.rv); if (!confirm('Remove access for ' + s.email + '?')) return;
     b.disabled = true; try { await window.FB.setPaidUntil(s.uid, s.email, new Date(Date.now() - 1000)); admStu(box); } catch(e) { b.disabled = false; alert('Could not save.'); }
   });
+}
+function admAdmins(box){
+  const FB = window.FB;
+  box.innerHTML = `<div class="panel pad"><h3 class="ph2">Add an admin</h3>
+    <p class="small">The person must already have created an account in the app. Type the email they signed up with.</p>
+    <label class="lbl">Email<input id="nae" class="search" type="email" inputmode="email" autocapitalize="off" placeholder="name@example.com"></label>
+    <div class="btnrow"><button class="btn pri" id="nab">Make admin</button></div><p class="msg" id="nam" role="status"></p></div>
+    <div class="sec"><h2>Current admins</h2></div><div id="nal" class="panel"><div class="empty">Loading…</div></div>`;
+  const draw = async () => {
+    const el = $('#nal'); let list = [];
+    try { list = await FB.listAdmins(); } catch(e) { el.innerHTML = '<div class="empty">Could not load admins. Run the admins SQL in Supabase first.</div>'; return; }
+    el.innerHTML = list.length ? list.map(a => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(a.email || a.uid)}</span>${a.uid === (S.user && S.user.uid) ? '<span class="small">This is you</span>' : ''}</div>${a.uid === (S.user && S.user.uid) ? '' : `<button class="btn" data-rm="${esc(a.uid)}">Remove</button>`}</div>`).join('') : '<div class="empty">No admins found.</div>';
+    el.querySelectorAll('[data-rm]').forEach(b => b.onclick = async () => {
+      if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Tap again to remove'; setTimeout(() => { if (b.isConnected) { b.dataset.sure = ''; b.textContent = 'Remove'; } }, 4000); return; }
+      b.disabled = true; try { await FB.removeAdmin(b.dataset.rm); await draw(); } catch(e) { b.disabled = false; $('#nam').textContent = 'Could not remove that admin.'; }
+    });
+  };
+  $('#nab').onclick = async () => {
+    const em = $('#nae').value.trim().toLowerCase(), m = $('#nam');
+    if (!/^\S+@\S+\.\S+$/.test(em)) { m.textContent = 'Type a full email address.'; return; }
+    $('#nab').disabled = true; m.textContent = 'Adding…';
+    try { await FB.addAdmin(em); m.textContent = em + ' is now an admin. They may need to sign out and in again.'; $('#nae').value = ''; await draw(); }
+    catch(e) { m.textContent = /no account|not found/i.test(String(e && e.message)) ? 'No account found for that email. Ask them to sign up first.' : 'Could not add. Check you ran the admins SQL.'; }
+    $('#nab').disabled = false;
+  };
+  draw();
 }
 function admSet(box){
   const c = S.cfg || {};
@@ -1725,27 +1824,28 @@ const TIPS = [
 const dayIndex = () => { const d = new Date(); return Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(d.getFullYear(), 0, 0)) / 864e5); };
 const todayMotivation = () => DAILY[dayIndex() % DAILY.length];
 const todayTip = () => TIPS[(dayIndex() * 7) % TIPS.length];
+const QUOTE_MS = 22000;
 let quoteTimer = null, helpTimer = null, pollTimer = null;
 function rotateQuotes(){
   const qt = $('#qt'), qa = $('#qa'), bq = $('#bq'); if (!qt) return;
-  let i = Math.floor(Math.random() * QUOTES.length);
+  let i = Math.floor(Math.random() * QUOTES.length), ti = (dayIndex() * 7) % TIPS.length;
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const draw = () => { qt.textContent = '“' + QUOTES[i][0] + '”'; qa.textContent = QUOTES[i][1] ? '— ' + QUOTES[i][1] : ''; qt.classList.remove('fade'); qa.classList.remove('fade'); };
-  const next = () => { i = (i + 1) % QUOTES.length; if (reduce) return draw(); qt.classList.add('fade'); qa.classList.add('fade'); setTimeout(draw, 450); };
+  const next = () => { i = (i + 1) % QUOTES.length; if (reduce) return draw(); qt.classList.add('fade'); qa.classList.add('fade'); setTimeout(draw, 450); const bt = $('#bt'); if (bt) { ti = (ti + 1) % TIPS.length; bt.classList.add('fade'); setTimeout(() => { bt.textContent = TIPS[ti][2]; bt.classList.remove('fade'); }, 450); } };
   draw();
-  clearInterval(quoteTimer); quoteTimer = setInterval(() => { if (!document.hidden && qt.isConnected) next(); }, 8000);
-  bq.onclick = () => { next(); clearInterval(quoteTimer); quoteTimer = setInterval(() => { if (!document.hidden && qt.isConnected) next(); }, 8000); };
+  clearInterval(quoteTimer); quoteTimer = setInterval(() => { if (!document.hidden && qt.isConnected) next(); }, QUOTE_MS);
+  bq.onclick = () => { next(); clearInterval(quoteTimer); quoteTimer = setInterval(() => { if (!document.hidden && qt.isConnected) next(); }, QUOTE_MS); };
   bq.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bq.onclick(); } };
 }
 const quoteBox = () => `<div class="bq" id="bq" role="button" tabindex="0" aria-label="Motivational quote. Tap for another."><p class="qt" id="qt" aria-live="off"></p><small class="qa" id="qa"></small></div>`;
 const boostCard = () => `<section class="boost glass" aria-label="Daily boost">${quoteBox()}
-  <div class="bday"><div><span class="kick">Today's motivation</span><p>${esc(todayMotivation())}</p></div><div><span class="kick">Study tip of the day</span><p>${esc(todayTip()[2])}</p></div></div>
+  <div class="bday"><div><span class="kick">Today's motivation</span><p>${esc(todayMotivation())}</p></div><div><span class="kick">Study tip of the day</span><p id="bt" class="tfade">${esc(todayTip()[2])}</p></div></div>
   <a class="linkbtn" href="#tips">More tips and motivation →</a></section>`;
 function tipsScreen(app){
   topbar('Tips & motivation', 'Fresh every day', '#home');
   const views = [['study','Study'],['exam','Exams'],['life','Life'],['quotes','Quotes']];
   if (!tipsScreen.v) tipsScreen.v = 'study';
-  app.innerHTML = `<section class="boost glass slim">${quoteBox()}<div class="bday"><div><span class="kick">Today's motivation</span><p>${esc(todayMotivation())}</p></div><div><span class="kick">Study tip of the day</span><p>${esc(todayTip()[2])}</p></div></div></section>
+  app.innerHTML = `<section class="boost glass slim">${quoteBox()}<div class="bday"><div><span class="kick">Today's motivation</span><p>${esc(todayMotivation())}</p></div><div><span class="kick">Study tip of the day</span><p id="bt" class="tfade">${esc(todayTip()[2])}</p></div></div></section>
     <div class="views" id="tv" style="grid-template-columns:repeat(4,1fr)"></div><div class="panel pad" id="tb" style="margin-top:12px"></div>
     <div class="panel pad"><h2 class="ph2">Need someone to talk to?</h2><p class="small" style="margin:0 0 10px">Struggling with studies, money or life? Send a message to the help desk. We read every one.</p><a class="btn pri" href="#help" style="text-decoration:none;display:inline-block">Open help desk</a></div>`;
   rotateQuotes();
@@ -2086,6 +2186,9 @@ if (window.FB === undefined) {
           ok(await sb.from('payments').update({status:'approved', decided_at:new Date().toISOString()}).eq('id', pay.id));
         },
         async rejectPayment(pay){ ok(await sb.from('payments').update({status:'rejected', decided_at:new Date().toISOString()}).eq('id', pay.id)); },
+        async listAdmins(){ const r = ok(await sb.rpc('list_admins')); return (r || []).map(x => ({uid:x.user_id, email:x.email})); },
+        async addAdmin(email){ ok(await sb.rpc('add_admin_by_email', {p_email:email})); },
+        async removeAdmin(uid){ ok(await sb.rpc('remove_admin', {p_user:uid})); },
         async listStudents(){ return (await all('students', q => q)).map(r => ({uid:r.user_id, email:r.email, paidUntil:D(r.paid_until)})); },
         async setPaidUntil(uid, email, date){ ok(await sb.from('students').upsert({user_id:uid, email, paid_until:date.toISOString()})); },
         async saveConfig(cfg){ ok(await sb.from('config').upsert({id:1, data:cfg})); },

@@ -289,7 +289,7 @@ details[open]>summary .chev{transform:rotate(90deg)}
 .frow input[type=text]{width:100%;margin-top:6px}
 
 .pdfwrap.office{position:relative;overflow:hidden;background:#fff;color:#000;border-radius:12px;-webkit-user-select:none;user-select:none}
-.pdfwrap .wm{position:absolute;inset:0;pointer-events:none;z-index:5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='140'%3E%3Ctext x='20' y='90' transform='rotate(-30 120 70)' font-family='sans-serif' font-weight='700' font-size='22' fill='rgba(0,0,0,0.14)'%3ECBU DATA%3C/text%3E%3C/svg%3E")}
+.pdfwrap .wm{position:absolute;inset:0;pointer-events:none;z-index:5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='140'%3E%3Ctext x='20' y='90' transform='rotate(-30 120 70)' font-family='sans-serif' font-weight='700' font-size='20' fill='rgba(0,0,0,0.14)'%3ESTUDY NEST%3C/text%3E%3C/svg%3E")}
 .pdfwrap .wm2{position:absolute;right:8px;bottom:6px;z-index:6;pointer-events:none;font:10px sans-serif;color:rgba(0,0,0,.4)}
 .tidyh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .tidy .small{margin:2px 0 8px}
@@ -1635,11 +1635,11 @@ async function readScreen(app, id){
   ['contextmenu','dragstart','copy','cut'].forEach(ev => box.addEventListener(ev, e => e.preventDefault()));
   try {
     const ex = extOf(p.path); loadPdfJs().catch(() => {});
-    if (ex === 'docx' || ex === 'pptx') { st.textContent = 'Downloading…'; const bytes = await window.FB.getPdf(p.path); await renderOffice(box, bytes, ex, st, S.user.email); }
+    if (ex === 'docx' || ex === 'pptx') { st.textContent = 'Downloading…'; const bytes = await window.FB.getPdf(p.path); await renderOffice(box, bytes, ex, st, 'Study Nest'); }
     else {
       let ok1 = false;
-      try { await renderPdf(box, await window.FB.getPdfUrl(p.path), 'CBU DATA', st, S.user.email); ok1 = true; } catch (e) { box.innerHTML = ''; }
-      if (!ok1) { st.textContent = 'Downloading…'; await renderPdf(box, await window.FB.getPdf(p.path), 'CBU DATA', st, S.user.email); }
+      try { await renderPdf(box, await window.FB.getPdfUrl(p.path), 'STUDY NEST', st, 'Study Nest'); ok1 = true; } catch (e) { box.innerHTML = ''; }
+      if (!ok1) { st.textContent = 'Downloading…'; await renderPdf(box, await window.FB.getPdf(p.path), 'STUDY NEST', st, 'Study Nest'); }
     }
   } catch(e) {
     if (box.isConnected) { st.innerHTML = 'Could not open this paper. <button class="linkbtn" id="rtry">Try again</button>'; $('#rtry').onclick = () => readScreen(app, id); }

@@ -1887,7 +1887,7 @@ function helpScreen(app){
       th.innerHTML = list.length ? list.map(m => bubble(m, !m.fromAdmin)).join('') : '<div class="small">No messages yet. Pick a suggestion below to start, or write your own. 👋</div>';
       if (list.length !== lastN) { th.scrollTop = th.scrollHeight; lastN = list.length; }
       markHelpSeen();
-    } catch (e) { th.innerHTML = '<div class="small">Could not load messages. Check your connection. If this keeps happening, the help desk may not be switched on yet.</div>'; }
+    } catch (e) { th.innerHTML = '<div class="small">Could not load messages. Check your connection. If this keeps happening, the help desk may not be switched on yet.<br>Reason: ' + esc(String((e && (e.message || e.code)) || e)) + '</div>'; }
   };
   loadThread();
   clearInterval(helpTimer); helpTimer = setInterval(() => { if (!document.hidden && th.isConnected && document.activeElement !== ta) loadThread(); }, 25000);
@@ -1915,7 +1915,7 @@ const CANNED = ["Hi, thanks for reaching out. We have your message and we are lo
 async function admInbox(box){
   const FB = window.FB;
   box.innerHTML = '<div class="empty">Loading…</div>';
-  let list = []; try { list = await FB.listMessages(); } catch (e) { box.innerHTML = '<div class="empty">Could not load messages. Have you run help-inbox.sql in Supabase?</div>'; return; }
+  let list = []; try { list = await FB.listMessages(); } catch (e) { box.innerHTML = '<div class="empty">Could not load messages.<br><span class="small">Supabase says: ' + esc(String((e && (e.message || e.code || e.details)) || e)) + '</span><br><span class="small">Have you run the help inbox SQL, with no errors, in Supabase?</span></div>'; return; }
   const convs = new Map();
   list.slice().reverse().forEach(m => { let c = convs.get(m.uid); if (!c) { c = {uid:m.uid, email:m.email, msgs:[], unread:0, urgent:false, last:0}; convs.set(m.uid, c); } c.msgs.push(m); if (m.email) c.email = m.email; });
   convs.forEach(c => { c.unread = c.msgs.filter(m => !m.fromAdmin && !m.read).length; c.urgent = c.msgs.some(m => !m.fromAdmin && !m.read && m.topic === 'Urgent'); c.last = +c.msgs[c.msgs.length - 1].createdAt; });

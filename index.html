@@ -917,6 +917,45 @@ html:root[data-theme] .sch .lbl b,html:root[data-theme] .sch .lbl span{color:#ff
 .cthread{gap:4px!important;max-height:52vh!important}
 .cm .meta button{padding:0!important;min-height:0!important;height:auto!important}
 
+</style><style>
+/* ===== v6 fixes: header, tabs, upload, inbox ===== */
+.topwrap{background:var(--bg)!important}
+:root[data-theme] body .views{grid-template-columns:repeat(auto-fit,minmax(104px,1fr))!important;border-radius:22px!important;padding:6px!important;gap:6px!important}
+:root[data-theme] body .views button{min-width:0;min-height:42px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.84rem!important;padding:9px 8px!important}
+.upl .pick{display:grid;gap:12px}
+.upl .lbl{display:block}
+.upl select{margin-top:6px;width:100%}
+.step{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pri,#b0703c);color:#fff;font:700 .7rem var(--body);margin-right:6px}
+.solbtn{display:flex!important;justify-content:center;text-decoration:none;margin:2px 0 12px}
+.chip.lnk{cursor:pointer}
+/* inbox */
+:root[data-theme] body .instats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 16px}
+:root[data-theme] body .instats div{background:var(--gg,var(--glass));border:.5px solid var(--gedge,var(--line));border-radius:18px;padding:14px 8px;text-align:center}
+:root[data-theme] body .instats b{display:block;font:700 1.45rem var(--head,inherit);line-height:1.1}
+:root[data-theme] body .instats span{display:block;margin-top:4px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+:root[data-theme] body .inlist{display:grid;gap:12px}
+:root[data-theme] body .icard{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:16px;border-radius:22px;background:var(--gg,var(--glass));border:.5px solid var(--gedge,var(--line));color:inherit;font:inherit;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+:root[data-theme] body .icard.new{border-color:rgba(170,110,60,.6);box-shadow:0 8px 22px rgba(170,110,60,.18)}
+:root[data-theme] body .icard:active{transform:scale(.99)}
+:root[data-theme] body .icard .av,:root[data-theme] body .ithead .av{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;font:700 1rem var(--body);color:#fff;background:linear-gradient(145deg,#d9893f,#9a4f1c);box-shadow:0 4px 12px rgba(150,80,30,.35)}
+:root[data-theme] body .ibody{flex:1;min-width:0;display:grid;gap:6px}
+:root[data-theme] body .irow1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+:root[data-theme] body .inm{display:flex;align-items:center;gap:6px;font-weight:700;font-size:1rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:root[data-theme] body .inm .vt{width:18px;height:18px;flex:none}
+:root[data-theme] body .itime{flex:none;font-size:.74rem;opacity:.65}
+:root[data-theme] body .iprev{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.9rem;line-height:1.45;opacity:.82}
+:root[data-theme] body .ibadges{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+:root[data-theme] body .ibadges:empty{display:none}
+:root[data-theme] body .ibadge{font-size:.72rem;font-weight:650;padding:4px 11px;border-radius:999px;background:var(--tint,rgba(128,128,128,.14));border:.5px solid var(--gedge,var(--line))}
+:root[data-theme] body .ibadge.nw{background:var(--pri,#b0703c);color:var(--pri-fg,#fff);border-color:transparent}
+:root[data-theme] body .ibadge.urg{background:#c0392b;color:#fff;border-color:transparent}
+:root[data-theme] body .ithead{display:flex;align-items:center;gap:14px;padding:16px;margin:10px 0 14px;border-radius:22px;background:var(--gg,var(--glass));border:.5px solid var(--gedge,var(--line))}
+:root[data-theme] body .ithread .thread{gap:14px;padding:8px 2px;max-height:56vh}
+:root[data-theme] body .bub{padding:11px 15px!important;font-size:.9rem!important;line-height:1.5!important;border-radius:18px!important}
+:root[data-theme] body .bub{display:block!important}
+:root[data-theme] body .bub small{display:block;margin-top:6px;font-size:.68rem!important;opacity:.75}
+:root[data-theme] body .bub small .vt{width:14px;height:14px}
+.vt{display:inline-block;vertical-align:-3px}
 </style>
 
 
@@ -973,7 +1012,7 @@ const BUS_CAT = {
   'HRM 210':'Labour Economics','HRM 220':'Cost Management Accounting','HRM 240':'Information Technology','HRM 242':'Decision Making Techniques','HRM 260':'Principles of Marketing','HRM 280':'Fundamentals of Human Resource Management',
   /* Economics (BEC): course titles still to be added, except BEC 320 */
   'BEC 110':'Introduction to Microeconomics','BEC 120':'BEC 120','BEC 130':'BEC 130','BEC 140':'BEC 140','BEC 150':'BEC 150','BEC 190':'BEC 190',
-  'BEC 210':'BEC 210','BEC 220':'BEC 220','BEC 230':'BEC 230','BEC 240':'BEC 240','BEC 242':'BEC 242','BEC 244':'BEC 244',
+  'BEC 210':'Intermediate Economics','BEC 220':'BEC 220','BEC 230':'BEC 230','BEC 240':'BEC 240','BEC 242':'BEC 242','BEC 244':'BEC 244',
   'BEC 310':'BEC 310','BEC 320':'Advanced Microeconomics','BEC 330':'BEC 330','BEC 340':'BEC 340','BEC 350':'BEC 350','BEC 360':'BEC 360',
   'BEC 400':'BEC 400','BEC 410':'BEC 410','BEC 411':'BEC 411','BEC 420':'BEC 420','BEC 440':'Econometrics II','BEC 442':'BEC 442'
 };
@@ -1157,8 +1196,6 @@ setRealYears('bus', 'ps', {
 BUS_CAT['BS 153'] = BUS_CAT['HRM 153'] = 'Business Environment';
 Y1.splice(Y1.indexOf('BS 151') + 1, 0, 'BS 153');
 BUS_PROGS.find(p => p.id === 'hrm').years[1].splice(3, 0, 'HRM 153');
-/* Banking and Finance has no BF 120: its Financial Accounting is BF 220 in Year 2 */
-{ const bf = BUS_PROGS.find(p => p.id === 'bf'); bf.years[1] = bf.years[1].filter(c => c !== 'BF 120'); delete BUS_CAT['BF 120']; }
 /* One name for courses shared under different codes */
 BUS_CAT['BS 224'] = BUS_CAT['BF 224'] = 'Managerial Finance (Corporate Finance)';
 BUS_CAT['BS 222'] = BUS_CAT['HRM 220'] = 'Cost Accounting';
@@ -1190,10 +1227,12 @@ const CATS = [
   {id:'paper', name:'Past papers', types:['Final exam','Supplementary exam','Mid-term test','Test'], icon:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>'},
   {id:'notes', name:'Notes', types:['Lecture notes','Summary notes'], icon:'<path d="M5 4h14v16H5z"/><path d="M9 4v16M12 9h4M12 13h4"/>'},
   {id:'work', name:'Worksheets', types:['Worksheet','Tutorial sheet','Assignment','Lab manual'], icon:'<path d="M9 3h6v3H9z"/><path d="M6 5h12v16H6z"/><path d="M9 12l2 2 4-4M9 18h6"/>'},
+  {id:'sol', name:'Solutions', types:['Solutions'], icon:'<path d="M5 4h14v16H5z"/><path d="M8.5 12.2l2.3 2.3 4.7-4.9"/>'},
   {id:'book', name:'Books', types:['Textbook','Reference book'], icon:'<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/>'},
   {id:'outline', name:'Course outlines', types:['Course outline'], icon:'<path d="M5 5h14M5 10h10M5 15h14M5 20h8"/>'}
 ];
 const PTYPES = CATS.flatMap(c => c.types);
+const SOLRE = /\b(marking\s*(scheme|key|guide)|solutions?|memo(randum)?|answer\s*(key|sheet|guide)|model\s*answers?)\b/i;
 const catOf = t => CATS.find(c => c.types.includes(t)) || CATS[0];
 const NTYPES = ['Lecture notes','Tutorial sheet','Lab manual','Summary sheet'];
 const LEVELS = {1:'Year 1',2:'Year 2',3:'Year 3',4:'Year 4'};
@@ -1210,10 +1249,10 @@ const halfTag = c => (c.school.id === 'bus' && /^[A-Za-z]+\s*15[13]$/.test(c.cod
 const sampleChip = c => isSample(c) ? '<span class="chip smp">SAMPLE COURSE</span>' : '';
 /* In the School of Business every first-year course is shared: BS 110, BEC 110 and so on are the same course with different prefixes. */
 /* Business courses that are the same course under different codes (outside first year) */
-const SHARED_BUS = [['BF 224','BS 224'],['BS 222','HRM 220','BSP 320'],['BF 240','BS 240','HRM 240'],['BF 242','BS 242','HRM 242'],['BF 260','BS 260','HRM 260']];
+const SHARED_BUS = [['BF 224','BS 224'],['BS 222','HRM 220','BSP 320','BF 220'],['BEC 210','BS 210'],['BF 240','BS 240','HRM 240'],['BF 242','BS 242','HRM 242'],['BF 260','BS 260','HRM 260']];
 const SHARE_KEY = {}; SHARED_BUS.forEach((g,i) => g.forEach(c => SHARE_KEY[c] = 'bus-x' + i));
-/* Financial Accounting: BS 120 in first year is BF 220 / BSP 220 in second year */
-SHARE_KEY['BF 220'] = SHARE_KEY['BSP 220'] = 'bus1-120';
+/* Financial Accounting: BS 120 / BF 120 in first year is BSP 220 in second year */
+SHARE_KEY['BSP 220'] = 'bus1-120';
 const eqKey = c => c.school.id !== 'bus' ? '' : (SHARE_KEY[c.code] || (/^[A-Za-z]+\s*1\d\d$/.test(c.code) ? 'bus1-' + c.code.match(/(\d+)$/)[1] : ''));
 const grp = c => eqKey(c) || c.code;
 const siblings = c => { const k = eqKey(c); return k ? courses.filter(x => eqKey(x) === k) : [c]; };
@@ -1225,6 +1264,7 @@ function retitle(title, c2){
 let viewCtx = null;
 
 const papers = [];
+const solOf = new Map(), qOf = new Map();   /* paper id -> its solutions, solutions id -> its question paper */
 const papersX = [];   /* papers plus a copy for every sibling course (same file, no extra space) */
 const notes = [];
 
@@ -1476,8 +1516,11 @@ function paperRow(p, mode, after){
   if (mode === 'course') main = catOf(p.type).id === 'paper' ? `<span class="ri-t">${esc(p.type)}</span><span class="small">${p.yr} academic year${p.title ? ' · ' + esc(p.title) : ''}</span>` : `<span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(p.type)} · ${p.yr}</span>`;
   else if (mode === 'year') main = `<span class="code">${esc(p.course.code)}</span><span class="ri-t">${esc(p.course.name)}</span><span class="ri-s"><span class="chip">${esc(p.course.school.ab)}</span><span class="chip">${LEVELS[p.course.lvl]}</span></span>`;
   else main = `<span class="code">${esc(p.course.code)}</span><span class="ri-t">${esc(p.course.name)}</span><span class="ri-s"><span class="chip hot">${esc(p.type)}</span><span class="chip">${p.yr}</span><span class="chip">${LEVELS[p.course.lvl]}</span></span>`;
+  const sl = solOf.get(p.id), qp = qOf.get(p.id), tgt = sl || qp;
+  if (tgt) main += `<span class="ri-s"><span class="chip hot lnk" data-to="${esc(tgt.id)}">${sl ? 'Has solutions ›' : 'Question paper ›'}</span></span>`;
   d.innerHTML = `<a class="ri-main" href="#read-${p.id}">${main}</a><button class="star" aria-pressed="${on}" aria-label="Save paper">${on ? '★' : '☆'}</button>`;
   $('.ri-main', d).addEventListener('click', () => { viewCtx = p.course; });
+  const lk = $('.lnk', d); if (lk) lk.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); viewCtx = p.course; location.hash = '#read-' + lk.dataset.to; });
   starButton(savedP, p.id, 'cbu-sp', d, after);
   return d;
 }
@@ -1525,11 +1568,18 @@ function papersScreen(app){
         const cs = [...by.keys()].filter(c => c.school === s); if (!cs.length) return;
         const np = cs.reduce((a,c) => a + by.get(c).length, 0);
         res.appendChild(group(s.name, cs.length + ' courses · ' + np + ' papers', s.ab, box => {
-          [1,2,3,4].forEach(l => {
-            const lc = cs.filter(c => c.lvl === l).sort((a,b) => a.code.localeCompare(b.code)); if (!lc.length) return;
-            subhead(box, 'Year ' + l, lc.length + ' courses');
-            moreList(box, lc, c => courseRow(c, by.get(c)), 40);
+          const natural = (a, b) => a.code.localeCompare(b.code, undefined, {numeric:true}), used = new Set();
+          (s.programmes || []).forEach(p => {
+            const yrs = [1,2,3,4].map(l => [l, (p.years[l] || []).map(code => cs.find(c => c.code === code)).filter(Boolean).sort(natural)]).filter(x => x[1].length);
+            if (!yrs.length) return;
+            yrs.forEach(x => x[1].forEach(c => used.add(c)));
+            const n = new Set(yrs.flatMap(x => x[1])).size;
+            box.appendChild(group(p.name, n + (n === 1 ? ' course' : ' courses') + ' with papers', (p.id || '').slice(0, 3).toUpperCase(), pb => {
+              yrs.forEach(([l, lc]) => { subhead(pb, 'Year ' + l, lc.length + (lc.length === 1 ? ' course' : ' courses')); moreList(pb, lc, c => courseRow(c, by.get(c)), 40); });
+            }, false));
           });
+          const rest = cs.filter(c => !used.has(c)).sort(natural);
+          if (rest.length) { subhead(box, 'Other courses', rest.length + ' courses'); moreList(box, rest, c => courseRow(c, by.get(c)), 40); }
         }, false));
         first = false;
       });
@@ -1650,6 +1700,20 @@ const fmtDate = d => d ? new Date(d).toLocaleDateString('en-GB',{day:'numeric',m
 const onFormPage = () => /^(account|admin|read|help|nest|about)/.test(location.hash.slice(1));
 function refresh(){ if (!onFormPage()) route(true); }
 
+function buildSolLinks(){
+  solOf.clear(); qOf.clear();
+  const GEN = /\b(final|exam|exams|examination|examinations|test|tests|quiz|paper|papers|tutorial|tutorials|worksheet|worksheets|assignment|assignments|sheet|sheets|mid|term|midterm|semester|supplementary|supp|question|questions|and|the|of|for|ca|solutions?|marking|scheme|key|guide|memo|memorandum|answers?|model)\b/gi;
+  const bare = s => String(s || '').replace(GEN, ' ').replace(/[^a-z0-9]+/gi, '').toLowerCase();
+  const exact = s => normName(String(s || '').replace(SOLRE, ' '));
+  papers.filter(p => p.type === 'Solutions').forEach(s => {
+    const pool = papers.filter(p => p.type !== 'Solutions' && p.yr === s.yr && grp(p.course) === grp(s.course) && !solOf.has(p.id));
+    let hit = pool.filter(p => exact(p.title) && exact(p.title) === exact(s.title));
+    if (!hit.length) { const b = bare(s.title); hit = pool.filter(p => bare(p.title) === b); }
+    if (!hit.length) { const w = String(s.title || '').toLowerCase(); const kinds = [['tutorial','Tutorial sheet'],['worksheet','Worksheet'],['assign','Assignment'],['supp','Supplementary exam'],['mid','Mid-term test'],['test','Test'],['quiz','Test'],['final','Final exam'],['exam','Final exam']]; const k = kinds.find(x => w.includes(x[0])); if (k) hit = pool.filter(p => p.type === k[1]); }
+    if (!hit.length) { const ex = pool.filter(p => catOf(p.type).id === 'paper'); if (ex.length === 1) hit = ex; }
+    if (hit.length === 1) { solOf.set(hit[0].id, s); qOf.set(s.id, hit[0]); }
+  });
+}
 function setPapers(list){
   papers.length = 0;
   list.forEach(d => {
@@ -1658,6 +1722,7 @@ function setPapers(list){
   });
   papersX.length = 0;
   papers.forEach(p => { papersX.push(p); siblings(p.course).forEach(c2 => { if (c2 !== p.course) papersX.push({...p, course:c2, title:retitle(p.title, c2), orig:p}); }); });
+  buildSolLinks();
   const ys = [...new Set(papers.map(p => p.yr))].sort((a,b) => b.localeCompare(a));
   YEARS.length = 0; ys.forEach(y => YEARS.push(y));
 }
@@ -1817,7 +1882,8 @@ async function readScreen(app, id){
   if (!S.authReady) { app.innerHTML = '<div class="empty">Loading…</div>'; return; }
   if (!S.user) return gateBox(app, 'Sign in to read', 'Create a free account, then get access to open every paper.', 'Sign in or create account', '#account');
   if (!isPaid()) return gateBox(app, 'Access needed', 'Your account does not have access yet. Pay by mobile money and send the reference to unlock all papers.', 'Get access', '#account');
-  app.innerHTML = `<p class="small" id="rst" style="margin:4px 0 10px">Opening paper…</p><div class="pdfwrap" id="pw"></div><p class="small" style="text-align:center;margin:12px 0">View only. Copying or sharing papers is not allowed.</p>`;
+  const _sl = solOf.get(p.id), _qp = qOf.get(p.id), _lk = _sl || _qp;
+  app.innerHTML = (_lk ? `<a class="btn solbtn" href="#read-${_lk.id}">${_sl ? 'Open the solutions for this paper' : 'Open the question paper'} ›</a>` : '') + `<p class="small" id="rst" style="margin:4px 0 10px">Opening paper…</p><div class="pdfwrap" id="pw"></div><p class="small" style="text-align:center;margin:12px 0">View only. Copying or sharing papers is not allowed.</p>`;
   const box = $('#pw'), st = $('#rst');
   ['contextmenu','dragstart','copy','cut'].forEach(ev => box.addEventListener(ev, e => e.preventDefault()));
   try {
@@ -1834,10 +1900,10 @@ async function readScreen(app, id){
 }
 
 /* ----- Admin ----- */
-const adm = {tab:'add', school:'', course:''};
+const adm = {tab:'add', school:'', prog:'', lvl:'', course:''};
 const YEAR_OPTS = (() => { const a = []; for (let y = new Date().getFullYear(); y >= 2005; y--) a.push(y); return a; })();
 const guessYear = n => { const m = String(n).match(/(?:19|20)\d{2}/); return m ? Number(m[0]) : new Date().getFullYear(); };
-const guessTypeRaw = n => /outline|syllabus|course\s*guide/i.test(n) ? 'Course outline' : /supp/i.test(n) ? 'Supplementary exam' : /mid/i.test(n) ? 'Mid-term test' : /test|quiz|\bca\b/i.test(n) ? 'Test' : /final|exam/i.test(n) ? 'Final exam' : /worksheet/i.test(n) ? 'Worksheet' : /tutorial/i.test(n) ? 'Tutorial sheet' : /assign/i.test(n) ? 'Assignment' : /\blab/i.test(n) ? 'Lab manual' : /summary/i.test(n) ? 'Summary notes' : /notes?|lecture|slides/i.test(n) ? 'Lecture notes' : /book|edition/i.test(n) ? 'Textbook' : '';
+const guessTypeRaw = n => SOLRE.test(n) ? 'Solutions' : /outline|syllabus|course\s*guide/i.test(n) ? 'Course outline' : /supp/i.test(n) ? 'Supplementary exam' : /mid/i.test(n) ? 'Mid-term test' : /test|quiz|\bca\b/i.test(n) ? 'Test' : /final|exam/i.test(n) ? 'Final exam' : /worksheet/i.test(n) ? 'Worksheet' : /tutorial/i.test(n) ? 'Tutorial sheet' : /assign/i.test(n) ? 'Assignment' : /\blab/i.test(n) ? 'Lab manual' : /summary/i.test(n) ? 'Summary notes' : /notes?|lecture|slides/i.test(n) ? 'Lecture notes' : /book|edition/i.test(n) ? 'Textbook' : '';
 const guessType = n => guessTypeRaw(n) || 'Final exam';
 const MIME = {pdf:'application/pdf', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation'};
 const FILE_EXT = /\.(pdf|docx|pptx)$/i;
@@ -1847,8 +1913,8 @@ const typeOptions = cur => CATS.map(k => `<optgroup label="${esc(k.name)}">${opt
 const normName = s => String(s || '').toLowerCase().replace(FILE_EXT, '').replace(/[^a-z0-9]+/g, '');
 function findDup(code, f, seen){
   const nn = [normName(f.file.name), normName(f.title)];
-  const gc = courses.find(c => c.code === code), hit = papers.find(p => grp(p.course) === (gc ? grp(gc) : code) && ((p.size && p.size === f.file.size) || nn.includes(normName(p.title))));
-  if (hit) return 'Already uploaded in this course';
+  const gc = courses.find(c => c.code === code), hit = papers.find(p => grp(p.course) === (gc ? grp(gc) : code) && ((p.size && p.size === f.file.size) || (!p.size && nn.includes(normName(p.title)))));
+  if (hit) return 'Already uploaded in this course (same file)';
   const key = (gc ? grp(gc) : code) + '|' + f.file.size + '|' + normName(f.file.name);
   if (seen) { if (seen.has(key)) return 'Picked twice'; seen.add(key); }
   return '';
@@ -1914,33 +1980,47 @@ function groupedCourses(cl, cur){
 }
 function admAdd(box){
   if (!adm.school) adm.school = SCHOOLS[0].id;
-  box.innerHTML = `<div class="panel pad"><label class="lbl">School<select id="as">${optionsHtml(SCHOOLS.map(s => [s.id, s.name]), adm.school)}</select></label>
-    <label class="lbl">Course<select id="ac"></select></label>
+  box.innerHTML = `<div class="panel pad upl"><div class="pick">
+    <label class="lbl"><span class="step">1</span> School<select id="as"></select></label>
+    <label class="lbl"><span class="step">2</span> Programme<select id="apg"></select></label>
+    <label class="lbl"><span class="step">3</span> Year<select id="ay"></select></label>
+    <label class="lbl"><span class="step">4</span> Course<select id="ac"></select></label></div>
     <p class="small" id="ashare"></p>
-    <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many. The app reads inside each one to label it (exam, notes, tutorial…) and name it by its topic. Check the labels before uploading.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
-    <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped. PDFs over ${MAX_PAGES} pages are skipped.</p>
+    <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many. The app reads inside each one to label it (exam, notes, tutorial, solutions…) and name it by its topic. Check the labels before uploading.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
+    <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped (same file, even if the name is different). Files with the same name but different content are kept. PDFs over ${MAX_PAGES} pages are skipped.</p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
-  const courseList = () => courses.filter(c => c.school.id === adm.school).sort((a,b) => a.code.localeCompare(b.code));
-  const drawShare = () => { const c = courses.find(x => x.code === adm.course), s = c ? siblings(c).filter(x => x !== c) : []; $('#ashare').textContent = s.length ? 'Shared course. Files added here also show under ' + s.map(x => x.code).join(', ') + ', with the code changed to match.' : ''; };
-  const drawCourses = () => {
-    const cl = courseList(); if (!cl.some(c => c.code === adm.course)) adm.course = cl.length ? cl[0].code : '';
-    $('#ac').innerHTML = groupedCourses(cl, adm.course);
+  const natural = (a, b) => a.localeCompare(b, undefined, {numeric:true});
+  const sch = () => SCHOOLS.find(s => s.id === adm.school);
+  const inProg = new Set();
+  const others = () => { const s = sch(), used = new Set(); (s.programmes || []).forEach(p => Object.values(p.years).forEach(a => a.forEach(c => used.add(c)))); return courses.filter(c => c.school === s && !used.has(c.code)).sort((a, b) => natural(a.code, b.code)); };
+  const progOpts = () => { const s = sch(), o = (s.programmes || []).map(p => [p.id, p.name]); if (others().length) o.push(['__other', 'Other courses']); return o; };
+  const yearOpts = () => { const s = sch(); if (adm.prog === '__other' || !(s.programmes || []).length) return [['0', 'All years']]; const p = s.programmes.find(x => x.id === adm.prog); return p ? Object.keys(p.years).map(Number).sort().map(y => [String(y), 'Year ' + y]) : []; };
+  const courseOpts = () => {
+    const s = sch(), p = (s.programmes || []).find(x => x.id === adm.prog);
+    if (!p) return (adm.prog === '__other' ? others() : courses.filter(c => c.school === s).sort((a, b) => natural(a.code, b.code))).map(c => [c.code, c.code + ' · ' + c.name]);
+    return (p.years[adm.lvl] || []).map(code => courses.find(c => c.school === s && c.code === code)).filter(Boolean).map(c => [c.code, c.code + ' · ' + ((p.names && p.names[c.code]) || c.name)]);
+  };
+  const locate = (sid, code) => { const s = SCHOOLS.find(x => x.id === sid); for (const p of (s.programmes || [])) { const y = Object.keys(p.years).find(k => p.years[k].includes(code)); if (y) return {prog:p.id, lvl:y}; } return {prog:'__other', lvl:'0'}; };
+  const drawShare = () => { const c = courses.find(x => x.code === adm.course && x.school.id === adm.school), s = c ? siblings(c).filter(x => x !== c) : []; $('#ashare').textContent = s.length ? 'Shared course. Files added here also show under ' + s.map(x => x.code).join(', ') + ', with the code changed to match.' : ''; };
+  const drawPick = () => {
+    const po = progOpts(); if (!po.some(o => o[0] === adm.prog)) { adm.prog = po.length ? po[0][0] : ''; adm.lvl = ''; adm.course = ''; }
+    const yo = yearOpts(); if (!yo.some(o => o[0] === String(adm.lvl))) { adm.lvl = yo.length ? yo[0][0] : ''; adm.course = ''; }
+    const co = courseOpts(); if (!co.some(o => o[0] === adm.course)) adm.course = co.length ? co[0][0] : '';
+    $('#as').innerHTML = optionsHtml(SCHOOLS.map(s => [s.id, s.name]), adm.school);
+    $('#apg').innerHTML = po.length ? optionsHtml(po, adm.prog) : '<option value="">All courses</option>';
+    $('#ay').innerHTML = optionsHtml(yo, String(adm.lvl));
+    $('#ac').innerHTML = co.length ? optionsHtml(co, adm.course) : '<option value="">No courses yet</option>';
     drawShare();
   };
   const drawExisting = () => {
-    const cur = courses.find(c => c.code === adm.course), ex = papers.filter(p => cur && grp(p.course) === grp(cur)).sort((a,b) => b.yr.localeCompare(a.yr));
-    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}${p.course.code !== adm.course ? ' · uploaded as ' + esc(p.course.code) : ''}</span></div><button class="btn" data-del="${esc(p.id)}">Delete</button></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
-    $('#aex').querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
-      const p = papers.find(x => x.id === b.dataset.del); if (!p || !confirm('Delete this paper?\n' + p.title)) return;
-      b.disabled = true;
-      try { await window.FB.deletePaper({id:p.id, path:p.path}); setPapers(await window.FB.listPapers()); drawExisting(); } catch(e) { b.disabled = false; alert('Could not delete.'); }
-    });
+    const cur = courses.find(c => c.code === adm.course && c.school.id === adm.school), ex = papers.filter(p => cur && grp(p.course) === grp(cur)).sort((a,b) => b.yr.localeCompare(a.yr));
+    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}${p.course.code !== adm.course ? ' · uploaded as ' + esc(p.course.code) : ''}</span></div></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
   };
   const drawFiles = () => {
     const seen = new Set(); files.forEach(f => { f.dup = findDup(adm.course, f, seen); });
-    const gc = courses.find(c => c.code === adm.course);
+    const gc = courses.find(c => c.code === adm.course && c.school.id === adm.school);
     $('#afl').innerHTML = files.map((f,i) => {
       const other = (f.codes || []).filter(c => !gc || grp(c) !== grp(gc)), same = (f.codes || []).some(c => gc && grp(c) === grp(gc));
       const hint = !f.busy && other.length === 1 && !same ? `<div class="dupnote">Inside the file this looks like <b>${esc(other[0].code)}</b> · ${esc(other[0].name)}. <button type="button" class="linkbtn" data-sw="${i}">Switch course</button></div>` : '';
@@ -1953,11 +2033,13 @@ function admAdd(box){
     $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); });
     $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; });
     $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
-    $('#afl').querySelectorAll('[data-sw]').forEach(b => b.onclick = () => { const f = files[b.dataset.sw], o = (f.codes || []).find(c => !gc || grp(c) !== grp(gc)); if (!o) return; adm.school = o.school.id; adm.course = o.code; $('#as').value = adm.school; drawCourses(); drawExisting(); drawFiles(); });
+    $('#afl').querySelectorAll('[data-sw]').forEach(b => b.onclick = () => { const f = files[b.dataset.sw], o = (f.codes || []).find(c => !gc || grp(c) !== grp(gc)); if (!o) return; adm.school = o.school.id; adm.course = o.code; const l = locate(adm.school, o.code); adm.prog = l.prog; adm.lvl = l.lvl; drawPick(); drawExisting(); drawFiles(); });
     $('#aup').disabled = !files.some(f => !f.dup) || files.some(f => f.busy);
   };
-  drawCourses(); drawExisting();
-  $('#as').onchange = e => { adm.school = e.target.value; drawCourses(); drawExisting(); };
+  drawPick(); drawExisting();
+  $('#as').onchange = e => { adm.school = e.target.value; adm.prog = ''; adm.lvl = ''; adm.course = ''; drawPick(); drawExisting(); drawFiles(); };
+  $('#apg').onchange = e => { adm.prog = e.target.value; adm.lvl = ''; adm.course = ''; drawPick(); drawExisting(); drawFiles(); };
+  $('#ay').onchange = e => { adm.lvl = e.target.value; adm.course = ''; drawPick(); drawExisting(); drawFiles(); };
   $('#ac').onchange = e => { adm.course = e.target.value; drawShare(); drawExisting(); drawFiles(); };
   $('#af').onchange = async e => {
     const mine = files = [...e.target.files].map(file => ({file, year:guessYear(file.name), type:'', title:file.name.replace(FILE_EXT, '').replace(/_+/g, ' '), busy:true, why:[], codes:[]}));
@@ -1999,7 +2081,7 @@ function dupGroups(){
   const find = x => { while (parent.get(x) !== x) { parent.set(x, parent.get(parent.get(x))); x = parent.get(x); } return x; };
   const seen = new Map();
   papers.forEach(p => {
-    [p.size > 0 ? grp(p.course) + '|s' + p.size : '', p.title ? grp(p.course) + '|' + p.yr + '|t' + normName(p.title) : ''].filter(Boolean).forEach(k => {
+    [p.size > 0 ? grp(p.course) + '|s' + p.size : '', p.title && !p.size ? grp(p.course) + '|' + p.yr + '|t' + normName(p.title) : ''].filter(Boolean).forEach(k => {
       if (seen.has(k)) parent.set(find(p.id), find(seen.get(k))); else seen.set(k, p.id);
     });
   });
@@ -2230,13 +2312,15 @@ function classify(info, fname){
   let type = '', conf = 'low';
   if (best && best[1] >= 3) { type = best[0]; conf = best[1] >= 8 ? 'high' : best[1] >= 5 ? 'ok' : 'low'; }
   else if (slides) type = 'Lecture notes';
+  if (!slides && (SOLRE.test(fn) || SOLRE.test(head))) { type = 'Solutions'; conf = 'high'; why.unshift('file says it is solutions / a marking scheme'); }
   const year = findYear(lines, fname);
   /* title */
   const fallback = base.replace(/_+/g, ' ').replace(/\s+/g, ' ').trim();
   const junk = JUNK_NAME.test(fallback);
   const sol = /marking (scheme|key|guide)|solutions?|\bmemo\b/.test(fn + ' ' + lines.slice(0, 5).join(' ').toLowerCase()) ? ' (solutions)' : '';
   let title;
-  if (EXAMT.includes(type)) title = (junk ? type + ' ' + year : fallback) + (sol && !/solution|marking|memo/i.test(fallback) ? sol : '');
+  if (type === 'Solutions') title = (junk ? 'Solutions ' + year : fallback) + (/solution|marking|memo|answer/i.test(fallback) ? '' : ' (solutions)');
+  else if (EXAMT.includes(type)) title = (junk ? type + ' ' + year : fallback) + (sol && !/solution|marking|memo/i.test(fallback) ? sol : '');
   else {
     const codeLine = /\b[A-Za-z]{2,5}[\s_\-]?\d{3}[A-Za-z]?\b/;
     const cand = lines.slice(0, 16).map(s => s.trim()).filter(s => s.length >= 3 && s.length <= 100 && !BOILER.test(s));
@@ -2567,7 +2651,7 @@ async function pollInbox(){
   } catch (e) {}
 }
 function startPolling(){ clearInterval(pollTimer); if (S.user) { pollInbox(); pollTimer = setInterval(() => { if (!document.hidden) pollInbox(); }, 60000); } else setDot(false); }
-const bubble = (m, mine) => `<div class="bub ${mine ? 'me' : 'them'}">${esc(m.body).replace(/\n/g, '<br>')}<small>${m.fromAdmin ? 'Help desk · ' : ''}${fmtTime(m.createdAt)}${m.topic && !m.fromAdmin && m.topic !== 'Other' ? ' · ' + esc(topicLabel(m.topic)) : ''}</small></div>`;
+const bubble = (m, mine) => `<div class="bub ${mine ? 'me' : 'them'}">${esc(m.body).replace(/\n/g, '<br>')}<small>${m.fromAdmin ? 'Study Nest team' + vt(true) + ' · ' : ''}${fmtTime(m.createdAt)}${m.topic && !m.fromAdmin && m.topic !== 'Other' ? ' · ' + esc(topicLabel(m.topic)) : ''}</small></div>`;
 const hs = {topic:'Studies'};
 function helpScreen(app){
   topbar('Help desk', 'Tell us what is hard. We read every message');
@@ -2635,17 +2719,24 @@ const CANNED = ["Hi, thanks for reaching out. We have your message and we are lo
   "That paper has been fixed. Thanks for letting us know!",
   "We are sorry you are going through this. You are not alone. Please also speak to someone you trust, or Student Affairs on campus.",
   "Thank you for the idea! We have noted it."];
+const prettyName = e => { const l = String(e || '').split('@')[0].replace(/[0-9._\-+]+/g, ' ').replace(/\s+/g, ' ').trim(); return l ? l.replace(/\b[a-z]/g, m => m.toUpperCase()) : 'Student'; };
+const initials = n => { const w = String(n || 'S').trim().split(/\s+/); return ((w[0] || 'S')[0] + (w[1] ? w[1][0] : '')).toUpperCase(); };
 async function admInbox(box){
   const FB = window.FB;
   box.innerHTML = '<div class="empty">Loading…</div>';
   let list = []; try { list = await FB.listMessages(); } catch (e) { box.innerHTML = '<div class="empty">Could not load messages.<br><span class="small">Supabase says: ' + esc(String((e && (e.message || e.code || e.details)) || e)) + '</span><br><span class="small">Have you run the help inbox SQL, with no errors, in Supabase?</span></div>'; return; }
+  const names = new Map(), paid = new Map();
+  try { (await FB.listProfiles()).forEach(p => { if (p.name) names.set(p.uid, p.name); }); } catch (e) {}
+  try { (await FB.listStudents()).forEach(s => paid.set(s.uid, !!(s.paidUntil && s.paidUntil > new Date()))); } catch (e) {}
   const convs = new Map();
   list.slice().reverse().forEach(m => { let c = convs.get(m.uid); if (!c) { c = {uid:m.uid, email:m.email, msgs:[], unread:0, urgent:false, last:0}; convs.set(m.uid, c); } c.msgs.push(m); if (m.email) c.email = m.email; });
-  convs.forEach(c => { c.unread = c.msgs.filter(m => !m.fromAdmin && !m.read).length; c.urgent = c.msgs.some(m => !m.fromAdmin && !m.read && m.topic === 'Urgent'); c.last = +c.msgs[c.msgs.length - 1].createdAt; });
+  convs.forEach(c => { c.unread = c.msgs.filter(m => !m.fromAdmin && !m.read).length; c.urgent = c.msgs.some(m => !m.fromAdmin && !m.read && m.topic === 'Urgent'); c.last = +c.msgs[c.msgs.length - 1].createdAt; c.name = names.get(c.uid) || prettyName(c.email); c.blue = !!paid.get(c.uid); });
   S.adminUnread = [...convs.values()].reduce((a, c) => a + c.unread, 0); setDot(S.adminUnread > 0);
   if (adm.thread && convs.has(adm.thread)) {
     const c = convs.get(adm.thread);
-    box.innerHTML = `<button class="linkbtn" id="ibk">← All conversations</button><div class="panel pad" style="margin-top:6px"><h2 class="ph2">${esc(c.email || 'Student')}</h2><div class="thread" id="ith" style="max-height:52vh">${c.msgs.map(m => bubble(m, m.fromAdmin)).join('')}</div></div>
+    box.innerHTML = `<button class="linkbtn" id="ibk">← All conversations</button>
+      <div class="ithead"><span class="av">${esc(initials(c.name))}</span><div><div class="inm">${esc(c.name)}${vt(c.blue)}</div><div class="small">${c.blue ? 'Verified member' : 'Student'} · ${c.msgs.length} message${c.msgs.length === 1 ? '' : 's'}</div></div></div>
+      <div class="panel pad ithread"><div class="thread" id="ith">${c.msgs.map(m => bubble(m, m.fromAdmin)).join('')}</div></div>
       <div class="panel pad"><div class="small">Quick replies</div><div class="sugs" id="icn">${CANNED.map((s, i) => `<button type="button" class="sug" data-c="${i}">${esc(s)}</button>`).join('')}</div>
       <label class="lbl" for="irep">Your reply</label><textarea id="irep" class="search ta" rows="4" maxlength="1500"></textarea><div class="btnrow"><button class="btn pri" id="isend">Send reply</button></div><p class="msg" id="im" role="status"></p></div>`;
     const th = $('#ith'); th.scrollTop = th.scrollHeight;
@@ -2661,7 +2752,8 @@ async function admInbox(box){
   }
   adm.thread = '';
   const rows = [...convs.values()].sort((a, b) => (b.urgent - a.urgent) || (b.unread > 0) - (a.unread > 0) || b.last - a.last);
-  box.innerHTML = rows.length ? `<p class="small">${rows.length} conversations · ${S.adminUnread} unread</p><div class="panel">${rows.map(c => { const lm = c.msgs[c.msgs.length - 1]; return `<button class="convrow" data-u="${esc(c.uid)}"><span class="av">${esc((c.email||"S").charAt(0).toUpperCase())}</span><span class="ri-main"><span class="ri-t">${esc(c.email || 'Student')}</span><span class="prev">${lm.fromAdmin ? 'You: ' : ''}${esc(lm.body)}</span><span class="small">${fmtTime(lm.createdAt)}</span></span>${c.urgent ? '<span class="chip urgent">Urgent</span>' : ''}${c.unread ? `<span class="chip hot">${c.unread} new</span>` : ''}</button>`; }).join('')}</div>` : '<div class="empty">No messages yet.</div>';
+  box.innerHTML = rows.length ? `<div class="instats"><div><b>${rows.length}</b><span>Conversations</span></div><div><b>${S.adminUnread}</b><span>Unread</span></div><div><b>${rows.filter(c => c.urgent).length}</b><span>Urgent</span></div></div>
+    <div class="inlist">${rows.map(c => { const lm = c.msgs[c.msgs.length - 1]; return `<button class="icard${c.unread ? ' new' : ''}" data-u="${esc(c.uid)}"><span class="av">${esc(initials(c.name))}</span><span class="ibody"><span class="irow1"><span class="inm">${esc(c.name)}${vt(c.blue)}</span><span class="itime">${fmtTime(lm.createdAt)}</span></span><span class="iprev">${lm.fromAdmin ? 'You: ' : ''}${esc(lm.body)}</span><span class="ibadges">${c.urgent ? '<span class="ibadge urg">Urgent</span>' : ''}${c.unread ? `<span class="ibadge nw">${c.unread} new</span>` : ''}${lm.topic && !lm.fromAdmin && lm.topic !== 'Other' && lm.topic !== 'Urgent' ? `<span class="ibadge">${esc(topicLabel(lm.topic))}</span>` : ''}</span></span></button>`; }).join('')}</div>` : '<div class="empty">No messages yet. When a student writes to the help desk, it shows up here.</div>';
   box.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { adm.thread = b.dataset.u; admInbox(box); });
 }
 
@@ -2945,6 +3037,7 @@ if (window.FB === undefined) {
         async listAdmins(){ const r = ok(await sb.rpc('list_admins')); return (r || []).map(x => ({uid:x.user_id, email:x.email})); },
         async addAdmin(email){ ok(await sb.rpc('add_admin_by_email', {p_email:email})); },
         async removeAdmin(uid){ ok(await sb.rpc('remove_admin', {p_user:uid})); },
+        async listProfiles(){ return (await all('profiles', q => q)).map(r => ({uid:r.user_id, name:r.display_name})); },
         async listStudents(){ return (await all('students', q => q)).map(r => ({uid:r.user_id, email:r.email, paidUntil:D(r.paid_until)})); },
         async setPaidUntil(uid, email, date){ ok(await sb.from('students').upsert({user_id:uid, email, paid_until:date.toISOString()})); },
         async saveConfig(cfg){ ok(await sb.from('config').upsert({id:1, data:cfg})); },

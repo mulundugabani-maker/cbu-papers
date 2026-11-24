@@ -1012,7 +1012,7 @@ const BUS_CAT = {
   'HRM 210':'Labour Economics','HRM 220':'Cost Management Accounting','HRM 240':'Information Technology','HRM 242':'Decision Making Techniques','HRM 260':'Principles of Marketing','HRM 280':'Fundamentals of Human Resource Management',
   /* Economics (BEC): course titles still to be added, except BEC 320 */
   'BEC 110':'Introduction to Microeconomics','BEC 120':'BEC 120','BEC 130':'BEC 130','BEC 140':'BEC 140','BEC 150':'BEC 150','BEC 190':'BEC 190',
-  'BEC 210':'Intermediate Economics','BEC 220':'BEC 220','BEC 230':'BEC 230','BEC 240':'BEC 240','BEC 242':'BEC 242','BEC 244':'BEC 244',
+  'BEC 210':'Intermediate Economics','BEC 220':'BEC 220','BEC 230':'BEC 230','BEC 240':'Data Processing','BEC 242':'Decision Making Techniques','BEC 244':'BEC 244',
   'BEC 310':'BEC 310','BEC 320':'Advanced Microeconomics','BEC 330':'BEC 330','BEC 340':'BEC 340','BEC 350':'BEC 350','BEC 360':'BEC 360',
   'BEC 400':'BEC 400','BEC 410':'BEC 410','BEC 411':'BEC 411','BEC 420':'BEC 420','BEC 440':'Econometrics II','BEC 442':'BEC 442'
 };
@@ -1250,7 +1250,7 @@ const halfTag = c => (c.school.id === 'bus' && /^[A-Za-z]+\s*15[13]$/.test(c.cod
 const sampleChip = c => isSample(c) ? '<span class="chip smp">SAMPLE COURSE</span>' : '';
 /* In the School of Business every first-year course is shared: BS 110, BEC 110 and so on are the same course with different prefixes. */
 /* Business courses that are the same course under different codes (outside first year) */
-const SHARED_BUS = [['BF 224','BS 224'],['BS 222','HRM 220','BSP 320','BF 220'],['BEC 210','BS 210'],['BF 240','BS 240','HRM 240'],['BF 242','BS 242','HRM 242'],['BF 260','BS 260','HRM 260']];
+const SHARED_BUS = [['BF 224','BS 224'],['BS 222','HRM 220','BSP 320','BF 220'],['BEC 210','BS 210'],['BF 240','BS 240','HRM 240','BEC 240'],['BF 242','BS 242','HRM 242','BEC 242'],['BF 260','BS 260','HRM 260']];
 const SHARE_KEY = {}; SHARED_BUS.forEach((g,i) => g.forEach(c => SHARE_KEY[c] = 'bus-x' + i));
 /* Financial Accounting: BS 120 / BF 120 in first year is BSP 220 in second year */
 SHARE_KEY['BSP 220'] = 'bus1-120';

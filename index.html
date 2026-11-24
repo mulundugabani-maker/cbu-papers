@@ -3152,14 +3152,19 @@ if (window.FB === undefined) {
         async getConfig(){ const r = ok(await sb.from('config').select('data').eq('id', 1).maybeSingle()); return r ? r.data : {}; },
         async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path, size:r.size, createdAt:r.created_at})); },
         async askAI(body){
-          const r = await Promise.race([sb.functions.invoke('ask-ai', {body}), new Promise((_, rej) => setTimeout(() => rej(new Error('The AI took too long. Check your connection and try again.')), 60000))]);
+          const once = () => Promise.race([sb.functions.invoke('ask-ai', {body}), new Promise((_, rej) => setTimeout(() => rej(new Error('The AI took too long. Check your connection and try again.')), 45000))]);
+          let r = await once();
+          for (let i = 0; i < 1 && r.error && r.error.context && [502, 504].includes(r.error.context.status); i++) {
+            await new Promise(res => setTimeout(res, 2000 * (i + 1)));
+            r = await once();
+          }
           if (r.error) {
             console.error('ask-ai', r.error);
             if (r.error.name === 'FunctionsFetchError') throw new Error('Could not reach the AI. Check your connection and try again.');
             let m = 'AI is not available right now.'; const c = r.error.context;
             try { const j = await c.clone().json(); if (j && (j.error || j.message)) m = String(j.error || j.message); }
             catch (e) { try { const t = await c.text(); if (t) m += ' ' + String(t).slice(0, 140); } catch (e2) {} }
-            if (c && c.status) m += ' [' + c.status + ']';
+            if (c && [502, 503, 504].includes(c.status)) m = 'The AI is busy right now. Please try again in a minute.'; else if (c && c.status) m += ' [' + c.status + ']';
             throw new Error(m);
           }
           if (r.data && r.data.error) throw new Error(r.data.error);

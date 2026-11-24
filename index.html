@@ -1938,17 +1938,24 @@ async function shrinkPdf(file, say){
   if (file.size < 400 * 1024) return file;
   const [lib, PL] = await Promise.all([loadPdfJs(), loadPdfLib()]);
   const src = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
-  const n = src.numPages, big = n > 100, target = big ? 1000 : 1200, q = big ? 0.5 : 0.6;
+  const n = src.numPages, big = n > 100, target = big ? 900 : 1200, q = big ? 0.5 : 0.6;
   const jpgs = new Array(n), tick = () => new Promise(r => setTimeout(r, 0));
   let doneN = 0;
+  const FILTER_OK = (() => { try { return 'filter' in document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })();
   const one = async i => {
     const page = await src.getPage(i), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:Math.min(3, target / v1.width)});
-    const cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
-    const g = cv.getContext('2d', {willReadFrequently:true}); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
+    let cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
+    const g = cv.getContext('2d', FILTER_OK ? undefined : {willReadFrequently:true}); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
     await page.render({canvasContext:g, viewport:v}).promise;
-    const im = g.getImageData(0, 0, cv.width, cv.height), d = im.data;   /* whiten the paper so it compresses well; text stays */
-    for (let k = 0; k < d.length; k += 4) { if ((d[k] * 77 + d[k+1] * 150 + d[k+2] * 29) >> 8 > 215) { d[k] = d[k+1] = d[k+2] = 255; } }
-    g.putImageData(im, 0, 0);
+    if (FILTER_OK) {   /* the graphics chip whitens the paper: no slow pixel-by-pixel loop */
+      const c2 = document.createElement('canvas'); c2.width = cv.width; c2.height = cv.height;
+      const g2 = c2.getContext('2d'); g2.filter = 'contrast(1.4) brightness(1.05)'; g2.drawImage(cv, 0, 0);
+      cv.width = cv.height = 0; cv = c2;
+    } else {
+      const im = g.getImageData(0, 0, cv.width, cv.height), d = im.data;
+      for (let k = 0; k < d.length; k += 4) { if ((d[k] * 77 + d[k+1] * 150 + d[k+2] * 29) >> 8 > 215) { d[k] = d[k+1] = d[k+2] = 255; } }
+      g.putImageData(im, 0, 0);
+    }
     const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', q));
     jpgs[i-1] = {bytes:new Uint8Array(await blob.arrayBuffer()), w:v1.width, h:v1.height};
     cv.width = cv.height = 0; page.cleanup();
@@ -1962,7 +1969,7 @@ async function shrinkPdf(file, say){
     const rest = []; for (let i = 1; i <= n; i++) if (!jpgs[i-1]) rest.push(i);
     let at = 0;
     const w = async () => { while (at < rest.length) await one(rest[at++]); };
-    await Promise.all([w(), w()]);
+    await Promise.all([w(), w(), w()]);
   } finally { try { await src.destroy(); } catch(e) {} }
   const out = await PL.PDFDocument.create();
   for (const j of jpgs) { const img = await out.embedJpg(j.bytes); out.addPage([j.w, j.h]).drawImage(img, {x:0, y:0, width:j.w, height:j.h}); }
@@ -2091,7 +2098,7 @@ function admAdd(box){
           } catch(e) { failed = failed || e; }
         }
       };
-      await Promise.all([upWorker(), upWorker()]);
+      await Promise.all([upWorker(), upWorker(), upWorker()]);
       if (failed) throw failed;
       msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '') + (why.long ? ' ' + why.long + ' skipped: over ' + MAX_PAGES + ' pages.' : '') + (why.big ? ' ' + why.big + ' skipped: over 50 MB.' : '') + (why.type ? ' ' + why.type + ' skipped: not PDF, Word (.docx) or PowerPoint (.pptx).' : '');
       files = []; $('#af').value = ''; drawFiles();

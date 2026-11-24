@@ -1931,28 +1931,41 @@ function loadPdfLib(){
   return pdflibP;
 }
 async function pageCount(file){ const lib = await loadPdfJs(); const d = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const n = d.numPages; await d.destroy(); return n; }
-/* Makes big PDFs smaller: each page is redrawn as a sharp picture. If it does not get clearly smaller, the original is kept. */
+/* Makes big scanned PDFs smaller by redrawing pages as sharp pictures.
+   Fast version: skips small files, tests 3 pages first and gives up at once if the file would not get clearly smaller,
+   then redraws two pages at a time and lets the screen breathe between pages. */
 async function shrinkPdf(file, say){
   if (file.size < 400 * 1024) return file;
   const [lib, PL] = await Promise.all([loadPdfJs(), loadPdfLib()]);
   const src = await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
-  const n = src.numPages, big = n > 100, target = big ? 1200 : 1500, q = big ? 0.5 : 0.6;
-  const out = await PL.PDFDocument.create();
-  for (let i = 1; i <= n; i++) {
-    say(i, n);
+  const n = src.numPages, big = n > 100, target = big ? 1000 : 1200, q = big ? 0.5 : 0.6;
+  const jpgs = new Array(n), tick = () => new Promise(r => setTimeout(r, 0));
+  let doneN = 0;
+  const one = async i => {
     const page = await src.getPage(i), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:Math.min(3, target / v1.width)});
     const cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
-    const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
+    const g = cv.getContext('2d', {willReadFrequently:true}); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
     await page.render({canvasContext:g, viewport:v}).promise;
-    { const im = g.getImageData(0, 0, cv.width, cv.height), d = im.data;   /* clean the paper background so it compresses well; text stays */
-      for (let k = 0; k < d.length; k += 4) { if (d[k] * 0.3 + d[k+1] * 0.59 + d[k+2] * 0.11 > 215) { d[k] = d[k+1] = d[k+2] = 255; } }
-      g.putImageData(im, 0, 0); }
+    const im = g.getImageData(0, 0, cv.width, cv.height), d = im.data;   /* whiten the paper so it compresses well; text stays */
+    for (let k = 0; k < d.length; k += 4) { if ((d[k] * 77 + d[k+1] * 150 + d[k+2] * 29) >> 8 > 215) { d[k] = d[k+1] = d[k+2] = 255; } }
+    g.putImageData(im, 0, 0);
     const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', q));
-    const img = await out.embedJpg(new Uint8Array(await blob.arrayBuffer()));
-    out.addPage([v1.width, v1.height]).drawImage(img, {x:0, y:0, width:v1.width, height:v1.height});
+    jpgs[i-1] = {bytes:new Uint8Array(await blob.arrayBuffer()), w:v1.width, h:v1.height};
     cv.width = cv.height = 0; page.cleanup();
-  }
-  await src.destroy();
+    say(++doneN, n); await tick();
+  };
+  try {
+    const probe = [...new Set([1, Math.ceil(n / 2), n])];
+    for (const i of probe) await one(i);
+    const avg = probe.reduce((a, i) => a + jpgs[i-1].bytes.length, 0) / probe.length;
+    if (avg * n + 20000 > file.size * 0.85) return file;   /* would not get clearly smaller: keep the original, no more waiting */
+    const rest = []; for (let i = 1; i <= n; i++) if (!jpgs[i-1]) rest.push(i);
+    let at = 0;
+    const w = async () => { while (at < rest.length) await one(rest[at++]); };
+    await Promise.all([w(), w()]);
+  } finally { try { await src.destroy(); } catch(e) {} }
+  const out = await PL.PDFDocument.create();
+  for (const j of jpgs) { const img = await out.embedJpg(j.bytes); out.addPage([j.w, j.h]).drawImage(img, {x:0, y:0, width:j.w, height:j.h}); }
   const bytes = await out.save();
   return bytes.length < file.size * 0.9 ? new File([bytes], file.name, {type:'application/pdf'}) : file;
 }
@@ -1982,6 +1995,7 @@ function groupedCourses(cl, cur){
 }
 function admAdd(box){
   if (!adm.school) adm.school = SCHOOLS[0].id;
+  loadPdfJs().catch(() => {}); loadPdfLib().catch(() => {});
   box.innerHTML = `<div class="panel pad upl"><div class="pick">
     <label class="lbl"><span class="step">1</span> School<select id="as"></select></label>
     <label class="lbl"><span class="step">2</span> Programme<select id="apg"></select></label>
@@ -1989,7 +2003,7 @@ function admAdd(box){
     <label class="lbl"><span class="step">4</span> Course<select id="ac"></select></label></div>
     <p class="small" id="ashare"></p>
     <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many. The app reads inside each one to label it (exam, notes, tutorial, solutions…) and name it by its topic. Check the labels before uploading.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
-    <p class="small">PDFs are made smaller automatically. Files already uploaded are skipped (same file, even if the name is different). Files with the same name but different content are kept. PDFs over ${MAX_PAGES} pages are skipped.</p>
+    <p class="small">Big scanned PDFs are made smaller automatically; PDFs that would not get clearly smaller are left as they are. Files already uploaded are skipped (same file, even if the name is different). Files with the same name but different content are kept. PDFs over ${MAX_PAGES} pages are skipped.</p>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
@@ -2049,7 +2063,7 @@ function admAdd(box){
     let next = 0, done = 0;
     const worker = async () => { while (next < mine.length) { const f = mine[next++]; if (files !== mine) return; try { await analyseFile(f); } catch(e) { f.busy = false; } done++; if (files !== mine) return; drawFiles(); $('#amsg').textContent = done < mine.length ? 'Reading inside the files… ' + done + ' of ' + mine.length + ' done' : 'All ' + mine.length + ' files read and labelled. Check them, then tap Upload.'; } };
     $('#amsg').textContent = 'Reading inside the files… 0 of ' + mine.length + ' done';
-    await Promise.all([worker(), worker(), worker(), worker()]);
+    await Promise.all([worker(), worker()]);
   };
   $('#aup').onclick = async () => {
     const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
@@ -2059,18 +2073,26 @@ function admAdd(box){
       const seen = new Set(), todo = [];
       files.forEach(f => { if (findDup(adm.course, f, seen)) skipped++; else todo.push(f); });
       total = todo.length;
-      for (const f of todo) {
-        const label = 'File ' + (done + 1) + ' of ' + total;
-        let up = f.file; const ext = extOf(f.file.name);
-        if (!MIME[ext]) { why.type++; continue; }
-        if (f.file.size > MAX_BYTES) { why.big++; continue; }
-        if (ext === 'pdf') {
-          try { msg.textContent = label + ': checking pages'; if (await pageCount(f.file) > MAX_PAGES) { why.long++; continue; } } catch(e) {}
-          try { up = await shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; }); } catch(e) { up = f.file; }
+      let ti = 0, failed = null, lock = Promise.resolve();
+      const serial = fn => { const r = lock.then(fn); lock = r.catch(() => {}); return r; };   /* one shrink at a time, so the phone is not overloaded */
+      const upWorker = async () => {
+        while (ti < todo.length && !failed) {
+          const idx = ti++, f = todo[idx], label = 'File ' + (idx + 1) + ' of ' + total;
+          try {
+            let up = f.file; const ext = extOf(f.file.name);
+            if (!MIME[ext]) { why.type++; continue; }
+            if (f.file.size > MAX_BYTES) { why.big++; continue; }
+            if (ext === 'pdf') {
+              try { const pg = f.pages || await pageCount(f.file); if (pg > MAX_PAGES) { why.long++; continue; } } catch(e) {}
+              try { up = await serial(() => shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; })); } catch(e) { up = f.file; }
+            }
+            await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type || 'Other', title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
+            done++;
+          } catch(e) { failed = failed || e; }
         }
-        await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type || 'Other', title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
-        done++;
-      }
+      };
+      await Promise.all([upWorker(), upWorker()]);
+      if (failed) throw failed;
       msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '') + (why.long ? ' ' + why.long + ' skipped: over ' + MAX_PAGES + ' pages.' : '') + (why.big ? ' ' + why.big + ' skipped: over 50 MB.' : '') + (why.type ? ' ' + why.type + ' skipped: not PDF, Word (.docx) or PowerPoint (.pptx).' : '');
       files = []; $('#af').value = ''; drawFiles();
     } catch(e) { msg.textContent = 'Stopped after ' + done + ' of ' + total + '. ' + (e && e.code === 'storage/unauthorized' ? 'Storage rules refused the upload.' : 'Check your connection and try again.'); btn.disabled = false; }
@@ -2341,7 +2363,7 @@ function classify(info, fname){
 }
 async function analyseFile(f){
   try {
-    const info = await readSample(f.file), r = classify(info, f.file.name);
+    const info = await readSample(f.file), r = classify(info, f.file.name); f.pages = info.pages || 0;
     f.type = r.type || guessTypeRaw(f.file.name) || ''; f.title = r.title; f.year = r.year; f.why = r.why; f.conf = r.conf; f.codes = r.codes;
     if (!r.hasText) { f.why = ['no readable text inside (scanned?)'].concat(r.why); if (!r.type) f.conf = 'low'; }
   } catch (e) { f.type = guessTypeRaw(f.file.name) || ''; f.why = ['could not read inside']; f.conf = 'low'; }

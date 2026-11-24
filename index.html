@@ -1224,7 +1224,8 @@ const SCHOOL_IMG = {
 };
 const YEARS = [];
 const CATS = [
-  {id:'paper', name:'Past papers', types:['Final exam','Supplementary exam','Mid-term test','Test'], icon:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>'},
+  {id:'paper', name:'Past papers', types:['Final exam','Supplementary exam'], icon:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>'},
+  {id:'test', name:'Tests', types:['Test','Mid-term test'], icon:'<path d="M7 3h10v18H7z"/><path d="M10 8h4M10 12h4M10 16h2"/>'},
   {id:'notes', name:'Notes', types:['Lecture notes','Summary notes'], icon:'<path d="M5 4h14v16H5z"/><path d="M9 4v16M12 9h4M12 13h4"/>'},
   {id:'work', name:'Worksheets', types:['Worksheet','Tutorial sheet','Assignment','Lab manual'], icon:'<path d="M9 3h6v3H9z"/><path d="M6 5h12v16H6z"/><path d="M9 12l2 2 4-4M9 18h6"/>'},
   {id:'sol', name:'Solutions', types:['Solutions'], icon:'<path d="M5 4h14v16H5z"/><path d="M8.5 12.2l2.3 2.3 4.7-4.9"/>'},
@@ -1709,8 +1710,9 @@ function buildSolLinks(){
     const pool = papers.filter(p => p.type !== 'Solutions' && p.yr === s.yr && grp(p.course) === grp(s.course) && !solOf.has(p.id));
     let hit = pool.filter(p => exact(p.title) && exact(p.title) === exact(s.title));
     if (!hit.length) { const b = bare(s.title); hit = pool.filter(p => bare(p.title) === b); }
+    if (!hit.length) { const m = String(s.title || '').toLowerCase().match(/\b(test|quiz|assignment|tutorial|ca)\s*[-_#]?\s*(\d)\b/); if (m) hit = pool.filter(p => { const q = String(p.title || '').toLowerCase().match(/\b(test|quiz|assignment|tutorial|ca)\s*[-_#]?\s*(\d)\b/); return q && q[1] === m[1] && q[2] === m[2]; }); }
     if (!hit.length) { const w = String(s.title || '').toLowerCase(); const kinds = [['tutorial','Tutorial sheet'],['worksheet','Worksheet'],['assign','Assignment'],['supp','Supplementary exam'],['mid','Mid-term test'],['test','Test'],['quiz','Test'],['final','Final exam'],['exam','Final exam']]; const k = kinds.find(x => w.includes(x[0])); if (k) hit = pool.filter(p => p.type === k[1]); }
-    if (!hit.length) { const ex = pool.filter(p => catOf(p.type).id === 'paper'); if (ex.length === 1) hit = ex; }
+    if (!hit.length) { const ex = pool.filter(p => ['paper','test','work'].includes(catOf(p.type).id)); if (ex.length === 1) hit = ex; }
     if (hit.length === 1) { solOf.set(hit[0].id, s); qOf.set(s.id, hit[0]); }
   });
 }
@@ -2312,14 +2314,16 @@ function classify(info, fname){
   let type = '', conf = 'low';
   if (best && best[1] >= 3) { type = best[0]; conf = best[1] >= 8 ? 'high' : best[1] >= 5 ? 'ok' : 'low'; }
   else if (slides) type = 'Lecture notes';
-  if (!slides && (SOLRE.test(fn) || SOLRE.test(head))) { type = 'Solutions'; conf = 'high'; why.unshift('file says it is solutions / a marking scheme'); }
+  const solSigns = slides ? 0 : (raw.match(/^\s*(solution|answer|ans)\s*(to)?\s*(question|q)?\s*[0-9a-z]{0,3}\s*[:.\-)]/gim) || []).length + (raw.match(/\bmarks?\s+(allocation|awarded|scheme)\b|\bmark\s*allocation\b/gi) || []).length;
+  if (!slides && (SOLRE.test(fn) || SOLRE.test(head) || solSigns >= 3)) { type = 'Solutions'; conf = 'high'; why.unshift(solSigns >= 3 && !SOLRE.test(fn) && !SOLRE.test(head) ? 'worked answers inside (' + solSigns + ' signs)' : 'file says it is solutions / a marking scheme'); }
   const year = findYear(lines, fname);
   /* title */
   const fallback = base.replace(/_+/g, ' ').replace(/\s+/g, ' ').trim();
-  const junk = JUNK_NAME.test(fallback);
+  const junk = JUNK_NAME.test(fallback), junk2 = junk || /^(scan|img|image|doc|photo|file|cam)[\s\d_\-]*$/i.test(fallback);
   const sol = /marking (scheme|key|guide)|solutions?|\bmemo\b/.test(fn + ' ' + lines.slice(0, 5).join(' ').toLowerCase()) ? ' (solutions)' : '';
   let title;
-  if (type === 'Solutions') title = (junk ? 'Solutions ' + year : fallback) + (/solution|marking|memo|answer/i.test(fallback) ? '' : ' (solutions)');
+  if (type === 'Solutions') title = (junk2 ? (((fn + ' ' + head).match(/\b(test|quiz|assignment|tutorial)\s*[-_#]?\s*(\d)\b/i) || [''])[0].replace(/^./, m => m.toUpperCase()) + ' solutions ' + year).trim() : fallback) + ((typeof junk2 !== 'undefined' && junk2) || /solution|marking|memo|answer/i.test(fallback) ? '' : ' (solutions)');
+  else if ((type === 'Test' || type === 'Mid-term test') && (/\b(test|quiz|ca)\s*[-_#]?\s*(\d)\b/i.test(fn) || /\b(test|quiz|ca)\s*[-_#]?\s*(\d)\b/i.test(head))) { const tn = (fn.match(/\b(test|quiz|ca)\s*[-_#]?\s*(\d)\b/i) || head.match(/\b(test|quiz|ca)\s*[-_#]?\s*(\d)\b/i)); title = (junk2 ? (type === 'Mid-term test' ? 'Mid-term test' : 'Test ' + tn[2]) + ' ' + year : fallback); }
   else if (EXAMT.includes(type)) title = (junk ? type + ' ' + year : fallback) + (sol && !/solution|marking|memo/i.test(fallback) ? sol : '');
   else {
     const codeLine = /\b[A-Za-z]{2,5}[\s_\-]?\d{3}[A-Za-z]?\b/;
@@ -2345,14 +2349,14 @@ async function analyseFile(f){
 }
 
 /* Admin: relabel files that are already uploaded */
-const rel = {done:new Set(), props:[], all:false};
+const rel = {done:new Set(), props:[], all:true};
 const relabelCands = () => papers.filter(p => !rel.done.has(p.id) && (rel.all || p.type === 'Other' || (p.type === 'Final exam' && guessTypeRaw(p.title) !== 'Final exam')));
 function admRelabel(box){
   const left = relabelCands().length;
-  box.innerHTML = `<div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Fix labels by reading inside</h2><span class="chip ${left ? 'hot' : ''}">${left}</span></div>
-    <p class="small">Opens each file, reads the first pages, and works out what it really is (exam, notes, tutorial…) and its topic. You review the list before anything changes.</p>
-    <label class="lbl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="rall" ${rel.all ? 'checked' : ''}> Check every file, not only the ones that look mislabelled</label>
-    <div class="btnrow"><button class="btn pri" id="rscan" ${left ? '' : 'disabled'}>${left ? 'Scan all ' + left + ' files at once' : 'Nothing to scan'}</button></div>
+  box.innerHTML = `<div class="panel pad" style="margin-top:12px"><div class="tidyh"><h2 class="ph2">Rescan everything inside</h2><span class="chip ${left ? 'hot' : ''}">${left}</span></div>
+    <p class="small">Opens each file, reads inside, and works out what it really is: exam, test, notes, tutorial or solutions. Files put in the wrong group (a test that is really solutions, an exam that is really a test) show up as suggestions. You review the list before anything changes.</p>
+    <label class="lbl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="rall" ${rel.all ? 'checked' : ''}> Check every file (recommended)</label>
+    <div class="btnrow"><button class="btn pri" id="rscan" ${left ? '' : 'disabled'}>${left ? 'Rescan all ' + left + ' files' : 'Nothing to scan'}</button></div>
     <p class="msg" id="rmsg" role="status"></p><div id="rres"></div></div>`;
   const msg = $('#rmsg', box);
   $('#rall', box).onchange = e => { rel.all = e.target.checked; rel.done.clear(); admRelabel(box); };

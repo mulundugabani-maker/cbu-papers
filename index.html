@@ -987,6 +987,15 @@ html:root[data-theme] .sch .lbl b,html:root[data-theme] .sch .lbl span{color:#ff
 :root[data-theme] body .bub small{display:block;margin-top:6px;font-size:.68rem!important;opacity:.75}
 :root[data-theme] body .bub small .vt{width:14px;height:14px}
 .vt{display:inline-block;vertical-align:-3px}
+
+/* Softer splash: no white glare, follows light/dark */
+#splash{background:radial-gradient(70% 45% at 50% 32%,rgba(184,138,46,.16),transparent 70%),linear-gradient(180deg,#efe4cc,#e0d2b2)}
+#splash img{filter:drop-shadow(0 12px 20px rgba(80,55,10,.22))}
+:root[data-theme="dark"] #splash{background:radial-gradient(70% 45% at 50% 32%,rgba(226,183,101,.10),transparent 70%),linear-gradient(180deg,#2e2118,#1b120c);color:#f1e4cc}
+:root[data-theme="dark"] #splash img{filter:brightness(.82) drop-shadow(0 14px 24px rgba(0,0,0,.55))}
+:root[data-theme="dark"] #splash b{color:#e2b765}
+:root[data-theme="dark"] #splash .sp-b b{color:#f1e4cc}
+:root[data-theme="dark"] #splash small{color:#c9a15a}
 </style>
 
 
@@ -1331,11 +1340,11 @@ const aiFmt = t => esc(t).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/^\s*
 async function aiCapture(box){
   const vh = innerHeight; let best = null, bo = -1;
   box.querySelectorAll('canvas').forEach(c => { const r = c.getBoundingClientRect(), o = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)); if (o > bo) { bo = o; best = c; } });
-  const n = best ? +best.dataset.p : 1, page = await box._doc.getPage(n), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:Math.min(2.2, 1100 / v1.width)});
+  const n = best ? +best.dataset.p : 1, page = await box._doc.getPage(n), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:Math.min(1.6, 900 / v1.width)});
   const cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
   const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
   await page.render({canvasContext:g, viewport:v}).promise;
-  const img = cv.toDataURL('image/jpeg', .72).split(',')[1]; cv.width = cv.height = 0;
+  const img = cv.toDataURL('image/jpeg', .6).split(',')[1]; cv.width = cv.height = 0;
   let text = ''; try { text = (await page.getTextContent()).items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim().slice(0, 6000); } catch (e) {}
   return {n, img, text, total: box._doc.numPages};
 }
@@ -1929,7 +1938,7 @@ async function renderPdf(box, src, mark, status, sub){
   const lib = await loadPdfJs();
   const task = lib.getDocument(typeof src === 'string' ? {url:src, disableAutoFetch:true, rangeChunkSize:1048576} : {data:src});
   task.onProgress = p => { if (p.total) status.textContent = 'Loading ' + Math.min(99, Math.round(p.loaded / p.total * 100)) + '%'; };
-  const doc = await Promise.race([task.promise, new Promise((_, r) => setTimeout(() => { try { task.destroy(); } catch (e) {} r(new Error('timeout')); }, 15000))]);
+  let tmo; const doc = await Promise.race([task.promise.then(d => { clearTimeout(tmo); return d; }, e => { clearTimeout(tmo); throw e; }), new Promise((_, r) => { tmo = setTimeout(() => { try { task.destroy(); } catch (e) {} r(new Error('timeout')); }, 20000); })]);
   const w = Math.min(box.clientWidth || 360, 900), dpr = Math.min(window.devicePixelRatio || 1, 2), n = doc.numPages;
   box._doc = doc; const p1 = await doc.getPage(1), r0 = p1.getViewport({scale:1}), ratio = r0.height / r0.width, slots = [];
   for (let i = 1; i <= n; i++) { const cv = document.createElement('canvas'); cv.style.width = w + 'px'; cv.style.height = Math.round(w * ratio) + 'px'; cv.dataset.p = i; box.appendChild(cv); slots.push(cv); }
@@ -3143,8 +3152,16 @@ if (window.FB === undefined) {
         async getConfig(){ const r = ok(await sb.from('config').select('data').eq('id', 1).maybeSingle()); return r ? r.data : {}; },
         async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path, size:r.size, createdAt:r.created_at})); },
         async askAI(body){
-          const r = await sb.functions.invoke('ask-ai', {body});
-          if (r.error) { let m = 'AI is not available right now.'; try { const j = await r.error.context.json(); if (j && j.error) m = j.error; } catch (e) {} throw new Error(m); }
+          const r = await Promise.race([sb.functions.invoke('ask-ai', {body}), new Promise((_, rej) => setTimeout(() => rej(new Error('The AI took too long. Check your connection and try again.')), 60000))]);
+          if (r.error) {
+            console.error('ask-ai', r.error);
+            if (r.error.name === 'FunctionsFetchError') throw new Error('Could not reach the AI. Check your connection and try again.');
+            let m = 'AI is not available right now.'; const c = r.error.context;
+            try { const j = await c.clone().json(); if (j && (j.error || j.message)) m = String(j.error || j.message); }
+            catch (e) { try { const t = await c.text(); if (t) m += ' ' + String(t).slice(0, 140); } catch (e2) {} }
+            if (c && c.status) m += ' [' + c.status + ']';
+            throw new Error(m);
+          }
           if (r.data && r.data.error) throw new Error(r.data.error);
           return r.data;
         },

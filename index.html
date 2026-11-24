@@ -43,6 +43,37 @@ main#app{padding-bottom:calc(128px + env(safe-area-inset-bottom,0px))!important}
 .sug{border:1px solid rgba(217,182,106,.3)!important;border-left:3px solid var(--gold)!important;border-radius:14px!important;padding:11px 14px!important;background:var(--surface)!important}
 .ta{border-radius:16px!important;padding:12px 14px!important;min-height:110px}
 .tchip{padding:8px 14px!important}
+/* ===== dialogs, toast, Study AI ===== */
+.dlg-ov{position:fixed;inset:0;z-index:95;display:grid;place-items:center;padding:24px;background:rgba(4,10,7,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:dlgf .18s ease}
+.dlg{width:100%;max-width:340px;border-radius:26px;padding:24px 22px 18px;text-align:center;background:var(--surface);color:var(--fg);border:1px solid rgba(217,182,106,.3);box-shadow:0 24px 60px rgba(0,0,0,.5);animation:dlgp .22s cubic-bezier(.2,.9,.3,1.2)}
+.dlg-ic{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:rgba(217,182,106,.16);color:var(--gold,#d9b66a)}
+.dlg-ic.d{background:rgba(214,69,57,.15);color:#e5574b}.dlg-ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.dlg h3{margin:0 0 6px;font:700 1.15rem var(--head)}.dlg p{margin:0 0 18px;color:var(--muted);font-size:.92rem;line-height:1.45}
+.dlg-b{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dlg-b button{padding:13px;border-radius:16px;font:650 .95rem var(--ui,inherit);cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg)}
+.dlg-b .dlg-o{background:var(--accent);color:var(--accent-fg);border-color:transparent}.dlg-b .dlg-o.d{background:#d64539;color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(112px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:96;max-width:86%;padding:12px 18px;border-radius:999px;background:var(--surface);color:var(--fg);border:1px solid rgba(217,182,106,.35);box-shadow:0 12px 30px rgba(0,0,0,.4);font:600 .88rem var(--body);animation:dlgp .2s ease}
+@keyframes dlgf{from{opacity:0}}@keyframes dlgp{from{opacity:0;transform:translate(var(--tx,0),10px) scale(.96)}}
+.toast{--tx:-50%}
+.ai-fab{position:fixed;right:18px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;padding:12px 18px;border:0;border-radius:999px;font:700 .9rem var(--ui,inherit);color:#1a1405;background:linear-gradient(135deg,#f0cf85,#c99a42);box-shadow:0 10px 26px rgba(176,138,60,.5);cursor:pointer}
+.ai-fab svg{width:18px;height:18px;fill:currentColor}
+.ai-ov{position:fixed;inset:0;z-index:90;display:none;align-items:flex-end;background:rgba(4,10,7,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}.ai-ov.open{display:flex}
+.ai-sh{width:100%;max-width:560px;margin:0 auto;height:82dvh;display:flex;flex-direction:column;border-radius:28px 28px 0 0;background:var(--surface);color:var(--fg);border:1px solid rgba(217,182,106,.3);border-bottom:0;box-shadow:0 -16px 50px rgba(0,0,0,.45);padding-bottom:env(safe-area-inset-bottom,0px);animation:aiup .25s ease}
+@keyframes aiup{from{transform:translateY(40px);opacity:0}}
+.ai-h{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px}.ai-h b{font:700 1.1rem var(--head);display:block}.ai-h small{color:var(--muted);font-size:.74rem}
+.ai-x{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--fg);font-size:1.3rem;line-height:1;cursor:pointer}
+.ai-m{flex:1;overflow-y:auto;padding:6px 16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}.ai-m::-webkit-scrollbar{display:none}
+.ai-b{max-width:88%;padding:11px 15px;border-radius:20px;font-size:.92rem;line-height:1.5;word-break:break-word}
+.ai-b.me{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#2f9d74);color:var(--accent-fg);border-bottom-right-radius:6px}
+.ai-b.ai{align-self:flex-start;background:var(--bg);border:1px solid rgba(217,182,106,.28);border-bottom-left-radius:6px}.ai-b.err{color:#e5574b}
+.ai-b.load{opacity:.7;font-style:italic}
+.ai-hi{margin:auto 0;text-align:center;color:var(--muted);font-size:.9rem;padding:10px 18px;line-height:1.5}
+.ai-ch{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;scrollbar-width:none}.ai-ch::-webkit-scrollbar{display:none}
+.ai-ch button{flex:none;padding:8px 14px;border-radius:999px;border:1px solid rgba(217,182,106,.35);background:transparent;color:var(--fg);font:600 .8rem var(--body);cursor:pointer}
+.ai-in{display:flex;gap:8px;align-items:flex-end;padding:6px 14px 4px}
+.ai-in textarea{flex:1;resize:none;max-height:110px;padding:12px 14px;border-radius:18px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:.95rem}
+.ai-in button{width:46px;height:46px;flex:none;border-radius:50%;border:0;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;cursor:pointer}.ai-in button svg{width:20px;height:20px;fill:currentColor}
+.ai-ft{margin:4px 18px 10px;text-align:center;color:var(--muted);font-size:.68rem}
 </style><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin><link rel="manifest" href="manifest.json?v=2"><meta name="theme-color" content="#f3e9d8"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Study Nest"></head><body>
 <title>Study Nest</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1272,6 +1303,73 @@ const notes = [];
 /* ---------- state ---------- */
 const $ = (s,r=document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+/* ----- Dialogs and toast (replace the browser pop-ups) ----- */
+function uiConfirm(msg, o = {}){
+  return new Promise(res => {
+    const ov = document.createElement('div'); ov.className = 'dlg-ov'; const d = o.danger !== false;
+    ov.innerHTML = `<div class="dlg" role="dialog" aria-modal="true"><div class="dlg-ic ${d ? 'd' : ''}"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6"/></svg></div><h3>${esc(o.title || 'Are you sure?')}</h3><p>${esc(msg)}</p><div class="dlg-b"><button type="button" class="dlg-c">Cancel</button><button type="button" class="dlg-o ${d ? 'd' : ''}">${esc(o.ok || 'Confirm')}</button></div></div>`;
+    const done = v => { ov.remove(); res(v); };
+    ov.querySelector('.dlg-c').onclick = () => done(false); ov.querySelector('.dlg-o').onclick = () => done(true);
+    ov.addEventListener('click', e => { if (e.target === ov) done(false); });
+    document.body.appendChild(ov);
+  });
+}
+let toastT = 0;
+function uiToast(msg){
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t);
+  clearTimeout(toastT); toastT = setTimeout(() => t.remove(), 2800);
+}
+/* ----- Study AI (reads the page you are on and helps answer) ----- */
+let aiEls = [];
+function killAI(){ aiEls.forEach(e => e.remove()); aiEls = []; }
+window.addEventListener('hashchange', () => { if (!/^#read-/.test(location.hash)) killAI(); });
+const AI_MAX = 25, aiKey = () => 'sn_ai_' + new Date().toISOString().slice(0, 10);
+const aiUsed = () => { try { return +localStorage.getItem(aiKey()) || 0; } catch (e) { return 0; } };
+const aiBump = () => { try { localStorage.setItem(aiKey(), String(aiUsed() + 1)); } catch (e) {} };
+const aiFmt = t => esc(t).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/^\s*[-*] /gm, '• ').replace(/\n/g, '<br>');
+async function aiCapture(box){
+  const vh = innerHeight; let best = null, bo = -1;
+  box.querySelectorAll('canvas').forEach(c => { const r = c.getBoundingClientRect(), o = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)); if (o > bo) { bo = o; best = c; } });
+  const n = best ? +best.dataset.p : 1, page = await box._doc.getPage(n), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:Math.min(2.2, 1100 / v1.width)});
+  const cv = document.createElement('canvas'); cv.width = Math.round(v.width); cv.height = Math.round(v.height);
+  const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
+  await page.render({canvasContext:g, viewport:v}).promise;
+  const img = cv.toDataURL('image/jpeg', .72).split(',')[1]; cv.width = cv.height = 0;
+  let text = ''; try { text = (await page.getTextContent()).items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim().slice(0, 6000); } catch (e) {}
+  return {n, img, text, total: box._doc.numPages};
+}
+function attachAI(box, cc, p){
+  killAI();
+  const SP = '<svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>', SD = '<svg viewBox="0 0 24 24"><path d="M3 20l18-8L3 4v6l11 2-11 2z"/></svg>';
+  const fab = document.createElement('button'); fab.className = 'ai-fab'; fab.innerHTML = SP + '<span>Ask AI</span>';
+  const ov = document.createElement('div'); ov.className = 'ai-ov';
+  ov.innerHTML = `<div class="ai-sh" role="dialog" aria-label="Study AI"><div class="ai-h"><div><b>Study AI</b><small id="aipg">Reads the page you are on</small></div><button type="button" class="ai-x" aria-label="Close">×</button></div><div class="ai-m" id="aim"><div class="ai-hi">Scroll to a page, then ask me to answer its questions or explain it.</div></div><div class="ai-ch" id="aic"></div><div class="ai-in"><textarea id="aiq" rows="1" maxlength="600" placeholder="Ask about this page…"></textarea><button type="button" id="ais" aria-label="Send">${SD}</button></div><p class="ai-ft">AI can make mistakes. Check answers with your notes.</p></div>`;
+  document.body.append(fab, ov); aiEls.push(fab, ov);
+  const m = ov.querySelector('#aim'), q = ov.querySelector('#aiq'), hist = []; let busy = false, last = 0;
+  const add = (cls, html) => { const h = m.querySelector('.ai-hi'); if (h) h.remove(); const d = document.createElement('div'); d.className = 'ai-b ' + cls; d.innerHTML = html; m.appendChild(d); m.scrollTop = m.scrollHeight; return d; };
+  const open = () => { ov.classList.add('open'); }, close = () => ov.classList.remove('open');
+  fab.onclick = open; ov.querySelector('.ai-x').onclick = close; ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  const send = async text => {
+    text = String(text || '').trim(); if (busy || !text) return;
+    add('me', esc(text)); q.value = '';
+    if (aiUsed() >= AI_MAX) { add('ai err', 'You have used today\'s free AI questions. They reset tomorrow.'); return; }
+    busy = true; const th = add('ai load', 'Reading the page…');
+    try {
+      if (!window.FB || !window.FB.askAI) throw new Error('AI is not available right now.');
+      const cap = await aiCapture(box); ov.querySelector('#aipg').textContent = 'Page ' + cap.n + ' of ' + cap.total;
+      const body = {q:text, page:cap.n, total:cap.total, title:cc.code + ' · ' + cc.name + ' · ' + p.type + ' ' + p.yr, text:cap.text, history:hist.slice(-6)};
+      if (cap.n !== last) body.img = cap.img;
+      const r = await window.FB.askAI(body), ans = String((r && r.answer) || '').trim() || 'I could not get an answer. Try again.';
+      th.className = 'ai-b ai'; th.innerHTML = aiFmt(ans); hist.push({role:'user', text}, {role:'model', text:ans}); last = cap.n; aiBump();
+    } catch (e) { th.className = 'ai-b ai err'; th.textContent = (e && e.message) || 'Could not reach the AI. Try again.'; }
+    busy = false; m.scrollTop = m.scrollHeight;
+  };
+  [['Answer the questions', 'Answer every question visible on this page. Show full working step by step.'], ['Explain this page', 'Explain what this page is about in simple terms.'], ['Summarise', 'Summarise the key points on this page in short bullets.'], ['Quiz me', 'Ask me 3 short exam-style questions based on this page, one at a time.']].forEach(([l, t]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = l; b.onclick = () => send(t); ov.querySelector('#aic').appendChild(b);
+  });
+  ov.querySelector('#ais').onclick = () => send(q.value);
+}
 function load(k){ try { return new Set(JSON.parse(localStorage.getItem(k)||'[]')); } catch(e){ return new Set(); } }
 function store(k,v){ try { localStorage.setItem(k, JSON.stringify([...v])); } catch(e){} }
 const savedP = load('cbu-sp'), savedN = load('cbu-sn');
@@ -1833,7 +1931,7 @@ async function renderPdf(box, src, mark, status, sub){
   task.onProgress = p => { if (p.total) status.textContent = 'Loading ' + Math.min(99, Math.round(p.loaded / p.total * 100)) + '%'; };
   const doc = await Promise.race([task.promise, new Promise((_, r) => setTimeout(() => { try { task.destroy(); } catch (e) {} r(new Error('timeout')); }, 30000))]);
   const w = Math.min(box.clientWidth || 360, 900), dpr = Math.min(window.devicePixelRatio || 1, 2), n = doc.numPages;
-  const p1 = await doc.getPage(1), r0 = p1.getViewport({scale:1}), ratio = r0.height / r0.width, slots = [];
+  box._doc = doc; const p1 = await doc.getPage(1), r0 = p1.getViewport({scale:1}), ratio = r0.height / r0.width, slots = [];
   for (let i = 1; i <= n; i++) { const cv = document.createElement('canvas'); cv.style.width = w + 'px'; cv.style.height = Math.round(w * ratio) + 'px'; cv.dataset.p = i; box.appendChild(cv); slots.push(cv); }
   const draw = async cv => {
     const i = +cv.dataset.p, page = i === 1 ? p1 : await doc.getPage(i), v1 = page.getViewport({scale:1}), v = page.getViewport({scale:(w / v1.width) * dpr});
@@ -1876,6 +1974,7 @@ function gateBox(app, title, text, label, href){
   app.innerHTML = `<div class="panel pad" style="text-align:center"><h2 class="ph2">${esc(title)}</h2><p class="small">${esc(text)}</p><a class="btn pri" href="${href}" style="text-decoration:none;display:inline-block">${esc(label)}</a></div>`;
 }
 async function readScreen(app, id){
+  killAI();
   const p = papers.find(x => String(x.id) === id);
   if (!p) { if (!S.loaded) { topbar('Paper','Loading','#papers'); app.innerHTML = '<div class="empty">Loading…</div>'; return; } return papersScreen(app); }
   const cc = (viewCtx && grp(viewCtx) === grp(p.course)) ? viewCtx : p.course;
@@ -1895,6 +1994,7 @@ async function readScreen(app, id){
       let ok1 = false;
       try { await renderPdf(box, await window.FB.getPdfUrl(p.path), 'STUDY NEST', st, 'Study Nest'); ok1 = true; } catch (e) { box.innerHTML = ''; }
       if (!ok1) { st.textContent = 'Downloading…'; await renderPdf(box, await window.FB.getPdf(p.path), 'STUDY NEST', st, 'Study Nest'); }
+      if (box._doc && box.isConnected) attachAI(box, cc, p);
     }
   } catch(e) {
     if (box.isConnected) { st.innerHTML = 'Could not open this paper. <button class="linkbtn" id="rtry">Try again</button>'; $('#rtry').onclick = () => readScreen(app, id); }
@@ -2155,7 +2255,7 @@ async function admTidy(box){
     catch(e) { msg.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; }
     setTimeout(() => admTidy(box), 900);
   };
-  if ($('#tdd')) $('#tdd').onclick = () => { if (confirm('Delete ' + drops.length + ' extra copies? This cannot be undone.')) run($('#tdd'), drops, p => window.FB.deletePaper({id:p.id, path:p.path}), 'Deleting'); };
+  if ($('#tdd')) $('#tdd').onclick = async () => { if (await uiConfirm('The older copy of each file is kept. This cannot be undone.', {title:'Delete ' + drops.length + ' extra copies?', ok:'Delete'})) run($('#tdd'), drops, p => window.FB.deletePaper({id:p.id, path:p.path}), 'Deleting'); };
   if ($('#tdw')) $('#tdw').onclick = () => run($('#tdw'), wrong, w => window.FB.updatePaper(w.p.id, {code:w.to.code}), 'Moving');
   if ($('#tdo')) $('#tdo').onclick = () => { const items = others.slice(0, 40).map((p, i) => ({p, type:box.querySelector('[data-o="' + i + '"]').value})); run($('#tdo'), items, it => window.FB.updatePaper(it.p.id, {type:it.type}), 'Saving'); };
 }
@@ -2170,10 +2270,10 @@ async function admPay(box){
   const byId = id => list.find(x => x.id === id);
   box.querySelectorAll('[data-ok]').forEach(b => b.onclick = async () => {
     b.disabled = true; const m = Number(box.querySelector('[data-m="' + b.dataset.ok + '"]').value) || months;
-    try { await window.FB.approvePayment(byId(b.dataset.ok), m); admPay(box); } catch(e) { b.disabled = false; alert('Could not approve.'); }
+    try { await window.FB.approvePayment(byId(b.dataset.ok), m); admPay(box); } catch(e) { b.disabled = false; uiToast('Could not approve.'); }
   });
   box.querySelectorAll('[data-no]').forEach(b => b.onclick = async () => {
-    b.disabled = true; try { await window.FB.rejectPayment(byId(b.dataset.no)); admPay(box); } catch(e) { b.disabled = false; alert('Could not reject.'); }
+    b.disabled = true; try { await window.FB.rejectPayment(byId(b.dataset.no)); admPay(box); } catch(e) { b.disabled = false; uiToast('Could not reject.'); }
   });
 }
 async function admStu(box){
@@ -2191,11 +2291,11 @@ async function admStu(box){
   box.querySelectorAll('[data-add]').forEach(b => b.onclick = async () => {
     const s = byId(b.dataset.add), m = Number(box.querySelector('[data-m="' + s.uid + '"]').value) || months;
     const base = s.paidUntil && s.paidUntil > new Date() ? new Date(s.paidUntil) : new Date(); base.setMonth(base.getMonth() + m);
-    b.disabled = true; try { await window.FB.setPaidUntil(s.uid, s.email, base); admStu(box); } catch(e) { b.disabled = false; alert('Could not save.'); }
+    b.disabled = true; try { await window.FB.setPaidUntil(s.uid, s.email, base); admStu(box); } catch(e) { b.disabled = false; uiToast('Could not save.'); }
   });
   box.querySelectorAll('[data-rv]').forEach(b => b.onclick = async () => {
-    const s = byId(b.dataset.rv); if (!confirm('Remove access for ' + s.email + '?')) return;
-    b.disabled = true; try { await window.FB.setPaidUntil(s.uid, s.email, new Date(Date.now() - 1000)); admStu(box); } catch(e) { b.disabled = false; alert('Could not save.'); }
+    const s = byId(b.dataset.rv); if (!(await uiConfirm(s.email + ' will lose access to all papers.', {title:'Remove access?', ok:'Remove'}))) return;
+    b.disabled = true; try { await window.FB.setPaidUntil(s.uid, s.email, new Date(Date.now() - 1000)); admStu(box); } catch(e) { b.disabled = false; uiToast('Could not save.'); }
   });
 }
 function admAdmins(box){
@@ -3041,6 +3141,12 @@ if (window.FB === undefined) {
         async getStudent(uid){ const r = ok(await sb.from('students').select('email,paid_until').eq('user_id', uid).maybeSingle()); return r ? {email:r.email, paidUntil:D(r.paid_until)} : null; },
         async getConfig(){ const r = ok(await sb.from('config').select('data').eq('id', 1).maybeSingle()); return r ? r.data : {}; },
         async listPapers(){ return (await all('papers', q => q)).map(r => ({id:r.id, code:r.code, year:r.year, type:r.type, title:r.title, path:r.path, size:r.size, createdAt:r.created_at})); },
+        async askAI(body){
+          const r = await sb.functions.invoke('ask-ai', {body});
+          if (r.error) { let m = 'AI is not available right now.'; try { const j = await r.error.context.json(); if (j && j.error) m = j.error; } catch (e) {} throw new Error(m); }
+          if (r.data && r.data.error) throw new Error(r.data.error);
+          return r.data;
+        },
         async getPdfUrl(path){ const r = ok(await sb.storage.from('papers').createSignedUrl(path, 900)); return r.signedUrl; },
         async getPdf(path){ const b = ok(await sb.storage.from('papers').download(path)); return new Uint8Array(await b.arrayBuffer()); },
         async createPayment(uid, email, reference, amount){ ok(await sb.from('payments').insert({user_id:uid, email, reference, amount:amount || ''})); },

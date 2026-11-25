@@ -2151,12 +2151,20 @@ function admAdd(box){
     const cur = courses.find(c => c.code === adm.course && c.school.id === adm.school), ex = papers.filter(p => cur && grp(p.course) === grp(cur)).sort((a,b) => b.yr.localeCompare(a.yr));
     $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}${p.course.code !== adm.course ? ' · uploaded as ' + esc(p.course.code) : ''}</span></div></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
   };
+  /* Each file goes to the course whose code it carries (file name first, then the text inside).
+     If it carries no code, or several, it goes to the course picked above. The admin can change it per file. */
+  const selCourse = () => courses.find(c => c.code === adm.course && c.school.id === adm.school);
+  const uniqG = arr => { const m = new Map(); arr.forEach(c => { if (!m.has(grp(c))) m.set(grp(c), c); }); return [...m.values()]; };
+  const detected = f => { const gc = selCourse(), pick = arr => { if (gc && arr.some(c => grp(c) === grp(gc))) return gc; const u = uniqG(arr); return u.length === 1 ? u[0] : null; }; return pick(f.fcodes || []) || pick(f.codes || []); };
+  const targetOf = f => { const gc = selCourse(); if (f.pick) { const c = courses.find(x => x.code === f.pick); if (c) return c; } return detected(f) || gc; };
+  const codeOf = f => { const t = targetOf(f); return t ? t.code : adm.course; };
   const drawFiles = () => {
-    const seen = new Set(); files.forEach(f => { f.dup = findDup(adm.course, f, seen); });
-    const gc = courses.find(c => c.code === adm.course && c.school.id === adm.school);
+    const seen = new Set(); files.forEach(f => { f.dup = findDup(codeOf(f), f, seen); });
+    const gc = selCourse();
     $('#afl').innerHTML = files.map((f,i) => {
-      const other = (f.codes || []).filter(c => !gc || grp(c) !== grp(gc)), same = (f.codes || []).some(c => gc && grp(c) === grp(gc));
-      const hint = !f.busy && other.length === 1 && !same ? `<div class="dupnote">Inside the file this looks like <b>${esc(other[0].code)}</b> · ${esc(other[0].name)}. <button type="button" class="linkbtn" data-sw="${i}">Switch course</button></div>` : '';
+      const tg = targetOf(f), cands = uniqG([...(gc ? [gc] : []), ...(f.fcodes || []), ...(f.codes || []), ...(tg ? [tg] : [])]);
+      const moved = tg && gc && grp(tg) !== grp(gc);
+      const hint = !f.busy && (moved || cands.length > 1) ? `<div class="dupnote">${moved ? 'Filed under <b>' + esc(tg.code) + '</b> · ' + esc(tg.name) + (f.pick ? '' : ' (its code was found in the file)') + '.' : 'Several course codes found in this file.'} <select data-c="${i}" aria-label="Course for this file">${cands.map(c => `<option value="${esc(c.code)}"${tg && c.code === tg.code ? ' selected' : ''}>${esc(c.code)} · ${esc(c.name)}${gc && grp(c) === grp(gc) ? ' (selected above)' : ''}</option>`).join('')}</select></div>` : '';
       const tag = f.busy ? '<span class="chip">Reading inside…</span>' : f.type ? `<span class="chip ${f.conf === 'low' ? '' : 'hot'}">${f.conf === 'low' ? 'Please check' : 'Read from the file'}</span>` : '<span class="chip">Pick a type</span>';
       return `<div class="frow"><div class="small" style="word-break:break-all">${esc(f.file.name)} · ${(f.file.size / 1048576).toFixed(1)} MB</div>
       <div style="margin-top:4px">${tag}</div>${f.why && f.why.length && !f.busy ? `<div class="why">${esc(f.why.join(' · '))}</div>` : ''}
@@ -2166,7 +2174,7 @@ function admAdd(box){
     $('#afl').querySelectorAll('[data-y]').forEach(s => s.onchange = () => { files[s.dataset.y].year = Number(s.value); });
     $('#afl').querySelectorAll('[data-t]').forEach(s => s.onchange = () => { files[s.dataset.t].type = s.value; });
     $('#afl').querySelectorAll('[data-n]').forEach(s => s.onchange = () => { files[s.dataset.n].title = s.value.trim() || files[s.dataset.n].file.name.replace(FILE_EXT, ''); drawFiles(); });
-    $('#afl').querySelectorAll('[data-sw]').forEach(b => b.onclick = () => { const f = files[b.dataset.sw], o = (f.codes || []).find(c => !gc || grp(c) !== grp(gc)); if (!o) return; adm.school = o.school.id; adm.course = o.code; const l = locate(adm.school, o.code); adm.prog = l.prog; adm.lvl = l.lvl; drawPick(); drawExisting(); drawFiles(); });
+    $('#afl').querySelectorAll('[data-c]').forEach(s => s.onchange = () => { files[s.dataset.c].pick = s.value; drawFiles(); });
     $('#aup').disabled = !files.some(f => !f.dup) || files.some(f => f.busy);
   };
   drawPick(); drawExisting();
@@ -2188,7 +2196,8 @@ function admAdd(box){
     try {
       try { setPapers(await window.FB.listPapers()); } catch(e) {}
       const seen = new Set(), todo = [];
-      files.forEach(f => { if (findDup(adm.course, f, seen)) skipped++; else todo.push(f); });
+      files.forEach(f => { if (findDup(codeOf(f), f, seen)) skipped++; else todo.push(f); });
+      const toSel = gc0 => todo.filter(f => { const t = targetOf(f); return t && gc0 && grp(t) !== grp(gc0); }).length, rerouted = toSel(selCourse());
       total = todo.length;
       let ti = 0, failed = null, lock = Promise.resolve();
       const serial = fn => { const r = lock.then(fn); lock = r.catch(() => {}); return r; };   /* one shrink at a time, so the phone is not overloaded */
@@ -2203,14 +2212,14 @@ function admAdd(box){
               try { const pg = f.pages || await pageCount(f.file); if (pg > MAX_PAGES) { why.long++; continue; } } catch(e) {}
               try { up = await serial(() => shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; })); } catch(e) { up = f.file; }
             }
-            await window.FB.addPaper(up, {code:adm.course, year:f.year, type:f.type || 'Other', title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
+            await window.FB.addPaper(up, {code:codeOf(f), year:f.year, type:f.type || 'Other', title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
             done++;
           } catch(e) { failed = failed || e; }
         }
       };
       await Promise.all([upWorker(), upWorker(), upWorker()]);
       if (failed) throw failed;
-      msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '') + (why.long ? ' ' + why.long + ' skipped: over ' + MAX_PAGES + ' pages.' : '') + (why.big ? ' ' + why.big + ' skipped: over 50 MB.' : '') + (why.type ? ' ' + why.type + ' skipped: not PDF, Word (.docx) or PowerPoint (.pptx).' : '');
+      msg.textContent = done + (done === 1 ? ' file added.' : ' files added.') + (rerouted ? ' ' + rerouted + ' filed under the course code found in the file.' : '') + (skipped ? ' ' + skipped + ' skipped because already uploaded.' : '') + (why.long ? ' ' + why.long + ' skipped: over ' + MAX_PAGES + ' pages.' : '') + (why.big ? ' ' + why.big + ' skipped: over 50 MB.' : '') + (why.type ? ' ' + why.type + ' skipped: not PDF, Word (.docx) or PowerPoint (.pptx).' : '');
       files = []; $('#af').value = ''; drawFiles();
     } catch(e) { msg.textContent = 'Stopped after ' + done + ' of ' + total + '. ' + (e && e.code === 'storage/unauthorized' ? 'Storage rules refused the upload.' : 'Check your connection and try again.'); btn.disabled = false; }
     try { setPapers(await window.FB.listPapers()); drawExisting(); } catch(e) {}
@@ -2295,13 +2304,18 @@ async function admStu(box){
   const now = new Date(), months = Number(S.cfg && S.cfg.months) || 6;
   list.sort((a,b) => String(a.email).localeCompare(String(b.email)));
   const active = list.filter(s => s.paidUntil && s.paidUntil > now).length;
-  box.innerHTML = `<p class="small">${list.length} accounts · ${active} with active access</p>` + (list.length ? '<div class="panel">' + list.map(s => `<div class="frow"><div><b>${esc(s.email)}</b><div class="small">${s.paidUntil && s.paidUntil > now ? 'Access until ' + fmtDate(s.paidUntil) : s.paidUntil ? 'Expired ' + fmtDate(s.paidUntil) : 'Never paid'}</div></div>
-    <div class="btnrow"><input class="search mo" type="number" min="1" max="24" value="${months}" data-m="${esc(s.uid)}" aria-label="Months to add"><button class="btn pri" data-add="${esc(s.uid)}">Add months</button><button class="btn" data-rv="${esc(s.uid)}">Revoke</button></div></div>`).join('') + '</div>' : '<div class="empty">No accounts yet.</div>');
+  const dev = {}; try { (await window.FB.listDevices()).forEach(d => { dev[d.uid] = d; }); } catch(e) {}
+  box.innerHTML = `<p class="small">${list.length} accounts · ${active} with active access</p>` + (list.length ? '<div class="panel">' + list.map(s => `<div class="frow"><div><b>${esc(s.email)}</b><div class="small">${s.paidUntil && s.paidUntil > now ? 'Access until ' + fmtDate(s.paidUntil) : s.paidUntil ? 'Expired ' + fmtDate(s.paidUntil) : 'Never paid'}</div><div class="small">${dev[s.uid] ? 'Device: ' + esc(dev[s.uid].label || 'Unknown') + (dev[s.uid].at ? ' · since ' + fmtDate(dev[s.uid].at) : '') : 'Device: none yet'}</div></div>
+    <div class="btnrow">${dev[s.uid] ? `<button class="btn" data-rd="${esc(s.uid)}">Reset device</button>` : ''}<input class="search mo" type="number" min="1" max="24" value="${months}" data-m="${esc(s.uid)}" aria-label="Months to add"><button class="btn pri" data-add="${esc(s.uid)}">Add months</button><button class="btn" data-rv="${esc(s.uid)}">Revoke</button></div></div>`).join('') + '</div>' : '<div class="empty">No accounts yet.</div>');
   const byId = id => list.find(x => x.uid === id);
   box.querySelectorAll('[data-add]').forEach(b => b.onclick = async () => {
     const s = byId(b.dataset.add), m = Number(box.querySelector('[data-m="' + s.uid + '"]').value) || months;
     const base = s.paidUntil && s.paidUntil > new Date() ? new Date(s.paidUntil) : new Date(); base.setMonth(base.getMonth() + m);
     b.disabled = true; try { await window.FB.setPaidUntil(s.uid, s.email, base); admStu(box); } catch(e) { b.disabled = false; uiToast('Could not save.'); }
+  });
+  box.querySelectorAll('[data-rd]').forEach(b => b.onclick = async () => {
+    const s = byId(b.dataset.rd); if (!(await uiConfirm(s.email + ' will be able to sign in on a new device. The next device to sign in becomes the allowed one.', {title:'Reset device?', ok:'Reset', danger:false}))) return;
+    b.disabled = true; try { await window.FB.resetDevice(s.uid); uiToast('Device reset.'); admStu(box); } catch(e) { b.disabled = false; uiToast('Could not reset. Run the device SQL first.'); }
   });
   box.querySelectorAll('[data-rv]').forEach(b => b.onclick = async () => {
     const s = byId(b.dataset.rv); if (!(await uiConfirm(s.email + ' will lose access to all papers.', {title:'Remove access?', ok:'Remove'}))) return;
@@ -2479,6 +2493,7 @@ function classify(info, fname){
   return {type, title, year, why, conf, codes, hasText:lines.length > 0};
 }
 async function analyseFile(f){
+  try { f.fcodes = codeResList().filter(x => x.re.test(f.file.name)).map(x => x.c); } catch (e) { f.fcodes = []; }
   try {
     const info = await readSample(f.file), r = classify(info, f.file.name); f.pages = info.pages || 0;
     f.type = r.type || guessTypeRaw(f.file.name) || ''; f.title = r.title; f.year = r.year; f.why = r.why; f.conf = r.conf; f.codes = r.codes;
@@ -2770,6 +2785,7 @@ function showGate(mode){
   };
 }
 window.addEventListener('fb-recovery', () => showGate('reset'));
+window.addEventListener('fb-locked', () => { showGate('in'); const m = $('#gm'); if (m) m.textContent = 'This account is already in use on another device. Only one device is allowed per account. Ask the admin to reset it, then sign in again.'; });
 
 /* ---------- 3. Help desk ---------- */
 const HELP_TOPICS = [['Studies','Studies'],['Personal','Life and feelings'],['Money','Money'],['Access','App and access'],['Other','Something else']];
@@ -3111,6 +3127,9 @@ if (window.FB === undefined) {
       const {createClient} = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm');
       const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {auth:{persistSession:true, autoRefreshToken:true}});
       const D = t => t ? new Date(t) : null;
+      /* One device per student: the first device to sign in is remembered on the server; admins are exempt. */
+      const devId = () => { try { let d = localStorage.getItem('sn-device'); if (!d) { d = (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2)); localStorage.setItem('sn-device', d); } return d; } catch(e) { return window.__snDev || (window.__snDev = 'tmp-' + Math.random().toString(36).slice(2)); } };
+      const devLabel = () => { const u = navigator.userAgent, os = /Android/.test(u) ? 'Android' : /iPhone|iPad/.test(u) ? 'iOS' : /Windows/.test(u) ? 'Windows' : /Mac/.test(u) ? 'Mac' : /Linux/.test(u) ? 'Linux' : 'Device', br = /Edg\//.test(u) ? 'Edge' : /OPR\//.test(u) ? 'Opera' : /Chrome\//.test(u) ? 'Chrome' : /Firefox\//.test(u) ? 'Firefox' : /Safari\//.test(u) ? 'Safari' : 'Browser'; return br + ' on ' + os; };
       const ok = ({data, error}) => { if (error) throw error; return data; };
       const authErr = e => {
         const c = String((e && (e.code || e.message)) || '').toLowerCase();
@@ -3135,6 +3154,11 @@ if (window.FB === undefined) {
         if (!s || !s.user) return null;
         let admin = false;
         try { const r = await sb.from('admins').select('user_id').eq('user_id', s.user.id).maybeSingle(); admin = !!(r.data); } catch(e) {}
+        if (!admin) {
+          let locked = false;
+          try { const r = await sb.rpc('claim_device', {p_device:devId(), p_label:devLabel()}); if (!r.error && r.data === 'locked') locked = true; } catch(e) {}
+          if (locked) { try { await sb.auth.signOut(); } catch(e) {} setTimeout(() => window.dispatchEvent(new Event('fb-locked')), 0); return null; }
+        }
         return {uid:s.user.id, email:s.user.email, admin, name:String((s.user.user_metadata && s.user.user_metadata.name) || ''), emailVerified:true};
       };
       sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') setTimeout(() => window.dispatchEvent(new Event('fb-recovery')), 0); });
@@ -3200,6 +3224,8 @@ if (window.FB === undefined) {
         async addAdmin(email){ ok(await sb.rpc('add_admin_by_email', {p_email:email})); },
         async removeAdmin(uid){ ok(await sb.rpc('remove_admin', {p_user:uid})); },
         async listProfiles(){ return (await all('profiles', q => q)).map(r => ({uid:r.user_id, name:r.display_name})); },
+        async listDevices(){ return (ok(await sb.rpc('admin_device_list')) || []).map(r => ({uid:r.user_id, label:r.label, at:D(r.claimed_at)})); },
+        async resetDevice(uid){ ok(await sb.rpc('admin_reset_device', {p_user:uid})); },
         async listStudents(){ return (await all('students', q => q)).map(r => ({uid:r.user_id, email:r.email, paidUntil:D(r.paid_until)})); },
         async setPaidUntil(uid, email, date){ ok(await sb.from('students').upsert({user_id:uid, email, paid_until:date.toISOString()})); },
         async saveConfig(cfg){ ok(await sb.from('config').upsert({id:1, data:cfg})); },

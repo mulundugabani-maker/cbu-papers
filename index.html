@@ -1552,6 +1552,34 @@ function offered(c){
   return `<div class="sec" style="margin-top:6px"><h2>Offered in</h2></div><div class="chips">${hits.map(p=>{ const y=Object.keys(p.years).find(k=>p.years[k].includes(c.code)); return `<a class="chip" style="text-decoration:none" href="#prog-${s.id}-${p.id}-${y}">${esc(p.name)} · Year ${y}</a>`; }).join('')}</div>`;
 }
 const courseCat = {};
+let mngOn = false;
+/* Admin: tick files in a course, then move them to another course or delete them. */
+function manageList(host, items, done){
+  const seen = new Set(), base = items.map(p => p.orig || p).filter(p => !seen.has(p.id) && seen.add(p.id)), sel = new Set();
+  let sid = (base[0] && base[0].course.school.id) || SCHOOLS[0].id;
+  const hint = 'Tick the files, then choose the course to move them to, or tap Delete.';
+  host.innerHTML = '<div class="panel glass">' + base.map(p => `<label class="row-item" style="cursor:pointer"><input type="checkbox" data-x="${esc(p.id)}" aria-label="Select file" style="margin-right:6px"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(p.type)} · ${esc(p.yr)}</span></div></label>`).join('') + `</div>
+    <div class="panel pad"><p class="small" id="mvn">${hint}</p>
+    <div class="pick"><label class="lbl">Move to school<select id="mvs">${optionsHtml(SCHOOLS.map(x => [x.id, x.name]), sid)}</select></label><label class="lbl">Course<select id="mvc"></select></label></div>
+    <div class="btnrow"><button class="btn" id="mvall" type="button">Select all</button><button class="btn pri" id="mvgo" type="button" disabled>Move</button><button class="btn" id="mvdel" type="button" disabled>Delete</button></div><p class="msg" id="mvm" role="status"></p></div>`;
+  const drawMc = () => { const cl = courses.filter(c => c.school.id === sid); $('#mvc', host).innerHTML = cl.length ? groupedCourses(cl, '') : '<option value="">No courses</option>'; };
+  const upd = () => { const n = sel.size; $('#mvn', host).textContent = n ? n + (n === 1 ? ' file' : ' files') + ' selected.' : hint; $('#mvgo', host).disabled = !n || !$('#mvc', host).value; $('#mvdel', host).disabled = !n; $('#mvall', host).textContent = n === base.length ? 'Clear' : 'Select all'; };
+  drawMc(); upd();
+  host.querySelectorAll('[data-x]').forEach(c => c.onchange = () => { c.checked ? sel.add(c.dataset.x) : sel.delete(c.dataset.x); upd(); });
+  $('#mvs', host).onchange = e => { sid = e.target.value; drawMc(); upd(); };
+  $('#mvc', host).onchange = upd;
+  $('#mvall', host).onclick = () => { const all = sel.size !== base.length; sel.clear(); host.querySelectorAll('[data-x]').forEach(c => { c.checked = all; if (all) sel.add(c.dataset.x); }); upd(); };
+  const act = async (verb, fn) => {
+    const its = base.filter(p => sel.has(p.id)), m = $('#mvm', host); if (!its.length) return;
+    $('#mvgo', host).disabled = $('#mvdel', host).disabled = true; let n = 0;
+    try { for (const p of its) { m.textContent = verb + ' ' + (n + 1) + ' of ' + its.length + '…'; await fn(p); n++; } }
+    catch (e) { m.textContent = 'Stopped after ' + n + ' of ' + its.length + '. Check your connection and try again.'; upd(); }
+    try { setPapers(await window.FB.listPapers()); } catch (e) {}
+    if (n) { uiToast(n + (n === 1 ? ' file ' : ' files ') + (verb === 'Moving' ? 'moved.' : 'deleted.')); done(); }
+  };
+  $('#mvgo', host).onclick = () => { const code = $('#mvc', host).value; if (code) act('Moving', p => window.FB.updatePaper(p.id, {code})); };
+  $('#mvdel', host).onclick = async () => { const n = sel.size; if (!n) return; if (await uiConfirm('The ' + (n === 1 ? 'file' : n + ' files') + ' will be removed for every student. This cannot be undone.', {title:'Delete ' + (n === 1 ? 'this file' : n + ' files') + '?', ok:'Delete'})) act('Deleting', p => window.FB.deletePaper({id:p.id, path:p.path})); };
+}
 function courseScreen(app,key){
   const c = courses.find(x=>slug(x)===key); if(!c) return schoolsScreen(app);
   topbar(c.code+' · '+c.name, c.school.name, '#school-'+c.school.id);
@@ -1566,6 +1594,8 @@ function courseScreen(app,key){
     const k = CATS.find(x => x.id === cur), list = of(k.id), box = $('#cp');
     box.innerHTML = `<div class="sec"><h2>${esc(k.name)} (${list.length})</h2></div>`;
     if (!list.length) { box.appendChild(emptyBox('No ' + k.name.toLowerCase() + ' for this course yet.')); return; }
+    if (isAdmin()) { const t = document.createElement('div'); t.className = 'btnrow'; t.innerHTML = `<button class="btn" type="button">${mngOn ? 'Done' : 'Select files to move or delete'}</button>`; box.appendChild(t); t.firstChild.onclick = () => { mngOn = !mngOn; draw(); }; }
+    if (isAdmin() && mngOn) { const h = document.createElement('div'); box.appendChild(h); manageList(h, list, () => courseScreen(app, key)); return; }
     const pn = panel(); box.appendChild(pn);
     if (k.id === 'paper') {
       YEARS.forEach(y => { const yp = list.filter(p => p.yr === y); if (!yp.length) return; subhead(pn, y + ' academic year', yp.length + (yp.length === 1 ? ' paper' : ' papers')); yp.forEach(p => pn.appendChild(paperRow(p,'course'))); });
@@ -2121,6 +2151,7 @@ function admAdd(box){
     <p class="small" id="ashare"></p>
     <label class="lbl">Files: PDF, Word (.docx) or PowerPoint (.pptx). You can pick many. The app reads inside each one to label it (exam, notes, tutorial, solutions…) and name it by its topic. Check the labels before uploading.<input id="af" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple></label>
     <p class="small">Big scanned PDFs are made smaller automatically; PDFs that would not get clearly smaller are left as they are. Files already uploaded are skipped (same file, even if the name is different). Files with the same name but different content are kept. PDFs over ${MAX_PAGES} pages are skipped.</p>
+    <label class="lbl" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="ashr" checked style="margin-top:3px"><span>Make big PDFs smaller before uploading. Untick for faster uploads on a slow computer; files then go up as they are.</span></label>
     <div id="afl"></div><div class="btnrow"><button class="btn pri" id="aup" disabled>Upload</button></div><p class="msg" id="amsg" role="status"></p></div>
     <div class="sec"><h2>Already in this course</h2></div><div id="aex"></div>`;
   let files = [];
@@ -2215,7 +2246,7 @@ function admAdd(box){
     await Promise.all([worker(), worker()]);
   };
   $('#aup').onclick = async () => {
-    const msg = $('#amsg'), btn = $('#aup'); btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
+    const msg = $('#amsg'), btn = $('#aup'), shrinkOn = $('#ashr') ? $('#ashr').checked : true; btn.disabled = true; msg.textContent = 'Checking for files already uploaded…';
     let done = 0, skipped = 0, total = 0; const why = {long:0, big:0, type:0};
     try {
       try { setPapers(await window.FB.listPapers()); } catch(e) {}
@@ -2234,7 +2265,7 @@ function admAdd(box){
             if (f.file.size > MAX_BYTES) { why.big++; continue; }
             if (ext === 'pdf') {
               try { const pg = f.pages || await pageCount(f.file); if (pg > MAX_PAGES) { why.long++; continue; } } catch(e) {}
-              try { up = await serial(() => shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; })); } catch(e) { up = f.file; }
+              if (shrinkOn) try { up = await serial(() => shrinkPdf(f.file, (i, n) => { msg.textContent = label + ': making it smaller, page ' + i + ' of ' + n; })); } catch(e) { up = f.file; }
             }
             await window.FB.addPaper(up, {code:codeOf(f), year:f.year, type:f.type || 'Other', title:f.title, origSize:f.file.size}, p => { msg.textContent = label + ': uploading (' + Math.round(p * 100) + '%)'; });
             done++;

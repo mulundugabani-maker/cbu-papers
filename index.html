@@ -2147,9 +2147,33 @@ function admAdd(box){
     $('#ac').innerHTML = co.length ? optionsHtml(co, adm.course) : '<option value="">No courses yet</option>';
     drawShare();
   };
+  const mv = {school:''}, sel = new Set();
   const drawExisting = () => {
     const cur = courses.find(c => c.code === adm.course && c.school.id === adm.school), ex = papers.filter(p => cur && grp(p.course) === grp(cur)).sort((a,b) => b.yr.localeCompare(a.yr));
-    $('#aex').innerHTML = ex.length ? '<div class="panel">' + ex.map(p => `<div class="row-item"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}${p.course.code !== adm.course ? ' · uploaded as ' + esc(p.course.code) : ''}</span></div></div>`).join('') + '</div>' : '<div class="empty">Nothing in this course yet.</div>';
+    sel.clear();
+    if (!ex.length) { $('#aex').innerHTML = '<div class="empty">Nothing in this course yet.</div>'; return; }
+    if (!mv.school) mv.school = adm.school;
+    $('#aex').innerHTML = '<div class="panel">' + ex.map(p => `<label class="row-item" style="cursor:pointer"><input type="checkbox" data-x="${esc(p.id)}" aria-label="Select file" style="margin-right:6px"><div class="ri-main"><span class="ri-t">${esc(p.title || p.type)}</span><span class="small">${esc(catOf(p.type).name)} · ${esc(p.type)} · ${esc(p.yr)}${p.course.code !== adm.course ? ' · uploaded as ' + esc(p.course.code) : ''}</span></div></label>`).join('') + `</div>
+      <div class="panel pad"><p class="small" id="mvn">Tick the files that are in the wrong course, then pick the right course and tap Move. Or tap Delete to remove them.</p>
+      <div class="pick"><label class="lbl">Move to school<select id="mvs">${optionsHtml(SCHOOLS.map(x => [x.id, x.name]), mv.school)}</select></label>
+      <label class="lbl">Course<select id="mvc"></select></label></div>
+      <div class="btnrow"><button class="btn" id="mvall" type="button">Select all</button><button class="btn pri" id="mvgo" type="button" disabled>Move</button><button class="btn" id="mvdel" type="button" disabled>Delete</button></div><p class="msg" id="mvm" role="status"></p></div>`;
+    const drawMc = () => { const cl = courses.filter(c => c.school.id === mv.school); $('#mvc').innerHTML = cl.length ? groupedCourses(cl, '') : '<option value="">No courses</option>'; };
+    const upd = () => { const n = sel.size; $('#mvn').textContent = n ? n + (n === 1 ? ' file' : ' files') + ' selected.' : 'Tick the files that are in the wrong course, then pick the right course and tap Move. Or tap Delete to remove them.'; $('#mvgo').disabled = !n || !$('#mvc').value; $('#mvdel').disabled = !n; $('#mvall').textContent = n === ex.length ? 'Clear' : 'Select all'; };
+    drawMc(); upd();
+    $('#aex').querySelectorAll('[data-x]').forEach(c => c.onchange = () => { c.checked ? sel.add(c.dataset.x) : sel.delete(c.dataset.x); upd(); });
+    $('#mvs').onchange = e => { mv.school = e.target.value; drawMc(); upd(); };
+    $('#mvc').onchange = upd;
+    $('#mvall').onclick = () => { const all = sel.size !== ex.length; sel.clear(); $('#aex').querySelectorAll('[data-x]').forEach(c => { c.checked = all; if (all) sel.add(c.dataset.x); }); upd(); };
+    const act = async (verb, fn) => {
+      const items = ex.filter(p => sel.has(p.id)), m = $('#mvm'); if (!items.length) return;
+      $('#mvgo').disabled = $('#mvdel').disabled = true; let n = 0;
+      try { for (const p of items) { m.textContent = verb + ' ' + (n + 1) + ' of ' + items.length + '…'; await fn(p); n++; } } catch (e) { m.textContent = 'Stopped after ' + n + ' of ' + items.length + '. Check your connection and try again.'; upd(); try { setPapers(await window.FB.listPapers()); } catch (e2) {} return; }
+      try { setPapers(await window.FB.listPapers()); } catch (e) {}
+      drawExisting(); drawFiles(); uiToast(n + (n === 1 ? ' file ' : ' files ') + (verb === 'Moving' ? 'moved.' : 'deleted.'));
+    };
+    $('#mvgo').onclick = () => { const code = $('#mvc').value; if (code) act('Moving', p => window.FB.updatePaper(p.id, {code})); };
+    $('#mvdel').onclick = async () => { const n = sel.size; if (!n) return; if (await uiConfirm('The ' + (n === 1 ? 'file' : n + ' files') + ' will be removed for every student. This cannot be undone.', {title:'Delete ' + (n === 1 ? 'this file' : n + ' files') + '?', ok:'Delete'})) act('Deleting', p => window.FB.deletePaper({id:p.id, path:p.path})); };
   };
   /* Each file goes to the course whose code it carries (file name first, then the text inside).
      If it carries no code, or several, it goes to the course picked above. The admin can change it per file. */
@@ -3178,8 +3202,8 @@ if (window.FB === undefined) {
         async askAI(body){
           const once = () => Promise.race([sb.functions.invoke('ask-ai', {body}), new Promise((_, rej) => setTimeout(() => rej(new Error('The AI took too long. Check your connection and try again.')), 45000))]);
           let r = await once();
-          for (let i = 0; i < 1 && r.error && r.error.context && [502, 504].includes(r.error.context.status); i++) {
-            await new Promise(res => setTimeout(res, 2000 * (i + 1)));
+          for (let i = 0; i < 3 && r.error && r.error.context && [429, 502, 503, 504].includes(r.error.context.status); i++) {
+            await new Promise(res => setTimeout(res, 1500 * (i + 1)));
             r = await once();
           }
           if (r.error) {

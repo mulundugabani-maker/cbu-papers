@@ -1304,6 +1304,106 @@ html:root[data-theme="dark"] body .rules{background:#173a66!important;color:var(
 html #splash{background:linear-gradient(180deg,#0d4377,#082a4d)!important}
 html:root[data-pre] body #gate,html:root[data-pre] body .gate{background:#0a3560!important}
 </style>
+<style id="v12-ios">
+/* ===== v12: iPhone-clean. Flat cards, liquid glass on buttons only, floating dock, small bold type ===== */
+html{font-size:14.5px!important;-webkit-text-size-adjust:100%}
+html:root[data-theme="light"]{--bg:#f1f4f9;--surface:#fff;--fill:#e6ebf3;--fg:#0f1d33;--muted:#667892;--line:#e3e9f1;--accent:#0d4377;--acc-tx:#0d4377;--pri:#0d4377;--tint:#e6eefa;--copper-bg:#e6eefa;--copper:#0d4377}
+html:root[data-theme="dark"]{--bg:#09111f;--surface:#111d33;--fill:#1a2a47;--fg:#eef3fb;--muted:#9bb0cf;--line:#1f3152;--accent:#6fb4ff;--acc-tx:#8ec5ff;--pri:#2a7de1;--tint:#16294a;--copper-bg:#16294a;--copper:#8ec5ff}
+html:root[data-theme][data-theme][data-theme][data-theme] body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Segoe UI",system-ui,sans-serif!important;font-weight:600;letter-spacing:-.011em;background:var(--bg)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body :is(h1,h2,h3,b,strong,button,.btn){font-weight:700}
+html:root[data-theme][data-theme][data-theme][data-theme] body :is(small,.muted,p,.hint,.cap){font-weight:500}
+/* header: light, compact, no solid bar */
+html:root[data-theme][data-theme][data-theme][data-theme] body .topwrap{background:var(--bg)!important;box-shadow:none!important;clip-path:none!important;padding:6px 0 4px!important;border:0!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .topbar{min-height:40px!important;padding:0 16px!important;gap:9px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .topbar img{width:30px!important;height:30px!important;border-radius:9px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .topbar h1{color:var(--fg)!important;text-transform:none!important;letter-spacing:-.02em!important;font-size:1.12rem!important;font-weight:800!important}
+/* liquid glass buttons (the only glass) */
+html:root[data-theme][data-theme][data-theme][data-theme] body .ib,html:root[data-theme][data-theme][data-theme][data-theme] body .back,html:root[data-theme][data-theme][data-theme][data-theme] body .topbar .back{width:34px!important;height:34px!important;border-radius:50%!important;color:var(--fg)!important;
+  background:radial-gradient(120% 120% at 25% 0%,rgba(255,255,255,.95),rgba(255,255,255,.35) 60%),linear-gradient(135deg,rgba(214,232,255,.6),rgba(255,255,255,.4))!important;
+  -webkit-backdrop-filter:blur(16px) saturate(190%)!important;backdrop-filter:blur(16px) saturate(190%)!important;
+  border:1px solid rgba(255,255,255,.85)!important;box-shadow:inset 0 1px 0 #fff,inset 0 -4px 8px rgba(110,160,240,.14),0 4px 12px -4px rgba(20,60,130,.28)!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .ib{background:radial-gradient(120% 120% at 25% 0%,rgba(255,255,255,.2),rgba(255,255,255,.04) 60%),rgba(40,70,120,.35)!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 12px -4px rgba(0,0,0,.5)!important;color:#fff!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .ib svg{stroke:currentColor!important;width:17px!important;height:17px!important;stroke-width:1.9!important}
+/* floating dock */
+html:root[data-theme][data-theme][data-theme][data-theme] body .tabs{left:18px!important;right:18px!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;width:auto!important;max-width:360px!important;margin:0 auto!important;border-radius:30px!important;padding:6px!important;gap:2px!important;
+  background:radial-gradient(140% 160% at 15% -10%,rgba(255,255,255,.95),rgba(255,255,255,0) 55%),linear-gradient(135deg,rgba(235,244,255,.7),rgba(190,215,255,.4) 60%,rgba(255,255,255,.55))!important;
+  -webkit-backdrop-filter:blur(24px) saturate(200%)!important;backdrop-filter:blur(24px) saturate(200%)!important;
+  border:1px solid rgba(255,255,255,.9)!important;box-shadow:inset 0 1px 0 #fff,inset 0 -10px 18px rgba(110,165,255,.14),0 16px 34px -10px rgba(15,55,125,.4)!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .tabs{background:radial-gradient(140% 160% at 15% -10%,rgba(255,255,255,.22),rgba(255,255,255,0) 55%),linear-gradient(135deg,rgba(60,95,155,.5),rgba(20,40,80,.5))!important;border:1px solid rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 16px 34px -10px rgba(0,0,0,.65)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .tabs a{border:0!important;border-radius:24px!important;color:#5d7090!important;text-transform:none!important;letter-spacing:0!important;font-size:.62rem!important;font-weight:700!important;padding:7px 2px 6px!important;gap:2px!important;background:transparent!important;box-shadow:none!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .tabs a{color:#a8bddc!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .tabs a svg{width:22px!important;height:22px!important;stroke-width:1.7!important;fill:none!important;stroke:currentColor!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .tabs a[aria-current="page"]{color:#0d4377!important;border:0!important;
+  background:radial-gradient(120% 140% at 30% 0%,#fff,rgba(255,255,255,.55) 65%),linear-gradient(180deg,rgba(255,255,255,.9),rgba(210,230,255,.7))!important;
+  box-shadow:inset 0 1px 0 #fff,inset 0 -5px 10px rgba(120,170,245,.2),0 5px 12px -4px rgba(20,70,160,.35)!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .tabs a[aria-current="page"]{color:#fff!important;background:radial-gradient(120% 140% at 30% 0%,rgba(255,255,255,.32),rgba(255,255,255,.06) 65%),rgba(70,120,200,.45)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 5px 12px -4px rgba(0,0,0,.5)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .tabs a[aria-current="page"] svg{fill:currentColor!important;fill-opacity:.16;stroke-width:2!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body main#app{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}
+/* flat cards, grouped like iOS */
+html:root[data-theme][data-theme][data-theme][data-theme] body :is(.card,.panel,.stat,.nestcard,.boost,.gate-card,.reader,.grp,.empty,.dlg,.ai-sh){background:var(--surface)!important;border:0!important;border-radius:16px!important;box-shadow:0 1px 2px rgba(15,35,70,.06)!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body :is(.card,.panel,.stat,.nestcard,.boost,.gate-card,.reader,.grp,.empty){box-shadow:none!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .row-item{padding:8px 4px!important}
+/* headings */
+html:root[data-theme][data-theme][data-theme][data-theme] body .sec{margin:12px 0 6px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .sec h2{border:0!important;padding:0!important;text-transform:none!important;letter-spacing:-.015em!important;font-size:.98rem!important;font-weight:800!important;color:var(--fg)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .sec a{font-size:.78rem!important;font-weight:700!important;color:#1a73d9!important}
+/* home: short and tidy */
+html:root[data-theme][data-theme][data-theme][data-theme] body .hero{min-height:146px!important;padding:12px!important;border-radius:18px!important;border:0!important;gap:4px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .hero h2{font-size:1.08rem!important;font-weight:800!important;letter-spacing:-.02em!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .hero .kicker{font-size:.62rem!important;letter-spacing:.08em!important;font-weight:700!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .hero .hsearch{border-radius:12px!important;padding:2px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .hero .hsearch input{padding:8px 10px!important;font-size:.82rem!important;font-weight:600!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .hero .hsearch button{padding:8px 12px!important;font-size:.78rem!important;border-radius:10px!important;background:linear-gradient(180deg,#1b5aa0,#0d4377)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick{gap:8px!important;margin-top:8px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick a{background:var(--surface)!important;border:0!important;border-bottom:0!important;border-radius:16px!important;padding:10px 4px 9px!important;gap:6px!important;box-shadow:0 1px 2px rgba(15,35,70,.06)!important;color:var(--fg)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick a b{color:var(--fg)!important;text-transform:none!important;font-size:.66rem!important;letter-spacing:-.005em!important;font-weight:700!important;line-height:1.15}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick svg{width:32px!important;height:32px!important;padding:7px!important;border-radius:10px!important;stroke:#fff!important;stroke-width:1.9!important;fill:none!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick a:nth-child(1) svg{background:linear-gradient(180deg,#3a8dff,#1f5fd0)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick a:nth-child(2) svg{background:linear-gradient(180deg,#34c7a8,#1a9a82)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick a:nth-child(3) svg{background:linear-gradient(180deg,#ffb347,#f08a1c)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .quick a:nth-child(4) svg{background:linear-gradient(180deg,#9b7bff,#6a4fe0)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .nestcard{padding:8px 11px!important;margin-top:8px!important;gap:9px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .nestcard img{width:30px!important;height:30px!important;border-radius:9px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .nestcard b{font-size:.82rem!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .nestcard small{font-size:.68rem!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .rail{gap:9px!important;padding:0 2px 4px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .sch{flex:0 0 min(38%,142px)!important;aspect-ratio:1/1.02!important;border-radius:16px!important;border:0!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .sch .lbl b{font-size:.74rem!important;font-weight:800!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .sch .lbl span{font-size:.62rem!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .sch .lbl:not(.topbar):not(.tabs){padding:8px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .stats{gap:8px!important;margin-top:10px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .stats .stat,html:root[data-theme][data-theme][data-theme][data-theme] body .stat{background:var(--surface)!important;color:var(--fg)!important;padding:7px 4px!important;border-radius:14px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .stats .stat b{color:#0d4377!important;font-size:1rem!important;font-weight:800!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .stats .stat b{color:#8ec5ff!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .stats .stat span{color:var(--muted)!important;font-size:.64rem!important;font-weight:600!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .stats .stat:nth-child(n){background:var(--surface)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .note-foot{font-size:.7rem!important;margin-top:10px!important}
+/* segmented control and chips */
+html:root[data-theme][data-theme][data-theme][data-theme] body .views{background:var(--fill)!important;border:0!important;border-radius:11px!important;padding:2px!important;margin-top:8px!important;gap:2px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .views button{border:0!important;border-radius:9px!important;padding:6px 4px!important;font-size:.76rem!important;font-weight:700!important;color:var(--muted)!important;background:transparent!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .views button[aria-pressed="true"]{background:var(--surface)!important;color:var(--fg)!important;box-shadow:0 1px 3px rgba(15,35,70,.18)!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .views button[aria-pressed="true"]{background:#2a4068!important;color:#fff!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .fr{margin-top:6px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .fchip,html:root[data-theme][data-theme][data-theme][data-theme] body .chip{border:0!important;background:var(--surface)!important;box-shadow:0 1px 2px rgba(15,35,70,.08)!important;padding:5px 11px!important;font-size:.74rem!important;font-weight:700!important;color:var(--fg)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .fchip[aria-pressed="true"],html:root[data-theme][data-theme][data-theme][data-theme] body .chip.hot,html:root[data-theme][data-theme][data-theme][data-theme] body .chip.on{background:linear-gradient(180deg,#1b5aa0,#0d4377)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 3px 8px -3px rgba(13,67,119,.5)!important}
+html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .fchip[aria-pressed="true"],html:root[data-theme="dark"][data-theme][data-theme][data-theme][data-theme] body .chip.hot{background:linear-gradient(180deg,#3a8dff,#1f5fd0)!important;color:#fff!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .search,html:root[data-theme][data-theme][data-theme][data-theme] body input,html:root[data-theme][data-theme][data-theme][data-theme] body textarea,html:root[data-theme][data-theme][data-theme][data-theme] body select{background:var(--fill)!important;border:0!important;border-radius:12px!important;font-size:.84rem!important;font-weight:600!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .search{padding:9px 12px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .res-meta{background:transparent!important;color:var(--muted)!important;font-size:.72rem!important;font-weight:700!important;padding:0 2px!important;margin:8px 0 4px!important;border-radius:0!important}
+/* buttons: glossy, flat shadow (glass look without blur) */
+html:root[data-theme][data-theme][data-theme][data-theme] body .btn{border:0!important;border-radius:12px!important;background:var(--surface)!important;box-shadow:0 1px 2px rgba(15,35,70,.1)!important;font-size:.8rem!important;padding:8px 14px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body :is(.btn.pri,.btn.primary,.dlg-o){background:linear-gradient(180deg,#1b5aa0,#0d4377)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px -4px rgba(13,67,119,.6)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .gbadge{background:linear-gradient(180deg,#1b5aa0,#0d4377)!important;border-radius:10px!important;min-width:36px!important;height:36px!important;font-size:.66rem!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .grp summary{padding:8px 11px!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .gt b{font-size:.86rem!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .gt small{font-size:.68rem!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .bub{font-size:.76rem!important;font-weight:600!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .bub.me{background:linear-gradient(180deg,#1b5aa0,#0d4377)!important}
+html:root[data-theme][data-theme][data-theme][data-theme] body .rules{background:var(--tint)!important;color:var(--fg)!important;font-size:.7rem!important;border-radius:14px!important}
+/* sign-in stays navy */
+html #splash{background:linear-gradient(180deg,#0d4377,#082a4d)!important}
+</style>
+
 
 
 
@@ -1318,11 +1418,11 @@ html:root[data-pre] body #gate,html:root[data-pre] body .gate{background:#0a3560
   <main id="app"></main>
 </div>
 <nav class="tabs" aria-label="Main">
-  <a href="#home" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
-  <a href="#papers" data-tab="papers"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>Papers</a>
-  <a href="#nest" data-tab="nest"><svg viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M2.8 20c.4-3.6 3-5.6 6.2-5.6s5.8 2 6.2 5.6"/><circle cx="17.4" cy="9.6" r="2.5"/><path d="M17 14.6c2.4.1 4.2 1.6 4.6 4.4"/></svg>Nest</a>
-  <a href="#help" data-tab="help"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Help<span class="dot" id="helpdot"></span></a>
-  <a href="#account" data-tab="account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Account</a>
+  <a href="#home" data-tab="home"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.2 12 4l8 7.2V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.2H9v5.2H5.5A1.5 1.5 0 0 1 4 19z"/></svg>Home</a>
+  <a href="#papers" data-tab="papers"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h6.8L18.5 8v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M13.5 3.8V8.3h4.6M8.6 12.6h6.8M8.6 16h4.6"/></svg>Papers</a>
+  <a href="#nest" data-tab="nest"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5c.4-3.4 2.9-5.2 6-5.2s5.6 1.8 6 5.2"/><circle cx="17.2" cy="9.5" r="2.5"/><path d="M17.4 14.2c2.3.1 3.9 1.5 4.3 4.3"/></svg>Nest</a>
+  <a href="#help" data-tab="help"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5h13A1.5 1.5 0 0 1 20 6.5v8a1.5 1.5 0 0 1-1.5 1.5H11l-4.5 3.5V16h-1A1.5 1.5 0 0 1 4 14.5v-8A1.5 1.5 0 0 1 5.5 5z"/><path d="M8.5 9.5h7M8.5 12.3h4"/></svg>Help<span class="dot" id="helpdot"></span></a>
+  <a href="#account" data-tab="account"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.7"/><path d="M4.5 20c.5-3.9 3.7-6 7.5-6s7 2.1 7.5 6"/></svg>Account</a>
 </nav>
 
 <script>
